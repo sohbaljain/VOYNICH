@@ -1,88 +1,49 @@
 # VOYNICH Audio Guide
 
-The game can run with this folder empty. `game.js` points to the editable slots below and the AudioManager safely falls back to silence when a file is missing.
+`game.js` is currently wired to the complete MP3 pack in this folder. Do not rename these files without updating `AUDIO_LIBRARY`.
 
-Use original audio, commissioned audio, or clearly licensed audio only. Add creator, license, and source notes to the credits before shipping any external material.
+All audio should be original, commissioned, or clearly licensed. Add creator, license, and source notes to the credits before shipping any external material.
 
-## Music Loops
+## Looping Music And Ambience
 
-- `title-music.ogg` - title screen music.
-- `corridor-theme.ogg` - restrained corridor music layer.
-- `archive-pulse.ogg` - subtle archive pulse after the first restricted clue.
-- `archive-tension.ogg` - archive tension layer after the access card is found.
-- `manuscript-low-rise.ogg` - manuscript puzzle music / low rise.
-- `distorted-low-pulse.ogg` - distorted corridor music.
-- `ending-music.ogg` - ending music.
+- `title-music.mp3` - title screen loop after browser audio unlock.
+- `archive-room-tone.mp3` - normal corridor, archive, exterior, fluorescent hum, electrical hum, and temporary archive music bed.
+- `distorted-corridor-tone.mp3` - distorted corridor ambience, reverse hum, manuscript rise, and distorted music bed.
+- `ending-music.mp3` - ending sequence music loop.
 
-## Ambience Loops
+## Interface And Interaction
 
-- `corridor-room-tone.ogg` - original corridor ambience.
-- `archive-room-tone.ogg` - archive room ambience.
-- `archive-fluorescent-hum.ogg` - archive fluorescent hum loop or long bed.
-- `distorted-corridor-tone.ogg` - altered corridor ambience.
-- `reverse-electrical-hum.ogg` - reverse electrical hum layer.
+- `ui-click.mp3` - menu movement, menu selection, keypad presses, small switches, camera shutter, and compact UI feedback.
+- `flashlight-toggle.mp3` - flashlight on/off only.
+- `dialogue-tick.mp3` - quiet typewriter tick while dialogue text reveals.
+- `final-notification.mp3` - final important notification only.
 
-## Interface And UI
+## Documents And Mechanisms
 
-- `ui-move.ogg` - menu selection movement.
-- `ui-select.ogg` - menu confirm / select.
-- `ui-back.ogg` - menu back / exit message.
-- `fullscreen-toggle.ogg` - fullscreen button feedback.
-- `interaction-prompt.ogg` - contextual prompt appearing.
-- `dialogue-tick.ogg` - quiet typewriter character tick.
-- `journal-open.ogg` - journal opening.
-- `journal-close.ogg` - journal closing.
+- `paper-movement.mp3` - journal open/close, pages, folders, books, and manuscript fragments.
+- `metal-creak.mp3` - doors, drawers, shelves, ladders, cabinets, and metal mechanism movement.
+- `locked-door.mp3` - locked doors, locked cabinets, and unavailable mechanisms.
+- `success.mp3` - clue collection, correct answers, restored power, solved stages, and unlocked mechanisms.
+- `wrong.mp3` - incorrect answers, failed actions, invalid sequences, empty charge, and blocked Archivist hits.
 
-## Corridor And Archive Effects
+## Horror And Impact
 
-- `flashlight-toggle.ogg` - flashlight on/off.
-- `debug-toggle.ogg` - debug collision toggle.
-- `clue-collected.ogg` - clue added to journal.
-- `locked-door.ogg` - locked archive door.
-- `keypad-button.ogg` - keypad press.
-- `wrong-code.ogg` - incorrect keypad code.
-- `correct-code.ogg` - correct keypad code.
-- `power-return.ogg` - auxiliary power reset.
-- `archive-door-unlock.ogg` - archive door unlocking.
-- `archive-door-open.ogg` - archive door opening / transition.
-- `shelf-creak.ogg` - archive shelf movement.
-- `paper-movement.ogg` - papers, folders, page handling.
-- `drawer-open.ogg` - drawer opening.
-- `drawer-close.ogg` - drawer closing.
-- `filing-cabinet-lock.ogg` - filing cabinet lock.
-- `ladder-movement.ogg` - rolling archive ladder.
-- `distant-metallic-impact.ogg` - distant archive impact.
-- `access-card-beep.ogg` - access card reader.
-- `manuscript-light-activation.ogg` - manuscript table reveal light.
-- `fluorescent-hum.ogg` - one-shot or short hum accent.
-- `electrical-hum.ogg` - electrical hum accent.
-- `light-flicker.ogg` - light flicker accent.
+- `glitch.mp3` - visual corruption, false doors, teleportation, scene shifts, light flickers, and reality distortion.
+- `heavy-impact.mp3` - debris impacts, environmental collapses, heavy passage openings, and major physical impacts.
+- `distant-footsteps.mp3` - occasional scripted distant scare accents only.
+- `camera-drop.mp3` - the moment the escape camera hits the floor.
 
-## Manuscript Puzzle Effects
+## Combat
 
-- `book-opening.ogg` - manuscript opening.
-- `page-movement.ogg` - manuscript page movement.
-- `paper-fragment-pickup.ogg` - picking up a torn fragment.
-- `fragment-placement.ogg` - snapping a fragment into place.
-- `subtle-symbol-tone.ogg` - symbol selection / reveal.
-- `incorrect-puzzle.ogg` - incorrect puzzle answer.
-- `stage-completion.ogg` - puzzle stage solved.
-- `ring-rotation.ogg` - rotating manuscript rings.
-- `final-alignment.ogg` - final ring alignment.
-- `glitch-burst.ogg` - controlled reality-change burst.
-- `silence-before-reality-change.ogg` - short impact or drop before silence.
+- `charged-flashlight-beam.mp3` - once when the charged flashlight beam starts firing.
+- `boss-windup.mp3` - when the Archivist telegraphs major attacks or phase actions.
+- `boss-hit.mp3` - only when a valid attack reduces Archivist health.
+- `player-hurt.mp3` - only after player stability/health is actually reduced.
+- `archivist-defeat.mp3` - once when the Archivist defeat state begins.
 
-## Distorted Corridor Effects
+## Runtime Behavior
 
-- `distant-footsteps.ogg` - distant non-enemy footsteps.
-- `corridor-loop.ogg` - corridor loop transition.
-- `false-door.ogg` - false duplicate door feedback.
-- `wall-switch.ogg` - distorted wall switch.
-- `passage-open-bass.ogg` - correct passage opening bass impact.
-- `final-page-reveal.ogg` - missing page reveal.
-
-## Implementation Notes
-
-- Keep loop files seamless and low in volume; the in-game mixer applies additional per-scene scaling.
-- Prefer `.ogg` for the listed filenames. If a different format is needed later, update `AUDIO_LIBRARY` in `game.js`.
-- Keep UI, dialogue, and clue sounds short and restrained so text remains readable and the tone stays serious.
+- Audio unlocks only after a valid browser user interaction.
+- The AudioManager keeps one music loop and one ambience loop active, with fades.
+- One-shot failure/locked sounds have short cooldowns to avoid spam.
+- Missing or blocked audio must never crash gameplay; warnings are one-shot.

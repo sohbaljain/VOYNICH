@@ -1,4 +1,9 @@
+
 "use strict";
+
+if (typeof TEXT_CONTENT === "undefined") {
+  throw new Error("TEXT_CONTENT failed to load. Include text-content.js before game.js.");
+}
 
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 360;
@@ -17,69 +22,114 @@ const GAMEPLAY_TARGET = Object.freeze({
 
 const AUDIO_LIBRARY = Object.freeze({
   music: Object.freeze({
-    titleTheme: "assets/audio/title-music.ogg",
-    corridorTheme: "assets/audio/corridor-theme.ogg",
-    archivePulse: "assets/audio/archive-pulse.ogg",
-    archiveTension: "assets/audio/archive-tension.ogg",
-    manuscriptRise: "assets/audio/manuscript-low-rise.ogg",
-    distortedPulse: "assets/audio/distorted-low-pulse.ogg",
-    endingTheme: "assets/audio/ending-music.ogg",
+    titleTheme: "assets/audio/title-music.mp3",
+    corridorTheme: "assets/audio/archive-room-tone.mp3",
+    archivePulse: "assets/audio/archive-room-tone.mp3",
+    archiveTension: "assets/audio/archive-room-tone.mp3",
+    manuscriptRise: "assets/audio/distorted-corridor-tone.mp3",
+    distortedPulse: "assets/audio/distorted-corridor-tone.mp3",
+    endingTheme: "assets/audio/ending-music.mp3",
   }),
+
   ambience: Object.freeze({
-    corridorRoomTone: "assets/audio/corridor-room-tone.ogg",
-    archiveRoomTone: "assets/audio/archive-room-tone.ogg",
-    archiveFluorescentHum: "assets/audio/archive-fluorescent-hum.ogg",
-    distortedCorridorTone: "assets/audio/distorted-corridor-tone.ogg",
-    reverseElectricalHum: "assets/audio/reverse-electrical-hum.ogg",
+    corridorRoomTone: "assets/audio/archive-room-tone.mp3",
+    archiveRoomTone: "assets/audio/archive-room-tone.mp3",
+    archiveFluorescentHum: "assets/audio/archive-room-tone.mp3",
+    distortedCorridorTone: "assets/audio/distorted-corridor-tone.mp3",
+    reverseElectricalHum: "assets/audio/distorted-corridor-tone.mp3",
+    exteriorAmbience: "assets/audio/archive-room-tone.mp3",
   }),
+
   sfx: Object.freeze({
-    flashlightToggle: "assets/audio/flashlight-toggle.ogg",
-    debugToggle: "assets/audio/debug-toggle.ogg",
-    interactionPrompt: "assets/audio/interaction-prompt.ogg",
-    dialogueTick: "assets/audio/dialogue-tick.ogg",
-    journalOpen: "assets/audio/journal-open.ogg",
-    journalClose: "assets/audio/journal-close.ogg",
-    uiMove: "assets/audio/ui-move.ogg",
-    uiSelect: "assets/audio/ui-select.ogg",
-    uiBack: "assets/audio/ui-back.ogg",
-    fullscreenToggle: "assets/audio/fullscreen-toggle.ogg",
-    clueCollected: "assets/audio/clue-collected.ogg",
-    lockedDoor: "assets/audio/locked-door.ogg",
-    keypadButton: "assets/audio/keypad-button.ogg",
-    wrongCode: "assets/audio/wrong-code.ogg",
-    correctCode: "assets/audio/correct-code.ogg",
-    powerReturn: "assets/audio/power-return.ogg",
-    archiveDoorUnlock: "assets/audio/archive-door-unlock.ogg",
-    archiveDoorOpen: "assets/audio/archive-door-open.ogg",
-    shelfCreak: "assets/audio/shelf-creak.ogg",
-    paperMove: "assets/audio/paper-movement.ogg",
-    drawerOpen: "assets/audio/drawer-open.ogg",
-    drawerClose: "assets/audio/drawer-close.ogg",
-    filingCabinetLock: "assets/audio/filing-cabinet-lock.ogg",
-    ladderMove: "assets/audio/ladder-movement.ogg",
-    distantMetallicImpact: "assets/audio/distant-metallic-impact.ogg",
-    accessCardBeep: "assets/audio/access-card-beep.ogg",
-    manuscriptLightActivation: "assets/audio/manuscript-light-activation.ogg",
-    fluorescentHum: "assets/audio/fluorescent-hum.ogg",
-    bookOpen: "assets/audio/book-opening.ogg",
-    pageMovement: "assets/audio/page-movement.ogg",
-    paperFragmentPickup: "assets/audio/paper-fragment-pickup.ogg",
-    fragmentPlacement: "assets/audio/fragment-placement.ogg",
-    symbolTone: "assets/audio/subtle-symbol-tone.ogg",
-    incorrectPuzzle: "assets/audio/incorrect-puzzle.ogg",
-    stageCompletion: "assets/audio/stage-completion.ogg",
-    ringRotation: "assets/audio/ring-rotation.ogg",
-    finalAlignment: "assets/audio/final-alignment.ogg",
-    glitchBurst: "assets/audio/glitch-burst.ogg",
-    silenceBeforeRealityChange: "assets/audio/silence-before-reality-change.ogg",
-    distantFootsteps: "assets/audio/distant-footsteps.ogg",
-    corridorLoop: "assets/audio/corridor-loop.ogg",
-    falseDoor: "assets/audio/false-door.ogg",
-    wallSwitch: "assets/audio/wall-switch.ogg",
-    passageOpenBass: "assets/audio/passage-open-bass.ogg",
-    finalPageReveal: "assets/audio/final-page-reveal.ogg",
-    electricalHum: "assets/audio/electrical-hum.ogg",
-    lightFlicker: "assets/audio/light-flicker.ogg",
+    flashlightToggle: "assets/audio/flashlight-toggle.mp3",
+    debugToggle: "assets/audio/ui-click.mp3",
+    interactionPrompt: "assets/audio/ui-click.mp3",
+    dialogueTick: "assets/audio/dialogue-tick.mp3",
+
+    journalOpen: "assets/audio/paper-movement.mp3",
+    journalClose: "assets/audio/paper-movement.mp3",
+
+    uiMove: "assets/audio/ui-click.mp3",
+    uiSelect: "assets/audio/ui-click.mp3",
+    uiBack: "assets/audio/ui-click.mp3",
+    fullscreenToggle: "assets/audio/ui-click.mp3",
+
+    clueCollected: "assets/audio/success.mp3",
+    lockedDoor: "assets/audio/locked-door.mp3",
+    keypadButton: "assets/audio/ui-click.mp3",
+    wrongCode: "assets/audio/wrong.mp3",
+    correctCode: "assets/audio/success.mp3",
+    powerReturn: "assets/audio/success.mp3",
+    archiveDoorUnlock: "assets/audio/success.mp3",
+    archiveDoorOpen: "assets/audio/metal-creak.mp3",
+
+    shelfCreak: "assets/audio/metal-creak.mp3",
+    paperMove: "assets/audio/paper-movement.mp3",
+    drawerOpen: "assets/audio/metal-creak.mp3",
+    drawerClose: "assets/audio/metal-creak.mp3",
+    filingCabinetLock: "assets/audio/locked-door.mp3",
+    ladderMove: "assets/audio/metal-creak.mp3",
+    distantMetallicImpact: "assets/audio/heavy-impact.mp3",
+    accessCardBeep: "assets/audio/ui-click.mp3",
+
+    manuscriptLightActivation: "assets/audio/glitch.mp3",
+    fluorescentHum: "assets/audio/archive-room-tone.mp3",
+    bookOpen: "assets/audio/paper-movement.mp3",
+    pageMovement: "assets/audio/paper-movement.mp3",
+    paperFragmentPickup: "assets/audio/paper-movement.mp3",
+    fragmentPlacement: "assets/audio/success.mp3",
+
+    symbolTone: "assets/audio/ui-click.mp3",
+    incorrectPuzzle: "assets/audio/wrong.mp3",
+    stageCompletion: "assets/audio/success.mp3",
+    ringRotation: "assets/audio/metal-creak.mp3",
+    finalAlignment: "assets/audio/success.mp3",
+
+    glitchBurst: "assets/audio/glitch.mp3",
+    silenceBeforeRealityChange: "assets/audio/glitch.mp3",
+    distantFootsteps: "assets/audio/distant-footsteps.mp3",
+    corridorLoop: "assets/audio/glitch.mp3",
+    falseDoor: "assets/audio/glitch.mp3",
+    wallSwitch: "assets/audio/ui-click.mp3",
+    passageOpenBass: "assets/audio/heavy-impact.mp3",
+    finalPageReveal: "assets/audio/success.mp3",
+
+    electricalHum: "assets/audio/archive-room-tone.mp3",
+    lightFlicker: "assets/audio/glitch.mp3",
+    circuitSwitch: "assets/audio/ui-click.mp3",
+    circuitWrong: "assets/audio/wrong.mp3",
+
+    ladderWheel: "assets/audio/metal-creak.mp3",
+    ladderLock: "assets/audio/locked-door.mp3",
+    ladderClimb: "assets/audio/metal-creak.mp3",
+
+    ringFailure: "assets/audio/wrong.mp3",
+    ringSuccess: "assets/audio/success.mp3",
+
+    archivistAppear: "assets/audio/glitch.mp3",
+    corruptedNode: "assets/audio/glitch.mp3",
+    stabilityHit: "assets/audio/player-hurt.mp3",
+    bossPhase: "assets/audio/boss-windup.mp3",
+    archiveShutdown: "assets/audio/glitch.mp3",
+    bossWindup: "assets/audio/boss-windup.mp3",
+    recordSlash: "assets/audio/metal-creak.mp3",
+    inkProjectile: "assets/audio/glitch.mp3",
+    spikeWarning: "assets/audio/glitch.mp3",
+    archivistHit: "assets/audio/boss-hit.mp3",
+    archivistTeleport: "assets/audio/glitch.mp3",
+    archivistBlocked: "assets/audio/wrong.mp3",
+    chargeEmpty: "assets/audio/wrong.mp3",
+    chargedBeam: "assets/audio/charged-flashlight-beam.mp3",
+    archivistDefeat: "assets/audio/archivist-defeat.mp3",
+
+    escapeSequence: "assets/audio/glitch.mp3",
+    finalNotification: "assets/audio/final-notification.mp3",
+    cameraShutter: "assets/audio/ui-click.mp3",
+    recordContradiction: "assets/audio/glitch.mp3",
+    classroomShift: "assets/audio/glitch.mp3",
+    debrisWarning: "assets/audio/glitch.mp3",
+    debrisImpact: "assets/audio/heavy-impact.mp3",
+    cameraDrop: "assets/audio/camera-drop.mp3",
   }),
 });
 
@@ -89,6 +139,62 @@ const AUDIO_VOLUME_DEFAULTS = Object.freeze({
   ambience: 0.64,
   sfx: 0.8,
 });
+
+const AUDIO_MIX_DEFAULTS = Object.freeze({
+  music: 0.22,
+  ambience: 0.22,
+  ui: 0.35,
+  effect: 0.5,
+  combat: 0.65,
+  dialogueTick: 0.12,
+});
+const INTERACTION_PROMPT_VOLUME = 0.12;
+const DIALOGUE_TICK_INTERVAL_CHARACTERS = 3;
+
+const AUDIO_SFX_COOLDOWNS = Object.freeze({
+  lockedDoor: 0.35,
+  archivistBlocked: 0.45,
+  chargeEmpty: 0.35,
+  bossWindup: 2.75,
+  bossPhase: 1.2,
+  wrongCode: 0.22,
+  incorrectPuzzle: 0.25,
+  ringFailure: 0.25,
+  circuitWrong: 0.25,
+});
+
+const AUDIO_UI_SFX = new Set([
+  "flashlightToggle",
+  "debugToggle",
+  "interactionPrompt",
+  "dialogueTick",
+  "uiMove",
+  "uiSelect",
+  "uiBack",
+  "fullscreenToggle",
+  "keypadButton",
+  "accessCardBeep",
+  "symbolTone",
+  "wallSwitch",
+  "circuitSwitch",
+  "cameraShutter",
+]);
+
+const AUDIO_COMBAT_SFX = new Set([
+  "archivistHit",
+  "archivistBlocked",
+  "stabilityHit",
+  "bossPhase",
+  "bossWindup",
+  "recordSlash",
+  "inkProjectile",
+  "spikeWarning",
+  "chargeEmpty",
+  "archivistDefeat",
+  "debrisWarning",
+  "debrisImpact",
+  "cameraDrop",
+]);
 
 const DEFAULT_SETTINGS = Object.freeze({
   masterVolume: AUDIO_VOLUME_DEFAULTS.master,
@@ -109,15 +215,15 @@ const TITLE_MENU_ACTIONS = Object.freeze({
 });
 
 const SETTINGS_ITEMS = Object.freeze([
-  Object.freeze({ id: "masterVolume", label: "Master volume", type: "range", min: 0, max: 1, step: 0.05 }),
-  Object.freeze({ id: "musicVolume", label: "Music volume", type: "range", min: 0, max: 1, step: 0.05 }),
-  Object.freeze({ id: "ambienceVolume", label: "Ambience volume", type: "range", min: 0, max: 1, step: 0.05 }),
-  Object.freeze({ id: "sfxVolume", label: "SFX volume", type: "range", min: 0, max: 1, step: 0.05 }),
-  Object.freeze({ id: "textSpeed", label: "Text speed", type: "range", min: 24, max: 90, step: 6 }),
-  Object.freeze({ id: "screenShake", label: "Screen shake", type: "toggle" }),
-  Object.freeze({ id: "grainIntensity", label: "Grain / scanlines", type: "range", min: 0, max: 1, step: 0.1 }),
-  Object.freeze({ id: "fullscreen", label: "Fullscreen", type: "action" }),
-  Object.freeze({ id: "back", label: "Back", type: "action" }),
+  Object.freeze({ id: "masterVolume", label: TEXT_CONTENT.settings.items.masterVolume, type: "range", min: 0, max: 1, step: 0.05 }),
+  Object.freeze({ id: "musicVolume", label: TEXT_CONTENT.settings.items.musicVolume, type: "range", min: 0, max: 1, step: 0.05 }),
+  Object.freeze({ id: "ambienceVolume", label: TEXT_CONTENT.settings.items.ambienceVolume, type: "range", min: 0, max: 1, step: 0.05 }),
+  Object.freeze({ id: "sfxVolume", label: TEXT_CONTENT.settings.items.sfxVolume, type: "range", min: 0, max: 1, step: 0.05 }),
+  Object.freeze({ id: "textSpeed", label: TEXT_CONTENT.settings.items.textSpeed, type: "range", min: 24, max: 90, step: 6 }),
+  Object.freeze({ id: "screenShake", label: TEXT_CONTENT.settings.items.screenShake, type: "toggle" }),
+  Object.freeze({ id: "grainIntensity", label: TEXT_CONTENT.settings.items.grainIntensity, type: "range", min: 0, max: 1, step: 0.1 }),
+  Object.freeze({ id: "fullscreen", label: TEXT_CONTENT.settings.items.fullscreen, type: "action" }),
+  Object.freeze({ id: "back", label: TEXT_CONTENT.settings.items.back, type: "action" }),
 ]);
 
 const ENDING_MENU_ACTIONS = Object.freeze({
@@ -191,9 +297,9 @@ const CORRIDOR = Object.freeze({
     { x: 2074, y: 346, w: 16, h: 6, shade: "#aaa293" },
   ]),
   WARNINGS: Object.freeze([
-    { x: 260, y: 138, label: "LAB" },
-    { x: 872, y: 106, label: "2086" },
-    { x: 1510, y: 154, label: "NO ENTRY" },
+    { x: 260, y: 138, label: TEXT_CONTENT.corridor.signs.lab },
+    { x: 872, y: 106, label: TEXT_CONTENT.corridor.signs.year },
+    { x: 1510, y: 154, label: TEXT_CONTENT.corridor.signs.noEntry },
   ]),
   SHELVES: Object.freeze([
     { x: 628, y: 178, w: 126, h: 76 },
@@ -214,8 +320,8 @@ const ARCHIVE_ROOM = Object.freeze({
   LADDER_MIN_X: 278,
   LADDER_MAX_X: 1356,
   LADDER_START_X: 364,
-  LADDER_TARGET_X: 1196,
-  HIGH_SHELF_X: 1216,
+  LADDER_TARGET_X: 950,
+  HIGH_SHELF_X: 968,
   TABLE_X: 1478,
   TABLE_Y: 228,
   TABLE_WIDTH: 148,
@@ -225,7 +331,7 @@ const ARCHIVE_ROOM = Object.freeze({
   FOREGROUND_SHELVES: Object.freeze([
     { x: 244, y: 110, w: 138, h: 178, mark: "A-02" },
     { x: 572, y: 104, w: 154, h: 184, mark: "C-11" },
-    { x: 890, y: 106, w: 156, h: 184, mark: "V-13" },
+    { x: 890, y: 106, w: 156, h: 184, mark: "C13" },
     { x: 1204, y: 98, w: 166, h: 192, mark: "R-06" },
   ]),
   FILING_CABINETS: Object.freeze([
@@ -246,49 +352,53 @@ const ARCHIVE_SHELF_SEARCHES = Object.freeze({
     shelfId: "personnelTransfer",
     mark: "A-02",
     clueId: "shelfPersonnelRecord",
-    title: "Personnel transfer",
-    text:
-      "A transfer list names three archivists assigned to V-13 in 2081, two years after the university stopped issuing official records.",
+    title: TEXT_CONTENT.archive.shelfSearches.personnelTransfer.title,
+    text: TEXT_CONTENT.archive.shelfSearches.personnelTransfer.text,
     useful: true,
   }),
   waterDamage: Object.freeze({
     shelfId: "waterDamage",
     mark: "C-11",
     clueId: "shelfAtmosphericRecord",
-    title: "Water damage log",
-    text:
-      "The log is mostly mildew and initials. Someone kept reporting wet paper beneath a dry ceiling.",
+    title: TEXT_CONTENT.archive.shelfSearches.waterDamage.title,
+    text: TEXT_CONTENT.archive.shelfSearches.waterDamage.text,
     useful: false,
   }),
   restrictedAccess: Object.freeze({
     shelfId: "restrictedAccess",
-    mark: "V-13",
+    mark: "C13",
     clueId: "shelfAccessRecord",
-    title: "Restricted access sheet",
-    text:
-      "Cabinet R-6 is listed beside a sealed key held above the V-13 shelf line. The entry is not in the terminal.",
+    title: TEXT_CONTENT.archive.shelfSearches.restrictedAccess.title,
+    text: TEXT_CONTENT.archive.shelfSearches.restrictedAccess.text,
     useful: true,
   }),
 });
 
 const MANUSCRIPT_STAGES = Object.freeze({
   RECONSTRUCT: "reconstruct",
+  PATTERN: "pattern",
   SYMBOLS: "symbols",
   ALIGNMENT: "alignment",
   SOLVED: "solved",
 });
 
 const MANUSCRIPT_VIEW = Object.freeze({
-  PAGE_X: 42,
-  PAGE_Y: 28,
-  PAGE_WIDTH: 346,
-  PAGE_HEIGHT: 304,
+  PAGE_X: 30,
+  PAGE_Y: 50,
+  PAGE_WIDTH: 356,
+  PAGE_HEIGHT: 278,
+  BOARD_X: 46,
+  BOARD_Y: 66,
+  BOARD_WIDTH: 324,
+  BOARD_HEIGHT: 244,
   OUTLINE_X: 100,
   OUTLINE_Y: 76,
   OUTLINE_WIDTH: 212,
   OUTLINE_HEIGHT: 174,
-  PANEL_X: 416,
-  PANEL_Y: 42,
+  PANEL_X: 410,
+  PANEL_Y: 58,
+  PANEL_WIDTH: 214,
+  PANEL_HEIGHT: 244,
   BUTTON_HEIGHT: 26,
   SNAP_DISTANCE: 24,
   RING_CENTER_X: 300,
@@ -298,95 +408,194 @@ const MANUSCRIPT_VIEW = Object.freeze({
 const MANUSCRIPT_FRAGMENTS = Object.freeze([
   Object.freeze({
     id: "upperLeft",
-    label: "I",
-    startX: 428,
-    startY: 82,
+    label: TEXT_CONTENT.manuscript.fragments.upperLeft,
+    startX: 58,
+    startY: 92,
     targetX: 108,
     targetY: 84,
     width: 88,
     height: 68,
     rotation: 1,
     targetRotation: 0,
-    mark: "staff",
+    mark: "eye",
   }),
   Object.freeze({
     id: "upperRight",
-    label: "II",
-    startX: 528,
-    startY: 88,
+    label: TEXT_CONTENT.manuscript.fragments.upperRight,
+    startX: 244,
+    startY: 82,
     targetX: 196,
     targetY: 88,
     width: 100,
     height: 64,
     rotation: 3,
     targetRotation: 0,
-    mark: "restricted",
+    mark: "spiral",
   }),
   Object.freeze({
     id: "lowerLeft",
-    label: "III",
-    startX: 430,
-    startY: 188,
+    label: TEXT_CONTENT.manuscript.fragments.lowerLeft,
+    startX: 62,
+    startY: 210,
     targetX: 112,
     targetY: 152,
     width: 86,
     height: 82,
     rotation: 2,
     targetRotation: 0,
-    mark: "maintenance",
+    mark: "brokenSquare",
   }),
   Object.freeze({
     id: "lowerRight",
-    label: "IV",
-    startX: 532,
-    startY: 184,
+    label: TEXT_CONTENT.manuscript.fragments.lowerRight,
+    startX: 248,
+    startY: 204,
     targetX: 198,
     targetY: 152,
     width: 96,
     height: 82,
     rotation: 1,
     targetRotation: 0,
-    mark: "removed",
+    mark: "verticalLine",
   }),
 ]);
 
 const MANUSCRIPT_SYMBOLS = Object.freeze([
   Object.freeze({
     id: "staff",
-    label: "Aster",
-    classLabel: "personnel transfer",
+    label: TEXT_CONTENT.manuscript.symbols.staff.label,
+    classLabel: TEXT_CONTENT.manuscript.symbols.staff.classLabel,
     clueId: "shelfPersonnelRecord",
-    hint: "The transfer list points to staff assigned after the official end.",
+    hint: TEXT_CONTENT.manuscript.symbols.staff.hint,
   }),
   Object.freeze({
     id: "maintenance",
-    label: "Drain",
-    classLabel: "water damage",
+    label: TEXT_CONTENT.manuscript.symbols.maintenance.label,
+    classLabel: TEXT_CONTENT.manuscript.symbols.maintenance.classLabel,
     clueId: "shelfAtmosphericRecord",
-    hint: "The water log is a maintenance classification, not the missing-page path.",
+    hint: TEXT_CONTENT.manuscript.symbols.maintenance.hint,
   }),
   Object.freeze({
     id: "restricted",
-    label: "Grille",
-    classLabel: "restricted access",
+    label: TEXT_CONTENT.manuscript.symbols.restricted.label,
+    classLabel: TEXT_CONTENT.manuscript.symbols.restricted.classLabel,
     clueId: "shelfAccessRecord",
-    hint: "The access sheet links V-13 to cabinet R-6 and the sealed key.",
+    hint: TEXT_CONTENT.manuscript.symbols.restricted.hint,
   }),
   Object.freeze({
     id: "removed",
-    label: "Hollow leaf",
-    classLabel: "removed page",
+    label: TEXT_CONTENT.manuscript.symbols.removed.label,
+    classLabel: TEXT_CONTENT.manuscript.symbols.removed.classLabel,
     clueId: "removedPageNote",
-    hint: "The cabinet note names the page removed from the catalogue.",
+    hint: TEXT_CONTENT.manuscript.symbols.removed.hint,
   }),
 ]);
 
 const MANUSCRIPT_SYMBOL_SEQUENCE = Object.freeze(["staff", "restricted", "removed"]);
 
+// The repaired page teaches the order reused by the chamber lock and finale.
+const ARCHIVE_SYMBOL_PATTERN = Object.freeze(["eye", "spiral", "brokenSquare", "verticalLine"]);
+const ARCHIVE_SYMBOL_LABELS = Object.freeze({
+  eye: TEXT_CONTENT.archivist.symbolLabels.eye,
+  spiral: TEXT_CONTENT.archivist.symbolLabels.spiral,
+  brokenSquare: TEXT_CONTENT.archivist.symbolLabels.brokenSquare,
+  verticalLine: TEXT_CONTENT.archivist.symbolLabels.verticalLine,
+});
+const CIRCUIT_SEQUENCE = Object.freeze(["auxiliary", "ventilation", "archive", "lighting"]);
+
+const ARCHIVIST_CHAMBER = Object.freeze({
+  WIDTH: 1600,
+  START_X: 92,
+  NODES: Object.freeze([280, 790, 1280]),
+  COPIES: Object.freeze([360, 790, 1220]),
+  CONTROLS: Object.freeze([250, 610, 970, 1330]),
+  TERMINAL_X: 1450,
+});
+
+const PROLOGUE_WORLD = Object.freeze({
+  WIDTH: 980,
+  CAMERA_LEFT_BOUNDARY: 0,
+  CAMERA_RIGHT_BOUNDARY: 980,
+  PLAYER_LEFT_BOUNDARY: 36,
+  PLAYER_RIGHT_BOUNDARY: 944,
+  ENTRANCE_X: 884,
+});
+
+const ESCAPE_WORLD = Object.freeze({
+  WIDTH: 4200,
+  CAMERA_LEFT_BOUNDARY: 0,
+  CAMERA_RIGHT_BOUNDARY: 4200,
+  PLAYER_LEFT_BOUNDARY: 36,
+  PLAYER_RIGHT_BOUNDARY: 4160,
+  EXIT_X: 4050,
+});
+
+const RECORDS_WORLD = Object.freeze({
+  WIDTH: 1540,
+  CAMERA_LEFT_BOUNDARY: 0,
+  CAMERA_RIGHT_BOUNDARY: 1540,
+  PLAYER_LEFT_BOUNDARY: 36,
+  PLAYER_RIGHT_BOUNDARY: 1504,
+  ENTRANCE_X: 82,
+});
+
+const CLASSROOM_WORLD = Object.freeze({
+  WIDTH: 920,
+  CAMERA_LEFT_BOUNDARY: 0,
+  CAMERA_RIGHT_BOUNDARY: 920,
+  PLAYER_LEFT_BOUNDARY: 36,
+  PLAYER_RIGHT_BOUNDARY: 884,
+  ENTRANCE_X: 82,
+});
+
+const MISSING_PERSON_CASES = Object.freeze([
+  Object.freeze({
+    id: "mara",
+    name: TEXT_CONTENT.recordsWing.cases.mara.name,
+    role: TEXT_CONTENT.recordsWing.cases.mara.role,
+    x: 330,
+    correctIndex: 2,
+    clueId: "maraVossCase",
+    records: TEXT_CONTENT.recordsWing.cases.mara.records,
+  }),
+  Object.freeze({
+    id: "elias",
+    name: TEXT_CONTENT.recordsWing.cases.elias.name,
+    role: TEXT_CONTENT.recordsWing.cases.elias.role,
+    x: 760,
+    correctIndex: 1,
+    clueId: "eliasWardCase",
+    records: TEXT_CONTENT.recordsWing.cases.elias.records,
+  }),
+  Object.freeze({
+    id: "jonah",
+    name: TEXT_CONTENT.recordsWing.cases.jonah.name,
+    role: TEXT_CONTENT.recordsWing.cases.jonah.role,
+    x: 1190,
+    correctIndex: 2,
+    clueId: "jonahValeCase",
+    records: TEXT_CONTENT.recordsWing.cases.jonah.records,
+  }),
+]);
+
+const BOSS_COMBAT = Object.freeze({
+  MAX_HEALTH: 100,
+  MAX_STABILITY: 5,
+  MAX_CHARGE: 100,
+  BEAM_DAMAGE: 5,
+  BEAM_PULSE_SECONDS: 0.2,
+  BEAM_RANGE: 430,
+  CHARGE_DRAIN_PER_SECOND: 34,
+  CHARGE_REGEN_PER_SECOND: 25,
+  DODGE_SECONDS: 0.28,
+  DODGE_COOLDOWN: 1,
+  BLOCKED_SOUND_COOLDOWN: 0.45,
+});
+
 const MANUSCRIPT_RINGS = Object.freeze([
-  Object.freeze({ id: "outer", label: "Outer ring", radius: 96, width: 18, target: 1 }),
-  Object.freeze({ id: "middle", label: "Middle ring", radius: 68, width: 16, target: 5 }),
-  Object.freeze({ id: "inner", label: "Inner ring", radius: 42, width: 14, target: 3 }),
+  Object.freeze({ id: "outer", label: TEXT_CONTENT.manuscript.rings.outer, radius: 96, width: 18, target: 1 }),
+  Object.freeze({ id: "middle", label: TEXT_CONTENT.manuscript.rings.middle, radius: 68, width: 16, target: 5 }),
+  Object.freeze({ id: "inner", label: TEXT_CONTENT.manuscript.rings.inner, radius: 42, width: 14, target: 3 }),
 ]);
 
 const REALITY_CHANGE_SYMBOLS = Object.freeze([
@@ -395,21 +604,21 @@ const REALITY_CHANGE_SYMBOLS = Object.freeze([
     symbolId: "staff",
     clueId: "changedShelfSymbol",
     x: 930,
-    prompt: "Inspect moved shelf",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectMovedShelf,
   }),
   Object.freeze({
     id: "alteredPhotograph",
     symbolId: "restricted",
     clueId: "alteredPhotographSymbol",
     x: 742,
-    prompt: "Inspect altered photograph",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectAlteredPhotograph,
   }),
   Object.freeze({
     id: "backwardClock",
     symbolId: "removed",
     clueId: "backwardClockSymbol",
     x: 786,
-    prompt: "Inspect backward clock",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectBackwardClock,
   }),
 ]);
 
@@ -432,9 +641,9 @@ const DISTORTED_CORRIDOR = Object.freeze({
   ]),
   SUPPORTS: Object.freeze([70, 404, 690, 1038, 1274, 1660, 1918, 2320, 2580]),
   DOORS: Object.freeze([
-    { id: "falseWest", x: 504, symbolId: "maintenance", label: "A-02" },
-    { id: "realDoor", x: 1096, symbolId: "restricted", label: "V-13" },
-    { id: "falseEast", x: 1718, symbolId: "staff", label: "R-06" },
+    { id: "falseWest", x: 504, symbolId: "maintenance", label: TEXT_CONTENT.distortedArchive.doorLabels.falseWest },
+    { id: "realDoor", x: 1096, symbolId: "restricted", label: TEXT_CONTENT.distortedArchive.doorLabels.realDoor },
+    { id: "falseEast", x: 1718, symbolId: "staff", label: TEXT_CONTENT.distortedArchive.doorLabels.falseEast },
   ]),
   SWITCHES: Object.freeze([
     { id: "staff", x: 2190, symbolId: "staff" },
@@ -446,599 +655,25 @@ const DISTORTED_CORRIDOR = Object.freeze({
 
 const ARCHIVE_CODE = "2079";
 
-const OBJECTIVE_DATA = Object.freeze({
-  findArchive: Object.freeze({
-    title: "Find a way into the archive.",
-    detail: "Start with the university directory.",
-  }),
-  checkDoor: Object.freeze({
-    title: "Find a way into the archive.",
-    detail: "Check the archive door at the east end.",
-  }),
-  inspectLock: Object.freeze({
-    title: "Find a way into the archive.",
-    detail: "Inspect the archive lock panel.",
-  }),
-  restorePower: Object.freeze({
-    title: "Restore auxiliary power.",
-    detail: "Find how the dead archive keypad is powered.",
-  }),
-  findKey: Object.freeze({
-    title: "Find the maintenance key.",
-    detail: "The electrical cabinet has a small physical lock.",
-  }),
-  resetPower: Object.freeze({
-    title: "Reset the archive power.",
-    detail: "Use the maintenance key on the electrical cabinet.",
-  }),
-  findCode: Object.freeze({
-    title: "Find the archive code.",
-    detail: "The keypad needs four digits.",
-  }),
-  enterCode: Object.freeze({
-    title: "Unlock the archive door.",
-    detail: "Enter the code at the powered keypad.",
-  }),
-  enterArchive: Object.freeze({
-    title: "Enter the archive.",
-    detail: "The door has finally released.",
-  }),
-  locateRestricted: Object.freeze({
-    title: "Locate the restricted collection.",
-    detail: "Begin with the archive index terminal.",
-  }),
-  searchMarkedShelves: Object.freeze({
-    title: "Search the marked shelf sections.",
-    detail: "Restricted Collection V-13 is missing from the index.",
-  }),
-  findShelfCoordinate: Object.freeze({
-    title: "Find the handwritten shelf coordinate.",
-    detail: "Check the loose folders around the searched sections.",
-  }),
-  moveArchiveLadder: Object.freeze({
-    title: "Move the rolling ladder.",
-    detail: "Reach the high shelf coordinate hidden in the folder.",
-  }),
-  retrieveStorageKey: Object.freeze({
-    title: "Retrieve the sealed storage key.",
-    detail: "Search the high shelf now that the ladder is in place.",
-  }),
-  openArchiveCabinet: Object.freeze({
-    title: "Open the filing cabinet.",
-    detail: "Use the sealed storage key on the locked records cabinet.",
-  }),
-  useArchiveAccessCard: Object.freeze({
-    title: "Use the archive access card.",
-    detail: "Find what the removed page was meant to hide.",
-  }),
-  revealManuscriptTable: Object.freeze({
-    title: "Reveal the manuscript table.",
-    detail: "The restricted cabinet has power again.",
-  }),
-  inspectManuscript: Object.freeze({
-    title: "Inspect the manuscript.",
-    detail: "Open the revealed page on the central table.",
-  }),
-  reconstructPage: Object.freeze({
-    title: "Reconstruct the torn page.",
-    detail: "Place and rotate the four fragments into the outline.",
-  }),
-  interpretSymbols: Object.freeze({
-    title: "Interpret the margin marks.",
-    detail: "Use the journal clues to choose the three-symbol sequence.",
-  }),
-  alignMissingPage: Object.freeze({
-    title: "Align the missing page.",
-    detail: "Rotate the three rings until a single symbol forms.",
-  }),
-  escapeDistortion: Object.freeze({
-    title: "Leave the archive.",
-    detail: "The exit no longer returns to the same corridor.",
-  }),
-  findMissingPage: Object.freeze({
-    title: "Find the missing page.",
-    detail: "Try leaving through the archive entrance.",
-  }),
-  noticeArchiveChanges: Object.freeze({
-    title: "Notice three impossible changes.",
-    detail: "Each changed detail exposes one symbol.",
-  }),
-  testDistortedExit: Object.freeze({
-    title: "Test the corridor exit.",
-    detail: "The normal way out is no longer trustworthy.",
-  }),
-  chooseRealDoor: Object.freeze({
-    title: "Choose the real duplicate door.",
-    detail: "Use the three revealed symbols to reject the false doors.",
-  }),
-  activateWallSwitches: Object.freeze({
-    title: "Open the sealed records section.",
-    detail: "Activate the wall switches in the order the manuscript taught you.",
-  }),
-  reachMissingPage: Object.freeze({
-    title: "Reach the missing page.",
-    detail: "The final passage is open under the distant light.",
-  }),
-});
-
-const CLUE_DATA = Object.freeze({
-  directory: Object.freeze({
-    title: "Damaged university directory",
-    text: "The archive is marked in the lower east wing, past the decommissioned records hall.",
-  }),
-  lockPanel: Object.freeze({
-    title: "Dead electronic lock panel",
-    text: "The archive keypad is intact, but no power reaches it.",
-  }),
-  maintenanceNotice: Object.freeze({
-    title: "Maintenance notice",
-    text: "Auxiliary archive power runs through a small electrical cabinet with a physical maintenance lock.",
-  }),
-  securityMemo: Object.freeze({
-    title: "Abandoned security memo",
-    text: "The archive code follows the last official university record year. The public registry ends in 2079.",
-  }),
-  maintenanceKey: Object.freeze({
-    title: "Loose maintenance key",
-    text: "A narrow service key for a utility cabinet, not for the archive door itself.",
-  }),
-  powerReset: Object.freeze({
-    title: "Auxiliary power reset",
-    text: "Power returned to the archive keypad after the cabinet switch was thrown.",
-  }),
-  archiveUnlocked: Object.freeze({
-    title: "Archive door unlocked",
-    text: "The keypad accepted 2079. Something behind the door woke up late.",
-  }),
-  archiveIndex: Object.freeze({
-    title: "Archive index terminal",
-    text: "Restricted Collection V-13 does not appear in the searchable index, but adjacent shelves still reference it.",
-  }),
-  shelfPersonnelRecord: Object.freeze({
-    title: "Useful record: personnel transfer",
-    text: "A late transfer list assigns staff to Restricted Collection V-13 after the university records officially ended.",
-  }),
-  shelfAtmosphericRecord: Object.freeze({
-    title: "Atmospheric record: water damage log",
-    text: "A maintenance log notes ceiling leaks, spoiled labels, and a smell of wet paper that never left.",
-  }),
-  shelfAccessRecord: Object.freeze({
-    title: "Useful record: restricted access",
-    text: "A restricted access sheet mentions cabinet R-6 and a storage key held above the V-13 shelf.",
-  }),
-  handwrittenCoordinate: Object.freeze({
-    title: "Handwritten shelf coordinate",
-    text: "A folder margin reads V-13 HIGH / LADDER LINE / KEY SEALED.",
-  }),
-  sealedStorageKey: Object.freeze({
-    title: "Sealed storage key",
-    text: "A waxed paper sleeve contains a small key stamped R-6.",
-  }),
-  cabinetPhotograph: Object.freeze({
-    title: "Photograph from cabinet R-6",
-    text: "A blurred archive table stands under a hanging lamp. The date is scratched away.",
-  }),
-  archiveAccessCard: Object.freeze({
-    title: "Archive access card",
-    text: "The card is still warm around the magnetic strip, as if it has been used recently.",
-  }),
-  removedPageNote: Object.freeze({
-    title: "Note about the removed page",
-    text: "A note says: The page that was removed must not be catalogued with the rest.",
-  }),
-  manuscriptTableReveal: Object.freeze({
-    title: "Concealed manuscript table",
-    text: "The restricted cabinet opens the darkness around the central table.",
-  }),
-  reconstructedMargin: Object.freeze({
-    title: "Reconstructed margin marks",
-    text: "The repaired page orders the archive path as staff assignment, restricted access, then the removed page.",
-  }),
-  changedShelfSymbol: Object.freeze({
-    title: "Changed archive shelf",
-    text: "The V-13 shelf has moved by itself. Behind it, the staff-assignment symbol is scratched into bare wall.",
-  }),
-  alteredPhotographSymbol: Object.freeze({
-    title: "Altered photograph",
-    text: "The photograph now shows the restricted cabinet where the manuscript table used to be.",
-  }),
-  backwardClockSymbol: Object.freeze({
-    title: "Backward-running clock",
-    text: "The desk clock runs backward. Its second hand drags the removed-page symbol through dust.",
-  }),
-  wrongDuplicateDoor: Object.freeze({
-    title: "False duplicate door",
-    text: "The wrong door folds the corridor back onto itself and changes one detail.",
-  }),
-  sealedRecordsOpened: Object.freeze({
-    title: "Sealed records section opened",
-    text: "The wall switches accepted the order: staff assignment, restricted access, removed page.",
-  }),
-  missingPageVisible: Object.freeze({
-    title: "Missing page visible",
-    text: "The missing page lies under a distant light, no longer hidden by the archive.",
-  }),
-});
-
-const DIALOGUE_DATA = Object.freeze({
-  directory: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Directory",
-        text: "LOWER EAST: ARCHIVE, RECORDS HALL, RESTRICTED STACKS. Most of the letters have lifted from the plastic.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "The archive should not still be listed. Someone kept updating the arrows after the directory died.",
-        thought: true,
-      }),
-    ]),
-  }),
-  doorLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Archive Door",
-        text: "The handle refuses to move. There is no keyhole meant for a person; this lock belongs to the electronics.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "The door is waiting for the electronics, not for me.",
-        thought: true,
-      }),
-    ]),
-  }),
-  doorPoweredLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Archive Door",
-        text: "A powered keypad watches from the frame. The door still holds shut.",
-      }),
-    ]),
-  }),
-  doorUnlocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Archive Door",
-        text: "The lock has released. Cold air presses through the seam.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "For the first time tonight, the university lets something open.",
-        thought: true,
-      }),
-    ]),
-  }),
-  lockPanelDead: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Lock Panel",
-        text: "The keypad is black. A faded diagnostic strip reads AUX POWER: CABINET B.",
-      }),
-    ]),
-  }),
-  lockNeedsClues: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Lock Panel",
-        text: "The keypad wakes, but it asks for four digits I have not earned yet.",
-      }),
-    ]),
-  }),
-  memo: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Security Memo",
-        text: "ARCHIVE ACCESS: Use the last official record year until central authentication returns.",
-      }),
-      Object.freeze({
-        speaker: "Security Memo",
-        text: "Public university records terminate in 2079. Archive access logs continue for seven years after, written by hand.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "Officially the university stopped remembering itself. Unofficially, someone kept feeding the archive.",
-        thought: true,
-      }),
-    ]),
-  }),
-  maintenanceNotice: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Maintenance Notice",
-        text: "AUXILIARY POWER: Archive keypad routed through east service cabinet. Physical key required after outages.",
-      }),
-    ]),
-  }),
-  keyCollected: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Maintenance Key",
-        text: "The key is taped under broken chair metal. Its tag reads CABINET B, not ARCHIVE.",
-      }),
-    ]),
-  }),
-  cabinetLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Electrical Cabinet",
-        text: "The cabinet has a small utility lock. It will not open by force.",
-      }),
-    ]),
-  }),
-  cabinetNeedsNotice: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Electrical Cabinet",
-        text: "The key fits, but the labels are half burned away. I need to know what this cabinet feeds before I touch it.",
-        thought: true,
-      }),
-    ]),
-  }),
-  cabinetNeedsPanel: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Electrical Cabinet",
-        text: "Before I send power anywhere, I should inspect the archive panel and make sure this is the right circuit.",
-        thought: true,
-      }),
-    ]),
-  }),
-  powerReset: Object.freeze({
-    allowEscape: false,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Electrical Cabinet",
-        text: "The reset switch snaps upward. Somewhere in the wall, relays answer one by one.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "The corridor sounds less abandoned when it remembers how to breathe.",
-        thought: true,
-      }),
-    ]),
-  }),
-  manuscriptObject: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Sealed Cart",
-        text: "The cart is chained shut. The label plate has been scraped until it shines.",
-      }),
-    ]),
-  }),
-  finalPageObject: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Loose Page",
-        text: "The page is blank except for pressure marks. Whatever wrote here pressed too hard.",
-      }),
-    ]),
-  }),
-  wrongCode: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Lock Panel",
-        text: "The keypad rejects the sequence. The red light lingers a little too long.",
-      }),
-    ]),
-  }),
-  correctCode: Object.freeze({
-    allowEscape: false,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Lock Panel",
-        text: "2079 is accepted. The archive door unlocks with a sound like a held breath leaving a room.",
-      }),
-    ]),
-  }),
-  archiveEntrance: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Voynich",
-        text: "The archive is warmer than the corridor. That makes it worse.",
-        thought: true,
-      }),
-    ]),
-  }),
-  archiveExitBlockedLater: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Archive Door",
-        text: "The doorway has folded into a flat strip of wall. It remembers being an exit, but not for me.",
-      }),
-    ]),
-  }),
-  archiveIndex: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Index Terminal",
-        text: "The terminal lists collections A through V-12. V-13 is missing, but the adjacent shelves still reserve its gap.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "Deleted from the search, not from the room.",
-        thought: true,
-      }),
-    ]),
-  }),
-  archiveIndexUnreadable: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Index Terminal",
-        text: "A dead cursor blinks beside the archive seal. The search prompt is waiting for someone who knows what to ask.",
-      }),
-    ]),
-  }),
-  shelfBeforeIndex: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Shelf Marker",
-        text: "The shelf labels mean nothing until I know what the archive refuses to list.",
-        thought: true,
-      }),
-    ]),
-  }),
-  shelfAlreadySearched: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Shelf Section",
-        text: "Only dust and duplicate folders remain here.",
-      }),
-    ]),
-  }),
-  coordinateFolderLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Loose Folder",
-        text: "The folder is wedged under a collapsed stack. I should finish checking the marked shelves first.",
-      }),
-    ]),
-  }),
-  coordinateFolder: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Loose Folder",
-        text: "Someone wrote V-13 HIGH / LADDER LINE / KEY SEALED inside the folder spine.",
-      }),
-    ]),
-  }),
-  ladderNeedsCoordinate: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Rolling Ladder",
-        text: "It moves along a fixed rail. I need a shelf coordinate before dragging it through the dark.",
-      }),
-    ]),
-  }),
-  ladderMoved: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Rolling Ladder",
-        text: "The ladder stops under the V-13 high shelf. The rail trembles after my hands leave it.",
-      }),
-    ]),
-  }),
-  highShelfNeedsLadder: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "High Shelf",
-        text: "The shelf is out of reach. The ladder rail runs directly beneath it.",
-      }),
-    ]),
-  }),
-  sealedKeyFound: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "High Shelf",
-        text: "A sealed paper sleeve drops into my hand. The key inside is tagged R-6.",
-      }),
-    ]),
-  }),
-  filingCabinetLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Filing Cabinet",
-        text: "The cabinet refuses the drawer. Its lock is stamped R-6.",
-      }),
-    ]),
-  }),
-  filingCabinetOpened: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Filing Cabinet",
-        text: "The drawer opens onto a photograph, an access card, and a note folded around an empty page slot.",
-      }),
-    ]),
-  }),
-  restrictedGateLocked: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Restricted Cabinet",
-        text: "A card reader glows behind the shelf grille. It wants something issued by the archive itself.",
-      }),
-    ]),
-  }),
-  manuscriptReveal: Object.freeze({
-    allowEscape: false,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Restricted Cabinet",
-        text: "The access card chirps once. The shelves around the center table lose their shadows.",
-      }),
-      Object.freeze({
-        speaker: "Voynich",
-        text: "There was a table here the whole time. The dark was arranged around it.",
-        thought: true,
-      }),
-    ]),
-  }),
-  manuscriptTable: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Manuscript Table",
-        text: "The glass is black with dust. Something beneath it has been waiting without becoming visible.",
-      }),
-    ]),
-  }),
-  trailerArchiveReveal: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Trailer Route",
-        text: "The archive search is compressed. The manuscript table reveal is now staged for capture.",
-      }),
-    ]),
-  }),
-  trailerReveal: Object.freeze({
-    allowEscape: true,
-    lines: Object.freeze([
-      Object.freeze({
-        speaker: "Trailer Route",
-        text: "Archive reveal state armed. Normal progression has not been changed.",
-      }),
-    ]),
-  }),
-});
+const OBJECTIVE_DATA = TEXT_CONTENT.objectives;
+const CLUE_DATA = TEXT_CONTENT.journalClues;
+const DIALOGUE_DATA = TEXT_CONTENT.dialogue;
 
 const GAME_STATES = Object.freeze({
   TITLE: "title",
   SETTINGS: "settings",
   CREDITS: "credits",
+  PROLOGUE: "prologue",
   CORRIDOR: "corridor",
   ARCHIVE: "archive",
+  RECORDS: "records",
   MANUSCRIPT: "manuscript",
   PUZZLE: "puzzle",
   DISTORTED: "distorted",
+  RING: "ring",
+  ARCHIVIST: "archivist",
+  ESCAPE: "escape",
+  CLASSROOM: "classroom",
   ENDING: "ending",
 });
 
@@ -1051,7 +686,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 78,
     height: 58,
     range: 84,
-    prompt: "Read directory",
+    prompt: TEXT_CONTENT.corridor.prompts.readDirectory,
     dialogueId: "directory",
     clueId: "directory",
     onInteract: handleDirectoryInteract,
@@ -1064,7 +699,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 30,
     height: 14,
     range: 74,
-    prompt: "Read security memo",
+    prompt: TEXT_CONTENT.corridor.prompts.readSecurityMemo,
     dialogueId: "memo",
     clueId: "securityMemo",
     onInteract: handleSecurityMemoInteract,
@@ -1088,7 +723,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 76,
     height: 34,
     range: 78,
-    prompt: "Read maintenance notice",
+    prompt: TEXT_CONTENT.corridor.prompts.readMaintenanceNotice,
     dialogueId: "maintenanceNotice",
     clueId: "maintenanceNotice",
     onInteract: handleMaintenanceNoticeInteract,
@@ -1101,7 +736,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 28,
     height: 10,
     range: 66,
-    prompt: "Take maintenance key",
+    prompt: TEXT_CONTENT.corridor.prompts.takeMaintenanceKey,
     dialogueId: "keyCollected",
     clueId: "maintenanceKey",
     isAvailable: () => !chapterProgress.maintenanceKeyCollected,
@@ -1116,6 +751,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     height: 94,
     range: 82,
     getPrompt: getElectricalCabinetPrompt,
+    requiresFlashlight: true,
     onInteract: handleElectricalCabinetInteract,
   }),
   Object.freeze({
@@ -1137,7 +773,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 70,
     height: 42,
     range: 68,
-    prompt: "Inspect sealed cart",
+    prompt: TEXT_CONTENT.corridor.prompts.inspectSealedCart,
     dialogueId: "manuscriptObject",
     onInteract: handleGenericDialogueInteract,
   }),
@@ -1149,7 +785,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 24,
     height: 10,
     range: 58,
-    prompt: "Inspect loose page",
+    prompt: TEXT_CONTENT.corridor.prompts.inspectLoosePage,
     dialogueId: "finalPageObject",
     isAvailable: () => chapterProgress.archiveDoorUnlocked,
     onInteract: handleGenericDialogueInteract,
@@ -1175,7 +811,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 42,
     height: 28,
     range: 72,
-    prompt: "Stage manuscript reveal",
+    prompt: TEXT_CONTENT.archive.prompts.stageManuscriptReveal,
     isAvailable: () => TRAILER_MODE && !archiveProgress.manuscriptTableRevealed,
     onInteract: handleTrailerArchiveRevealInteract,
   }),
@@ -1188,7 +824,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 74,
     height: 72,
     range: 78,
-    prompt: "Use index terminal",
+    prompt: TEXT_CONTENT.archive.prompts.useIndexTerminal,
     dialogueId: "archiveIndex",
     clueId: "archiveIndex",
     onInteract: handleArchiveIndexInteract,
@@ -1202,7 +838,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 92,
     height: 166,
     range: 82,
-    prompt: "Search shelf A-02",
+    prompt: TEXT_CONTENT.archive.prompts.searchShelfA02,
+    requiresFlashlight: true,
     shelfSearchId: "personnelTransfer",
     onInteract: handleArchiveShelfInteract,
   }),
@@ -1215,7 +852,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 96,
     height: 168,
     range: 82,
-    prompt: "Search shelf C-11",
+    prompt: TEXT_CONTENT.archive.prompts.searchShelfC11,
+    requiresFlashlight: true,
     shelfSearchId: "waterDamage",
     onInteract: handleArchiveShelfInteract,
   }),
@@ -1228,7 +866,9 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 104,
     height: 168,
     range: 82,
-    prompt: "Search shelf V-13",
+    prompt: TEXT_CONTENT.archive.prompts.searchShelfC13,
+    requiresFlashlight: true,
+    isAvailable: () => !archiveProgress.searchedShelves.has("restrictedAccess"),
     shelfSearchId: "restrictedAccess",
     onInteract: handleArchiveShelfInteract,
   }),
@@ -1242,6 +882,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     height: 12,
     range: 70,
     getPrompt: getCoordinateFolderPrompt,
+    requiresFlashlight: true,
     isAvailable: () => !archiveProgress.coordinateFound,
     onInteract: handleCoordinateFolderInteract,
   }),
@@ -1267,6 +908,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     height: 44,
     range: 86,
     getPrompt: getArchiveHighShelfPrompt,
+    requiresFlashlight: true,
     isAvailable: () => !archiveProgress.sealedStorageKeyCollected,
     onInteract: handleArchiveHighShelfInteract,
   }),
@@ -1303,10 +945,24 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: ARCHIVE_ROOM.TABLE_WIDTH,
     height: ARCHIVE_ROOM.TABLE_HEIGHT,
     range: 78,
-    prompt: "Inspect manuscript table",
+    prompt: TEXT_CONTENT.archive.prompts.inspectManuscriptTable,
+    requiresFlashlight: true,
     dialogueId: "manuscriptTable",
     isAvailable: () => archiveProgress.manuscriptTableRevealed,
     onInteract: handleManuscriptTableInteract,
+  }),
+  Object.freeze({
+    id: "missingPersonsWingDoor",
+    scene: GAME_STATES.ARCHIVE,
+    type: "door",
+    x: 1712,
+    y: 154,
+    width: 72,
+    height: 136,
+    range: 82,
+    prompt: TEXT_CONTENT.archive.prompts.enterMissingPersonsWing,
+    isAvailable: () => !manuscriptProgress.realityChanged,
+    onInteract: handleMissingPersonsWingDoor,
   }),
   Object.freeze({
     id: "changedShelf",
@@ -1317,7 +973,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 126,
     height: 178,
     range: 84,
-    prompt: "Inspect moved shelf",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectMovedShelf,
+    requiresFlashlight: true,
     isAvailable: () => manuscriptProgress.realityChanged,
     onInteract: handleChangedArchiveDetailInteract,
     realityDetailId: "movedShelf",
@@ -1331,7 +988,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 44,
     height: 30,
     range: 68,
-    prompt: "Inspect altered photo",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectAlteredPhoto,
+    requiresFlashlight: true,
     isAvailable: () => manuscriptProgress.realityChanged,
     onInteract: handleChangedArchiveDetailInteract,
     realityDetailId: "alteredPhotograph",
@@ -1345,7 +1003,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 30,
     height: 28,
     range: 64,
-    prompt: "Inspect backward clock",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectBackwardClock,
+    requiresFlashlight: true,
     isAvailable: () => manuscriptProgress.realityChanged,
     onInteract: handleChangedArchiveDetailInteract,
     realityDetailId: "backwardClock",
@@ -1359,7 +1018,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 76,
     height: 28,
     range: 68,
-    prompt: "Inspect wrong exit sign",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectWrongExitSign,
     isAvailable: () => manuscriptProgress.realityChanged,
     onInteract: handleOptionalArchiveChangeInteract,
     optionalDetailId: "wrongExitSign",
@@ -1373,7 +1032,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 70,
     height: 136,
     range: 78,
-    prompt: "Inspect extra door",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.inspectExtraDoor,
     isAvailable: () => manuscriptProgress.realityChanged,
     onInteract: handleOptionalArchiveChangeInteract,
     optionalDetailId: "extraArchiveDoor",
@@ -1387,7 +1046,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 70,
     height: 122,
     range: 82,
-    prompt: "Try corridor exit",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.tryCorridorExit,
     isAvailable: () => !realityProgress.archiveExitLooped,
     onInteract: handleDistortedExitLoopInteract,
   }),
@@ -1400,7 +1059,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 74,
     height: 136,
     range: 84,
-    prompt: "Open duplicate door A-02",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.openDuplicateDoorA02,
     isAvailable: () => realityProgress.archiveExitLooped && !realityProgress.correctDoorChosen,
     onInteract: handleDistortedDoorInteract,
     doorId: "falseWest",
@@ -1414,7 +1073,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 78,
     height: 140,
     range: 86,
-    prompt: "Open duplicate door V-13",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.openDuplicateDoorC13,
     isAvailable: () => realityProgress.archiveExitLooped && !realityProgress.correctDoorChosen,
     onInteract: handleDistortedDoorInteract,
     doorId: "realDoor",
@@ -1428,7 +1087,7 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 74,
     height: 134,
     range: 84,
-    prompt: "Open duplicate door R-06",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.openDuplicateDoorR06,
     isAvailable: () => realityProgress.archiveExitLooped && !realityProgress.correctDoorChosen,
     onInteract: handleDistortedDoorInteract,
     doorId: "falseEast",
@@ -1442,7 +1101,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 38,
     height: 62,
     range: 72,
-    prompt: "Activate staff switch",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.activateStaffSwitch,
+    requiresFlashlight: true,
     isAvailable: () => realityProgress.correctDoorChosen && !realityProgress.passageOpen,
     onInteract: handleDistortedWallSwitchInteract,
     switchId: "staff",
@@ -1456,7 +1116,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 38,
     height: 62,
     range: 72,
-    prompt: "Activate restricted switch",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.activateRestrictedSwitch,
+    requiresFlashlight: true,
     isAvailable: () => realityProgress.correctDoorChosen && !realityProgress.passageOpen,
     onInteract: handleDistortedWallSwitchInteract,
     switchId: "restricted",
@@ -1470,7 +1131,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 38,
     height: 62,
     range: 72,
-    prompt: "Activate removed-page switch",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.activateRemovedPageSwitch,
+    requiresFlashlight: true,
     isAvailable: () => realityProgress.correctDoorChosen && !realityProgress.passageOpen,
     onInteract: handleDistortedWallSwitchInteract,
     switchId: "removed",
@@ -1484,9 +1146,141 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     width: 42,
     height: 14,
     range: 72,
-    prompt: "Take missing page",
+    prompt: TEXT_CONTENT.distortedArchive.prompts.takeMissingPage,
+    requiresFlashlight: true,
     isAvailable: () => realityProgress.finalPageVisible && !realityProgress.finalPageCollected,
     onInteract: handleMissingPageInteract,
+  }),
+  Object.freeze({
+    id: "uncataloguedClassroomDoor",
+    scene: GAME_STATES.DISTORTED,
+    type: "door",
+    x: 1450,
+    y: 154,
+    width: 74,
+    height: 136,
+    range: 84,
+    prompt: TEXT_CONTENT.distortedArchive.prompts.enterUnmarkedClassroom,
+    isAvailable: () =>
+      realityProgress.archiveExitLooped &&
+      !realityProgress.correctDoorChosen &&
+      !classroomProgress.completed,
+    onInteract: enterUncataloguedClassroom,
+  }),
+  Object.freeze({
+    id: "recordsWingExit",
+    scene: GAME_STATES.RECORDS,
+    type: "door",
+    x: RECORDS_WORLD.ENTRANCE_X,
+    y: 166,
+    width: 70,
+    height: 124,
+    range: 80,
+    prompt: TEXT_CONTENT.recordsWing.prompts.returnToMainArchive,
+    onInteract: leaveMissingPersonsWing,
+  }),
+  ...MISSING_PERSON_CASES.map((caseData) =>
+    Object.freeze({
+      id: `missingPersonCase-${caseData.id}`,
+      scene: GAME_STATES.RECORDS,
+      type: "inspectable",
+      x: caseData.x,
+      y: 132,
+      width: 112,
+      height: 150,
+      range: 88,
+      prompt: formatText(TEXT_CONTENT.recordsWing.prompts.compareCaseFile, { name: caseData.name }),
+      onInteract: () => openMissingPersonCase(caseData.id),
+    }),
+  ),
+  Object.freeze({
+    id: "classroomExit",
+    scene: GAME_STATES.CLASSROOM,
+    type: "door",
+    x: CLASSROOM_WORLD.ENTRANCE_X,
+    y: 164,
+    width: 70,
+    height: 126,
+    range: 82,
+    prompt: TEXT_CONTENT.distortedArchive.prompts.leaveClassroom,
+    onInteract: leaveUncataloguedClassroom,
+  }),
+  Object.freeze({
+    id: "classroomRegister",
+    scene: GAME_STATES.CLASSROOM,
+    type: "inspectable",
+    x: 790,
+    y: 228,
+    width: 76,
+    height: 38,
+    range: 76,
+    prompt: TEXT_CONTENT.distortedArchive.prompts.readAttendanceRegister,
+    onInteract: inspectClassroomRegister,
+  }),
+  ...ARCHIVIST_CHAMBER.NODES.map((x, index) =>
+    Object.freeze({
+      id: `archivistNode${index}`,
+      scene: GAME_STATES.ARCHIVIST,
+      type: "switch",
+      x,
+      y: 180,
+      width: 56,
+      height: 92,
+      range: 78,
+      prompt: TEXT_CONTENT.archivist.prompts.disableCorruptedRecord,
+      requiresFlashlight: true,
+      isAvailable: () => false,
+      onInteract: () => disableCorruptedNode(index),
+    }),
+  ),
+  ...ARCHIVIST_CHAMBER.COPIES.map((x, index) =>
+    Object.freeze({
+      id: `archivistCopy${index}`,
+      scene: GAME_STATES.ARCHIVIST,
+      type: "inspectable",
+      x,
+      y: 156,
+      width: 48,
+      height: 134,
+      range: 76,
+      prompt: TEXT_CONTENT.archivist.prompts.testRevealedFigure,
+      requiresFlashlight: true,
+      isAvailable: () => false,
+      onInteract: () => testArchivistCopy(index),
+    }),
+  ),
+  ...ARCHIVIST_CHAMBER.CONTROLS.map((x, index) =>
+    Object.freeze({
+      id: `archiveLoopControl${index}`,
+      scene: GAME_STATES.ARCHIVIST,
+      type: "switch",
+      x,
+      y: 210,
+      width: 44,
+      height: 70,
+      range: 72,
+      prompt: formatText(TEXT_CONTENT.archivist.prompts.activateControl, {
+        label: ARCHIVE_SYMBOL_LABELS[ARCHIVE_SYMBOL_PATTERN[index]],
+      }),
+      requiresFlashlight: true,
+      isAvailable: () =>
+        archivistProgress.symbolInterruptionActive &&
+        !archivistProgress.bossDefeated,
+      onInteract: () => activateCombatSealControl(index),
+    }),
+  ),
+  Object.freeze({
+    id: "finalArchiveTerminal",
+    scene: GAME_STATES.ARCHIVIST,
+    type: "inspectable",
+    x: ARCHIVIST_CHAMBER.TERMINAL_X,
+    y: 174,
+    width: 72,
+    height: 108,
+    range: 82,
+    prompt: TEXT_CONTENT.archivist.prompts.inspectFinalArchiveEntry,
+    isAvailable: () => false,
+    onInteract: inspectFinalArchiveTerminal,
   }),
 ]);
 
@@ -1503,6 +1297,7 @@ const DEBUG_KEYS = Object.freeze([
   { code: "KeyC", label: "C" },
   { code: "Escape", label: "Escape" },
   { code: "Enter", label: "Enter" },
+  { code: "Space", label: "Space" },
   { code: "F2", label: "F2" },
   { code: "F8", label: "F8" },
   { code: "F10", label: "F10" },
@@ -1551,6 +1346,7 @@ const mouse = createMouseManager(canvas);
 const player = createPlayer(PLAYER_CONFIG);
 const camera = createCamera(player);
 const titleScene = createTitleScene();
+const prologueScene = createDistortedScene();
 const corridorScene = {
   time: 0,
   grainFrame: 0,
@@ -1558,15 +1354,26 @@ const corridorScene = {
   flashlightOn: true,
 };
 const archiveScene = createArchiveScene();
+const recordsScene = createDistortedScene();
 const manuscriptScene = createManuscriptScene();
 const distortedScene = createDistortedScene();
+const classroomScene = createDistortedScene();
+const archivistScene = createDistortedScene();
+const escapeScene = createDistortedScene();
 const chapterProgress = createChapterProgress();
 const archiveProgress = createArchiveProgress();
+const recordsProgress = createRecordsProgress();
 const manuscriptProgress = createManuscriptProgress();
 const realityProgress = createRealityProgress();
+const classroomProgress = createClassroomProgress();
+const circuitPuzzleState = createCircuitPuzzleState();
+const chamberRingProgress = createChamberRingProgress();
+const archivistProgress = createArchivistProgress();
+const prologueProgress = createPrologueProgress();
+const escapeProgress = createEscapeProgress();
 const dialogueState = createDialogueState();
 const objectiveState = createObjectiveState(
-  TRAILER_MODE ? "enterCode" : "findArchive",
+  TRAILER_MODE ? "enterCode" : "enterUniversity",
 );
 const journalState = {
   open: false,
@@ -1630,7 +1437,7 @@ const debug = {
 let lastFrameTime = 0;
 let isPausedForVisibility = document.hidden;
 
-audioManager.playMusic("titleTheme", { fadeSeconds: 2.6, volume: 0.34 });
+audioManager.playMusic("titleTheme", { fadeSeconds: 1.6, volume: 0.3 });
 registerAudioUnlockHandlers(audioManager);
 
 function createAudioManager(library, defaultVolumes) {
@@ -1646,7 +1453,9 @@ function createAudioManager(library, defaultVolumes) {
   const activeSfx = new Set();
   const missingAssets = new Set();
   const failedStarts = new Set();
+  const warnedAudioIssues = new Set();
   const fadeTokens = new WeakMap();
+  const lastSfxTimes = new Map();
   const volumes = {
     master: normalizeVolume(defaultVolumes.master),
     music: normalizeVolume(defaultVolumes.music),
@@ -1680,14 +1489,19 @@ function createAudioManager(library, defaultVolumes) {
   }
 
   function playSfx(key, options = {}) {
-    const path = library.sfx[key];
+    const path = getAudioPath("sfx", key);
 
-    if (!canUseAudio || !path || !unlocked) {
+    if (!canUseAudio || !path || !unlocked || isSfxOnCooldown(key)) {
       return false;
     }
 
     const element = createAudioElement(path, `sfx:${key}`, false);
-    element.volume = getChannelVolume("sfx") * normalizeVolume(options.volume ?? 1);
+    const volumeScale = getEffectiveSfxVolume(
+      key,
+      normalizeVolume(options.volume ?? getDefaultSfxVolume(key)),
+    );
+    element.volume =
+      getChannelVolume("sfx") * volumeScale;
     activeSfx.add(element);
 
     element.addEventListener("ended", () => activeSfx.delete(element), { once: true });
@@ -1722,7 +1536,7 @@ function createAudioManager(library, defaultVolumes) {
   }
 
   function startLoop(channel, key, options = {}) {
-    const path = library[channel][key];
+    const path = getAudioPath(channel, key);
 
     if (!path) {
       return false;
@@ -1739,10 +1553,25 @@ function createAudioManager(library, defaultVolumes) {
       return true;
     }
 
+    const otherChannel = channel === "music" ? "ambience" : "music";
+    const otherLoop = activeLoops[otherChannel];
+    if (channel === "music" && otherLoop?.path === path) {
+      stopLoop(channel, { fadeSeconds: options.crossfadeSeconds ?? options.fadeSeconds ?? 0.8 });
+      return true;
+    }
+    if (channel === "ambience" && otherLoop?.path === path) {
+      stopLoop(otherChannel, { fadeSeconds: options.crossfadeSeconds ?? options.fadeSeconds ?? 0.8 });
+    }
+
     stopLoop(channel, { fadeSeconds: options.crossfadeSeconds ?? options.fadeSeconds ?? 0.8 });
 
     const element = createAudioElement(path, `${channel}:${key}`, true);
-    const loop = { element, key, volumeScale: normalizeVolume(options.volume ?? 1) };
+    const loop = {
+      element,
+      key,
+      path,
+      volumeScale: normalizeVolume(options.volume ?? getDefaultLoopVolume(channel)),
+    };
 
     element.volume = 0;
     activeLoops[channel] = loop;
@@ -1777,6 +1606,10 @@ function createAudioManager(library, defaultVolumes) {
       "error",
       () => {
         missingAssets.add(assetId);
+        warnAudioOnce(
+          `load:${assetId}`,
+          `[VOYNICH audio] Failed to load ${assetId} from ${path}.`,
+        );
       },
       { once: true },
     );
@@ -1789,13 +1622,63 @@ function createAudioManager(library, defaultVolumes) {
       const playResult = element.play();
 
       if (playResult?.catch) {
-        playResult.catch(() => {
-          failedStarts.add(assetId);
+        playResult.catch((error) => {
+          markFailedStart(assetId, error);
         });
       }
-    } catch {
-      failedStarts.add(assetId);
+    } catch (error) {
+      markFailedStart(assetId, error);
     }
+  }
+
+  function getAudioPath(channel, key) {
+    const path = library[channel]?.[key];
+
+    if (!path) {
+      warnAudioOnce(
+        `missing-id:${channel}:${key}`,
+        `[VOYNICH audio] No ${channel} asset is mapped for "${key}".`,
+      );
+      return null;
+    }
+
+    return path;
+  }
+
+  function markFailedStart(assetId, error) {
+    failedStarts.add(assetId);
+    warnAudioOnce(
+      `play:${assetId}`,
+      `[VOYNICH audio] Playback failed or was blocked for ${assetId}.`,
+      error,
+    );
+  }
+
+  function warnAudioOnce(key, message, detail) {
+    if (warnedAudioIssues.has(key) || typeof console === "undefined" || !console.warn) {
+      return;
+    }
+
+    warnedAudioIssues.add(key);
+    console.warn(message, detail ?? "");
+  }
+
+  function isSfxOnCooldown(key) {
+    const cooldownSeconds = AUDIO_SFX_COOLDOWNS[key] ?? 0;
+
+    if (cooldownSeconds <= 0) {
+      return false;
+    }
+
+    const now = getNow();
+    const lastPlayedAt = lastSfxTimes.get(key) ?? -Infinity;
+
+    if (now - lastPlayedAt < cooldownSeconds * 1000) {
+      return true;
+    }
+
+    lastSfxTimes.set(key, now);
+    return false;
   }
 
   function fadeElement(element, targetVolume, seconds, onComplete) {
@@ -1898,6 +1781,38 @@ function createAudioManager(library, defaultVolumes) {
   };
 }
 
+function getDefaultLoopVolume(channel) {
+  return channel === "ambience" ? AUDIO_MIX_DEFAULTS.ambience : AUDIO_MIX_DEFAULTS.music;
+}
+
+function getDefaultSfxVolume(key) {
+  if (key === "dialogueTick") {
+    return AUDIO_MIX_DEFAULTS.dialogueTick;
+  }
+
+  if (AUDIO_UI_SFX.has(key)) {
+    return AUDIO_MIX_DEFAULTS.ui;
+  }
+
+  if (AUDIO_COMBAT_SFX.has(key)) {
+    return AUDIO_MIX_DEFAULTS.combat;
+  }
+
+  return AUDIO_MIX_DEFAULTS.effect;
+}
+
+function getEffectiveSfxVolume(key, volume) {
+  if (key === "dialogueTick") {
+    return Math.min(volume, AUDIO_MIX_DEFAULTS.dialogueTick);
+  }
+
+  if (AUDIO_UI_SFX.has(key)) {
+    return Math.min(volume, AUDIO_MIX_DEFAULTS.ui);
+  }
+
+  return volume;
+}
+
 function normalizeVolume(value) {
   return clamp(Number.isFinite(value) ? value : 1, 0, 1);
 }
@@ -1972,7 +1887,7 @@ function saveSettings() {
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
     return true;
   } catch {
-    setSettingsMessage("Settings could not be saved here.");
+    setSettingsMessage(TEXT_CONTENT.settings.messages.saveFailed);
     return false;
   }
 }
@@ -2001,7 +1916,7 @@ function updateSettingValue(settingId, value, options = {}) {
   saveSettings();
 
   if (!options.silent) {
-    setSettingsMessage("Settings saved.");
+    setSettingsMessage(TEXT_CONTENT.settings.messages.saved);
   }
 }
 
@@ -2048,7 +1963,7 @@ function requestFullscreenMode() {
   audioManager.playSfx("fullscreenToggle", { volume: 0.55 });
 
   if (typeof document === "undefined" || !document.documentElement.requestFullscreen) {
-    setSettingsMessage("Fullscreen is not available in this browser.");
+    setSettingsMessage(TEXT_CONTENT.settings.messages.fullscreenUnavailable);
     return;
   }
 
@@ -2058,12 +1973,16 @@ function requestFullscreenMode() {
 
   if (request?.then) {
     request
-      .then(() => setSettingsMessage(document.fullscreenElement ? "Fullscreen enabled." : "Fullscreen closed."))
-      .catch(() => setSettingsMessage("Fullscreen was blocked by the browser."));
+      .then(() => setSettingsMessage(
+        document.fullscreenElement
+          ? TEXT_CONTENT.settings.messages.fullscreenEnabled
+          : TEXT_CONTENT.settings.messages.fullscreenClosed,
+      ))
+      .catch(() => setSettingsMessage(TEXT_CONTENT.settings.messages.fullscreenBlocked));
     return;
   }
 
-  setSettingsMessage("Fullscreen toggled.");
+  setSettingsMessage(TEXT_CONTENT.settings.messages.fullscreenToggled);
 }
 
 function createChapterProgress() {
@@ -2075,6 +1994,8 @@ function createChapterProgress() {
     securityMemoRead: false,
     maintenanceKeyCollected: false,
     electricalCabinetOpen: false,
+    circuitPuzzleSolved: TRAILER_MODE,
+    circuitAttempts: 0,
     powerReset: TRAILER_MODE,
     archiveDoorUnlocked: false,
     archiveDoorRevealed: false,
@@ -2117,7 +2038,13 @@ function createArchiveProgress() {
     firstUsefulRecordFound: false,
     coordinateFound: false,
     ladderX: ARCHIVE_ROOM.LADDER_START_X,
+    ladderPosition: ARCHIVE_ROOM.LADDER_START_X,
     ladderMoved: false,
+    ladderLockedAtC13: false,
+    ladderSequenceActive: false,
+    ladderSequenceTimer: 0,
+    ladderClimbPhase: 0,
+    ladderPushActive: false,
     sealedStorageKeyCollected: false,
     filingCabinetUnlocked: false,
     photographFound: false,
@@ -2151,11 +2078,13 @@ function createManuscriptProgress() {
       rotation: fragment.rotation,
       placed: false,
     })),
-    selectedFragmentId: MANUSCRIPT_FRAGMENTS[0].id,
+    selectedFragmentId: null,
     draggingFragmentId: null,
     dragOffsetX: 0,
     dragOffsetY: 0,
     pageReconstructed: false,
+    manuscriptCompleted: false,
+    manuscriptPatternDiscovered: false,
     marginMarksRevealed: false,
     selectedSymbolIndex: 0,
     symbolSequence: [],
@@ -2230,6 +2159,142 @@ function createRealityProgress() {
     message: "",
     messageTimer: 0,
     musicIntensity: 0,
+    darkAttemptIndex: 0,
+  };
+}
+
+function createRecordsProgress() {
+  return {
+    entered: false,
+    solvedCases: new Set(),
+    photographedCases: new Set(),
+    activeCaseId: null,
+    selectedRecordIndex: 0,
+    errorTimer: 0,
+    completed: false,
+    message: "",
+    messageTimer: 0,
+  };
+}
+
+function createClassroomProgress() {
+  return {
+    entered: false,
+    occupants: 0,
+    previousFlashlightOn: true,
+    completed: false,
+    registerInspected: false,
+    returnX: 1450,
+    message: "",
+    messageTimer: 0,
+  };
+}
+
+function createCircuitPuzzleState() {
+  return {
+    active: false,
+    sequence: [],
+    message: "",
+    messageTimer: 0,
+    flickerTimer: 0,
+  };
+}
+
+function createChamberRingProgress() {
+  return {
+    entered: false,
+    selectedSection: 0,
+    symbols: [1, 3, 0, 2],
+    ringSolved: false,
+    inputCooldown: 0,
+    rejectionTimer: 0,
+    message: "",
+    messageTimer: 0,
+  };
+}
+
+function createArchivistProgress() {
+  return {
+    bossActive: false,
+    bossHealth: BOSS_COMBAT.MAX_HEALTH,
+    playerInvulnerable: 0,
+    manuscriptCharge: BOSS_COMBAT.MAX_CHARGE,
+    beamPulseTimer: 0,
+    beamActive: false,
+    beamSoundActive: false,
+    bossBlockedSoundCooldown: 0,
+    dodgeActive: 0,
+    dodgeCooldown: 0,
+    bossAttackState: null,
+    bossAttackCooldown: 1.8,
+    bossInvulnerable: false,
+    bossDefeated: false,
+    bossHitReaction: 0,
+    hitsSinceTeleport: 0,
+    projectiles: [],
+    spikeWarnings: [],
+    collapseWarnings: [],
+    falseCopies: [],
+    phaseTransitionTimer: 0,
+    symbolInterruptionActive: false,
+    symbolInterruptionSequence: [],
+    sealErrorTimer: 0,
+    finalStandTriggered: false,
+    playerDefeated: false,
+    defeatMenuIndex: 0,
+    tutorialTimer: 8,
+    tutorialMoved: false,
+    tutorialDodged: false,
+    tutorialAttacked: false,
+    bossStarted: false,
+    bossPhase: 1,
+    corruptedNodesDisabled: new Set(),
+    trueArchivistIdentified: false,
+    realCopyIndex: 1,
+    finalSequence: [],
+    finalSequenceSolved: false,
+    playerStability: 3,
+    stabilityCooldown: 0,
+    archivistX: 1180,
+    teleportTimer: 3.5,
+    interferenceTimer: 4,
+    interferenceActive: false,
+    interferenceDuration: 0,
+    message: "",
+    messageTimer: 0,
+    gameEnding: false,
+    endingTimer: 0,
+    finalTerminalInspected: false,
+  };
+}
+
+function createPrologueProgress() {
+  return {
+    prologueStarted: false,
+    prologueCompleted: false,
+    timer: 0,
+    controlGranted: false,
+  };
+}
+
+function createEscapeProgress() {
+  return {
+    escapeSequenceActive: false,
+    protagonistEscaped: false,
+    endingStarted: false,
+    timer: 0,
+    revealTimer: 0,
+    notificationPlayed: false,
+    debris: [],
+    debrisInvulnerability: 0,
+    detourActive: false,
+    detourCompleted: false,
+    cameraChoiceActive: false,
+    cameraChoice: null,
+    cameraChoiceIndex: 0,
+    evidencePreserved: false,
+    message: "",
+    messageTimer: 0,
   };
 }
 
@@ -2305,10 +2370,16 @@ function isInterfaceScreenState(state = gameState.current) {
 
 function isGameplayState(state = gameState.current) {
   return (
+    state === GAME_STATES.PROLOGUE ||
     state === GAME_STATES.CORRIDOR ||
     state === GAME_STATES.ARCHIVE ||
+    state === GAME_STATES.RECORDS ||
     state === GAME_STATES.MANUSCRIPT ||
-    state === GAME_STATES.DISTORTED
+    state === GAME_STATES.DISTORTED ||
+    state === GAME_STATES.CLASSROOM ||
+    state === GAME_STATES.RING ||
+    state === GAME_STATES.ARCHIVIST ||
+    state === GAME_STATES.ESCAPE
   );
 }
 
@@ -2318,17 +2389,17 @@ function shouldHideCaptureUi() {
 
 function getTitleMenuOptions() {
   const options = [
-    Object.freeze({ label: "Start", action: TITLE_MENU_ACTIONS.START }),
+    Object.freeze({ label: TEXT_CONTENT.title.menu.start, action: TITLE_MENU_ACTIONS.START }),
   ];
 
   if (runtimeSession.valid) {
-    options.push(Object.freeze({ label: "Continue", action: TITLE_MENU_ACTIONS.CONTINUE }));
+    options.push(Object.freeze({ label: TEXT_CONTENT.title.menu.continue, action: TITLE_MENU_ACTIONS.CONTINUE }));
   }
 
   options.push(
-    Object.freeze({ label: "Settings", action: TITLE_MENU_ACTIONS.SETTINGS }),
-    Object.freeze({ label: "Credits", action: TITLE_MENU_ACTIONS.CREDITS }),
-    Object.freeze({ label: "Exit", action: TITLE_MENU_ACTIONS.EXIT }),
+    Object.freeze({ label: TEXT_CONTENT.title.menu.settings, action: TITLE_MENU_ACTIONS.SETTINGS }),
+    Object.freeze({ label: TEXT_CONTENT.title.menu.credits, action: TITLE_MENU_ACTIONS.CREDITS }),
+    Object.freeze({ label: TEXT_CONTENT.title.menu.exit, action: TITLE_MENU_ACTIONS.EXIT }),
   );
 
   return options;
@@ -2392,8 +2463,8 @@ function updateEndingControls() {
 
 function getEndingMenuOptions() {
   return [
-    Object.freeze({ label: "Restart", action: ENDING_MENU_ACTIONS.RESTART }),
-    Object.freeze({ label: "Title", action: ENDING_MENU_ACTIONS.TITLE }),
+    Object.freeze({ label: TEXT_CONTENT.ending.menu.restart, action: ENDING_MENU_ACTIONS.RESTART }),
+    Object.freeze({ label: TEXT_CONTENT.ending.menu.title, action: ENDING_MENU_ACTIONS.TITLE }),
   ];
 }
 
@@ -2503,7 +2574,7 @@ function activateTitleMenuOption(option) {
 
   if (option.action === TITLE_MENU_ACTIONS.EXIT) {
     audioManager.playSfx("uiBack", { volume: 0.5 });
-    titleMenuState.exitMessage = "You may close this tab.";
+    titleMenuState.exitMessage = TEXT_CONTENT.title.exitMessage;
     titleMenuState.exitMessageTimer = 4.5;
   }
 }
@@ -2511,11 +2582,11 @@ function activateTitleMenuOption(option) {
 function startNewGameFromTitle() {
   resetRunProgressForNewGame();
   runtimeSession.valid = true;
-  runtimeSession.state = GAME_STATES.CORRIDOR;
+  runtimeSession.state = GAME_STATES.PROLOGUE;
   runtimeSession.playerX = PLAYER_CONFIG.SPAWN_X;
   runtimeSession.facing = 1;
-  startSceneTransition(GAME_STATES.CORRIDOR, {
-    spawnX: PLAYER_CONFIG.SPAWN_X,
+  startSceneTransition(GAME_STATES.PROLOGUE, {
+    spawnX: 72,
     facing: 1,
     duration: getTrailerAdjustedDuration(0.86),
     doorSfx: null,
@@ -2538,8 +2609,15 @@ function continueRuntimeSession() {
 function resetRunProgressForNewGame() {
   Object.assign(chapterProgress, createChapterProgress());
   Object.assign(archiveProgress, createArchiveProgress());
+  Object.assign(recordsProgress, createRecordsProgress());
   Object.assign(manuscriptProgress, createManuscriptProgress());
   Object.assign(realityProgress, createRealityProgress());
+  Object.assign(classroomProgress, createClassroomProgress());
+  Object.assign(circuitPuzzleState, createCircuitPuzzleState());
+  Object.assign(chamberRingProgress, createChamberRingProgress());
+  Object.assign(archivistProgress, createArchivistProgress());
+  Object.assign(prologueProgress, createPrologueProgress());
+  Object.assign(escapeProgress, createEscapeProgress());
   Object.assign(keypadState, createKeypadState());
   Object.assign(inspectOverlayState, createInspectOverlayState());
   endingState.selectedIndex = 0;
@@ -2549,7 +2627,7 @@ function resetRunProgressForNewGame() {
   closeDialogue();
   setJournalOpen(false, { silent: true });
   controlsState.open = false;
-  objectiveState.currentId = TRAILER_MODE ? "enterCode" : "findArchive";
+  objectiveState.currentId = TRAILER_MODE ? "enterCode" : "enterUniversity";
   objectiveState.completedIds = new Set();
   objectiveState.bannerTimer = 4;
   objectiveState.bannerText = OBJECTIVE_DATA[objectiveState.currentId].title;
@@ -2656,7 +2734,8 @@ function returnToTitleFromSubmenu() {
   titleMenuState.selectedIndex = 0;
   debug.showOverlay = false;
   audioManager.playSfx("uiBack", { volume: 0.5 });
-  audioManager.playMusic("titleTheme", { fadeSeconds: 1.2, volume: 0.34 });
+  audioManager.stopAmbience({ fadeSeconds: 0.8 });
+  audioManager.playMusic("titleTheme", { fadeSeconds: 1.2, volume: 0.3 });
 }
 
 function createInputManager(trackedKeys) {
@@ -2817,16 +2896,31 @@ function update(deltaSeconds) {
   updateInspectOverlayControls();
   updateObjectiveState(deltaSeconds);
   updateTransition(deltaSeconds);
+  updateCircuitPuzzle(deltaSeconds);
 
   if (gameState.current === GAME_STATES.CORRIDOR) {
     updateCorridorScene(corridorScene, deltaSeconds);
   } else if (gameState.current === GAME_STATES.ARCHIVE) {
     updateArchiveScene(archiveScene, deltaSeconds);
+  } else if (gameState.current === GAME_STATES.RECORDS) {
+    updateMissingPersonsWing(deltaSeconds);
   } else if (gameState.current === GAME_STATES.MANUSCRIPT) {
     updateManuscriptScene(manuscriptScene, deltaSeconds);
   } else if (gameState.current === GAME_STATES.DISTORTED) {
     updateDistortedScene(distortedScene, deltaSeconds);
+  } else if (gameState.current === GAME_STATES.CLASSROOM) {
+    updateUncataloguedClassroom(deltaSeconds);
+  } else if (gameState.current === GAME_STATES.RING) {
+    updateChamberRingPuzzle(deltaSeconds);
+  } else if (gameState.current === GAME_STATES.ARCHIVIST) {
+    updateArchivistEncounter(deltaSeconds);
+  } else if (gameState.current === GAME_STATES.PROLOGUE) {
+    updatePrologueScene(deltaSeconds);
+  } else if (gameState.current === GAME_STATES.ESCAPE) {
+    updateEscapeSequence(deltaSeconds);
   }
+
+  updateLadderSequence(deltaSeconds);
 
   updateInteractionPrompt();
   updatePlayer(player, deltaSeconds);
@@ -2837,8 +2931,16 @@ function update(deltaSeconds) {
 }
 
 function getCurrentWorld() {
+  if (gameState.current === GAME_STATES.PROLOGUE) {
+    return PROLOGUE_WORLD;
+  }
+
   if (gameState.current === GAME_STATES.ARCHIVE) {
     return ARCHIVE_WORLD;
+  }
+
+  if (gameState.current === GAME_STATES.RECORDS) {
+    return RECORDS_WORLD;
   }
 
   if (gameState.current === GAME_STATES.DISTORTED) {
@@ -2851,12 +2953,38 @@ function getCurrentWorld() {
     };
   }
 
+  if (gameState.current === GAME_STATES.ARCHIVIST) {
+    return {
+      WIDTH: ARCHIVIST_CHAMBER.WIDTH,
+      CAMERA_LEFT_BOUNDARY: 0,
+      CAMERA_RIGHT_BOUNDARY: ARCHIVIST_CHAMBER.WIDTH,
+      PLAYER_LEFT_BOUNDARY: 36,
+      PLAYER_RIGHT_BOUNDARY: ARCHIVIST_CHAMBER.WIDTH - 36,
+    };
+  }
+
+  if (gameState.current === GAME_STATES.CLASSROOM) {
+    return CLASSROOM_WORLD;
+  }
+
+  if (gameState.current === GAME_STATES.ESCAPE) {
+    return ESCAPE_WORLD;
+  }
+
   return WORLD;
 }
 
 function getActiveVisualScene() {
+  if (gameState.current === GAME_STATES.PROLOGUE) {
+    return prologueScene;
+  }
+
   if (gameState.current === GAME_STATES.ARCHIVE) {
     return archiveScene;
+  }
+
+  if (gameState.current === GAME_STATES.RECORDS) {
+    return recordsScene;
   }
 
   if (gameState.current === GAME_STATES.MANUSCRIPT) {
@@ -2865,6 +2993,18 @@ function getActiveVisualScene() {
 
   if (gameState.current === GAME_STATES.DISTORTED) {
     return distortedScene;
+  }
+
+  if (gameState.current === GAME_STATES.CLASSROOM) {
+    return classroomScene;
+  }
+
+  if (gameState.current === GAME_STATES.ARCHIVIST) {
+    return archivistScene;
+  }
+
+  if (gameState.current === GAME_STATES.ESCAPE) {
+    return escapeScene;
   }
 
   return corridorScene;
@@ -2902,7 +3042,10 @@ function startSceneTransition(targetState, options = {}) {
     audioManager.playSfx(options.doorSfx ?? "archiveDoorOpen");
   }
 
-  if (targetState === GAME_STATES.ARCHIVE) {
+  if (targetState === GAME_STATES.PROLOGUE) {
+    audioManager.stopAmbience({ fadeSeconds: 0.8 });
+    audioManager.stopMusic({ fadeSeconds: 0.8 });
+  } else if (targetState === GAME_STATES.ARCHIVE) {
     audioManager.stopAmbience({ fadeSeconds: 1.05 });
     audioManager.stopMusic({ fadeSeconds: 0.85 });
   } else if (targetState === GAME_STATES.CORRIDOR) {
@@ -2914,6 +3057,13 @@ function startSceneTransition(targetState, options = {}) {
   } else if (targetState === GAME_STATES.DISTORTED) {
     audioManager.stopAmbience({ fadeSeconds: 0.3 });
     audioManager.stopMusic({ fadeSeconds: 0.3 });
+  } else if (
+    targetState === GAME_STATES.RING ||
+    targetState === GAME_STATES.ARCHIVIST ||
+    targetState === GAME_STATES.ESCAPE
+  ) {
+    audioManager.stopAmbience({ fadeSeconds: 0.45 });
+    audioManager.stopMusic({ fadeSeconds: 0.45 });
   } else if (targetState === GAME_STATES.TITLE || targetState === GAME_STATES.ENDING) {
     audioManager.stopAmbience({ fadeSeconds: 0.8 });
     audioManager.stopMusic({ fadeSeconds: 0.8 });
@@ -2962,8 +3112,18 @@ function switchScene(targetState, spawnX, facing) {
     return;
   }
 
+  if (targetState === GAME_STATES.PROLOGUE) {
+    enterPrologueScene();
+    return;
+  }
+
   if (targetState === GAME_STATES.ARCHIVE) {
     enterArchiveScene();
+    return;
+  }
+
+  if (targetState === GAME_STATES.RECORDS) {
+    enterMissingPersonsWing();
     return;
   }
 
@@ -2982,6 +3142,26 @@ function switchScene(targetState, spawnX, facing) {
     return;
   }
 
+  if (targetState === GAME_STATES.CLASSROOM) {
+    enterClassroomScene();
+    return;
+  }
+
+  if (targetState === GAME_STATES.RING) {
+    enterChamberRingScene();
+    return;
+  }
+
+  if (targetState === GAME_STATES.ARCHIVIST) {
+    enterArchivistScene();
+    return;
+  }
+
+  if (targetState === GAME_STATES.ESCAPE) {
+    enterEscapeScene();
+    return;
+  }
+
   if (targetState === GAME_STATES.ENDING) {
     enterEndingScene();
   }
@@ -2989,7 +3169,16 @@ function switchScene(targetState, spawnX, facing) {
 
 function enterTitleScene() {
   audioManager.stopAmbience({ fadeSeconds: 0.8 });
-  audioManager.playMusic("titleTheme", { fadeSeconds: 1.8, volume: 0.34 });
+  audioManager.playMusic("titleTheme", { fadeSeconds: 1.2, volume: 0.3 });
+}
+
+function enterPrologueScene() {
+  prologueProgress.prologueStarted = true;
+  prologueProgress.timer = 0;
+  prologueProgress.controlGranted = false;
+  setCurrentObjective("enterUniversity");
+  audioManager.stopMusic({ fadeSeconds: 1 });
+  audioManager.playAmbience("exteriorAmbience", { fadeSeconds: 1.5, volume: 0.22 });
 }
 
 function enterArchiveScene() {
@@ -3000,10 +3189,14 @@ function enterArchiveScene() {
 
   if (manuscriptProgress.realityChanged) {
     startRealityChangeChapter();
-    audioManager.playAmbience("archiveRoomTone", { fadeSeconds: 1.6, volume: 0.12 });
+    audioManager.playAmbience("archiveRoomTone", { fadeSeconds: 1.6, volume: 0.18 });
   } else {
     setCurrentObjective(
-      archiveProgress.manuscriptTableRevealed ? "inspectManuscript" : "locateRestricted",
+      archiveProgress.manuscriptTableRevealed
+        ? "inspectManuscript"
+        : recordsProgress.completed
+          ? "locateRestricted"
+          : "investigateMissingPersons",
     );
     audioManager.playAmbience("archiveRoomTone", { fadeSeconds: 2.2, volume: 0.22 });
     audioManager.playSfx("fluorescentHum", { volume: 0.34 });
@@ -3016,8 +3209,18 @@ function enterArchiveScene() {
   }
 }
 
+function enterMissingPersonsWing() {
+  recordsProgress.entered = true;
+  recordsScene.flashlightOn = true;
+  setCurrentObjective(
+    recordsProgress.completed ? "returnFromRecordsWing" : "investigateMissingPersons",
+  );
+  audioManager.playAmbience("archiveRoomTone", { fadeSeconds: 1.2, volume: 0.22 });
+  audioManager.playMusic("archivePulse", { fadeSeconds: 1.6, volume: 0.16 });
+}
+
 function enterCorridorScene() {
-  audioManager.playAmbience("corridorRoomTone", { fadeSeconds: 1.5, volume: 0.72 });
+  audioManager.playAmbience("corridorRoomTone", { fadeSeconds: 1.5, volume: 0.22 });
   audioManager.playMusic("corridorTheme", { fadeSeconds: 2.4, volume: 0.22 });
 
   if (chapterProgress.archiveDoorUnlocked && !archiveProgress.entered) {
@@ -3038,13 +3241,22 @@ function enterDistortedCorridorScene() {
     realityProgress.correctDoorChosen ? "activateWallSwitches" : "chooseRealDoor",
   );
   distortedScene.flashlightOn = true;
-  audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.8, volume: 0.38 });
+  audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.8, volume: 0.28 });
   audioManager.playMusic("distortedPulse", {
     fadeSeconds: 2.2,
     volume: getDistortedMusicVolume(),
   });
-  audioManager.playSfx("reverseElectricalHum", { volume: 0.42 });
+  audioManager.playSfx("electricalHum", { volume: 0.42 });
   audioManager.playSfx("distantFootsteps", { volume: 0.24 });
+}
+
+function enterClassroomScene() {
+  classroomProgress.entered = true;
+  classroomProgress.previousFlashlightOn = classroomScene.flashlightOn;
+  classroomScene.flashlightOn = true;
+  realityProgress.message = TEXT_CONTENT.archivist.chamber.absentFromDirectory;
+  realityProgress.messageTimer = 3;
+  audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.2, volume: 0.28 });
 }
 
 function enterEndingScene() {
@@ -3052,7 +3264,60 @@ function enterEndingScene() {
   endingState.selectedIndex = 0;
   runtimeSession.valid = false;
   audioManager.stopAmbience({ fadeSeconds: 1 });
-  audioManager.playMusic("endingTheme", { fadeSeconds: 2.6, volume: 0.26 });
+  audioManager.playMusic("endingTheme", { fadeSeconds: 2.6, volume: 0.32 });
+}
+
+function enterChamberRingScene() {
+  chamberRingProgress.entered = true;
+  setCurrentObjective("unlockRestrictedChamber");
+  chamberRingProgress.message = TEXT_CONTENT.archivist.chamber.lockDescription;
+  chamberRingProgress.messageTimer = 4;
+  audioManager.playAmbience("reverseElectricalHum", { fadeSeconds: 1.4, volume: 0.28 });
+}
+
+function enterArchivistScene() {
+  if (!chamberRingProgress.ringSolved) {
+    gameState.set(GAME_STATES.RING);
+    enterChamberRingScene();
+    return;
+  }
+
+  resetArchivistCombat();
+  archivistProgress.bossStarted = true;
+  archivistProgress.bossActive = true;
+  archivistProgress.message = TEXT_CONTENT.archivist.messages.archivistTurns;
+  archivistProgress.messageTimer = 4;
+  setCurrentObjective("confrontArchivist");
+  audioManager.playSfx("archivistAppear", { volume: 0.72 });
+  audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.2, volume: 0.28 });
+  audioManager.playMusic("distortedPulse", { fadeSeconds: 1.4, volume: 0.3 });
+}
+
+function enterEscapeScene() {
+  escapeProgress.escapeSequenceActive = true;
+  escapeProgress.protagonistEscaped = false;
+  escapeProgress.endingStarted = false;
+  escapeProgress.timer = 0;
+  escapeProgress.revealTimer = 0;
+  escapeProgress.debris = [
+    { x: 760, timer: -1, active: 0, hit: false, hardOnly: false },
+    { x: 2720, timer: -1, active: 0, hit: false, hardOnly: false },
+    { x: 3520, timer: -1, active: 0, hit: false, hardOnly: true },
+    { x: 3820, timer: -1, active: 0, hit: false, hardOnly: true },
+  ];
+  escapeProgress.debrisInvulnerability = 0;
+  escapeProgress.detourActive = false;
+  escapeProgress.detourCompleted = false;
+  escapeProgress.cameraChoiceActive = false;
+  escapeProgress.cameraChoice = null;
+  escapeProgress.cameraChoiceIndex = 0;
+  escapeProgress.evidencePreserved = false;
+  escapeProgress.message = "";
+  escapeProgress.messageTimer = 0;
+  escapeScene.flashlightOn = true;
+  setCurrentObjective("escapeUniversity");
+  audioManager.playMusic("distortedPulse", { fadeSeconds: 0.8, volume: 0.32 });
+  audioManager.playSfx("escapeSequence", { volume: 0.66 });
 }
 
 function startRealityChangeChapter() {
@@ -3060,6 +3325,7 @@ function startRealityChangeChapter() {
     realityProgress.chapterStarted = true;
     realityProgress.archiveReturnSeen = true;
     setCurrentObjective("findMissingPage");
+    startDialogue("postManuscriptPurpose");
     return;
   }
 
@@ -3088,7 +3354,12 @@ function updateDebugControls() {
     audioManager.playSfx("debugToggle");
   }
 
-  if (isInterfaceScreenState()) {
+  if (
+    isInterfaceScreenState() ||
+    gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    gameState.current === GAME_STATES.ARCHIVIST
+  ) {
     return;
   }
 
@@ -3119,7 +3390,9 @@ function updateControlsOverlayControls() {
     !dialogueState.active &&
     !journalState.open &&
     !keypadState.active &&
-    !inspectOverlayState.active
+    !inspectOverlayState.active &&
+    recordsProgress.activeCaseId === null &&
+    !escapeProgress.cameraChoiceActive
   ) {
     controlsState.open = true;
   }
@@ -3133,8 +3406,8 @@ function updateTrailerShortcuts() {
   if (input.wasPressed("F10")) {
     cinematicCaptureActive = !cinematicCaptureActive;
     realityProgress.message = cinematicCaptureActive
-      ? "Cinematic capture enabled."
-      : "Cinematic capture disabled.";
+      ? TEXT_CONTENT.notifications.cinematicCaptureEnabled
+      : TEXT_CONTENT.notifications.cinematicCaptureDisabled;
     realityProgress.messageTimer = 2;
     audioManager.playSfx("uiSelect", { volume: 0.42 });
     return;
@@ -3175,6 +3448,7 @@ function updateTrailerShortcuts() {
   chapterProgress.securityMemoRead = true;
   chapterProgress.maintenanceKeyCollected = true;
   chapterProgress.electricalCabinetOpen = true;
+  chapterProgress.circuitPuzzleSolved = true;
   chapterProgress.powerReset = true;
   chapterProgress.archiveDoorUnlocked = true;
   chapterProgress.archiveDoorRevealed = true;
@@ -3201,6 +3475,8 @@ function updateTrailerShortcuts() {
 }
 
 function forceChangedArchiveForTrailer() {
+  manuscriptProgress.manuscriptCompleted = true;
+  manuscriptProgress.manuscriptPatternDiscovered = true;
   manuscriptProgress.solved = true;
   manuscriptProgress.realityChanged = true;
   manuscriptProgress.finalTriggered = true;
@@ -3211,7 +3487,7 @@ function forceChangedArchiveForTrailer() {
   player.x = ARCHIVE_ROOM.TABLE_X - 54;
   clampCameraToCurrentWorld(camera, player);
   startRealityChangeChapter();
-  realityProgress.message = "Trailer: changed archive forced.";
+  realityProgress.message = TEXT_CONTENT.distortedArchive.messages.trailerChangedArchiveForced;
   realityProgress.messageTimer = 2.2;
 }
 
@@ -3241,6 +3517,8 @@ function forceCorridorGlitchForTrailer() {
 }
 
 function forceFinalPageRevealForTrailer() {
+  manuscriptProgress.manuscriptCompleted = true;
+  manuscriptProgress.manuscriptPatternDiscovered = true;
   manuscriptProgress.realityChanged = true;
   realityProgress.archiveExitLooped = true;
   REALITY_CHANGE_SYMBOLS.forEach((detail) => discoverRealitySymbol(detail.id, { silent: true }));
@@ -3252,7 +3530,7 @@ function forceFinalPageRevealForTrailer() {
   gameState.set(GAME_STATES.DISTORTED);
   player.x = DISTORTED_CORRIDOR.FINAL_PAGE_X - 84;
   clampCameraToCurrentWorld(camera, player);
-  realityProgress.message = "Trailer: final page reveal forced.";
+  realityProgress.message = TEXT_CONTENT.distortedArchive.messages.trailerFinalPageRevealForced;
   realityProgress.messageTimer = 2.2;
 }
 
@@ -3271,9 +3549,14 @@ function updateDialogue(deltaSeconds) {
     );
 
     const visibleCount = Math.floor(dialogueState.visibleCharacters);
-    if (visibleCount >= dialogueState.lastTickCharacter + 3) {
+    if (
+      visibleCount < fullTextLength &&
+      visibleCount >= dialogueState.lastTickCharacter + DIALOGUE_TICK_INTERVAL_CHARACTERS
+    ) {
       dialogueState.lastTickCharacter = visibleCount;
-      audioManager.playSfx("dialogueTick", { volume: 0.36 });
+      audioManager.playSfx("dialogueTick", { volume: AUDIO_MIX_DEFAULTS.dialogueTick });
+    } else if (visibleCount >= fullTextLength) {
+      dialogueState.lastTickCharacter = visibleCount;
     }
   }
 
@@ -3292,6 +3575,8 @@ function updateJournalControls() {
     dialogueState.active ||
     keypadState.active ||
     inspectOverlayState.active ||
+    recordsProgress.activeCaseId !== null ||
+    escapeProgress.cameraChoiceActive ||
     controlsState.open ||
     transitionState.active
   ) {
@@ -3387,7 +3672,7 @@ function updateInteractionPrompt() {
 
   if (nearest && interactionState.lastPromptId !== nearest.id) {
     interactionState.lastPromptId = nearest.id;
-    audioManager.playSfx("interactionPrompt", { volume: 0.28 });
+    audioManager.playSfx("interactionPrompt", { volume: INTERACTION_PROMPT_VOLUME });
   }
 
   if (!nearest) {
@@ -3410,6 +3695,40 @@ function updateCorridorScene(scene, deltaSeconds) {
   }
 }
 
+function updatePrologueScene(deltaSeconds) {
+  prologueScene.time += deltaSeconds;
+  prologueProgress.timer += deltaSeconds;
+
+  if (
+    !prologueProgress.controlGranted &&
+    prologueProgress.timer >= 3 &&
+    (input.wasPressed("Space") || input.wasPressed("KeyE") || input.wasPressed("Enter"))
+  ) {
+    prologueProgress.controlGranted = true;
+    prologueProgress.timer = 24;
+  }
+
+  if (!prologueProgress.controlGranted && prologueProgress.timer >= 24) {
+    prologueProgress.controlGranted = true;
+  }
+
+  if (
+    prologueProgress.controlGranted &&
+    player.x >= PROLOGUE_WORLD.ENTRANCE_X &&
+    !transitionState.active
+  ) {
+    prologueProgress.prologueCompleted = true;
+    completeObjective("enterUniversity");
+    setCurrentObjective("findArchive");
+    startSceneTransition(GAME_STATES.CORRIDOR, {
+      spawnX: PLAYER_CONFIG.SPAWN_X,
+      facing: 1,
+      duration: 1,
+      doorSfx: "archiveDoorOpen",
+    });
+  }
+}
+
 function updateArchiveScene(scene, deltaSeconds) {
   scene.time += deltaSeconds;
   scene.grainTimer += deltaSeconds;
@@ -3419,6 +3738,90 @@ function updateArchiveScene(scene, deltaSeconds) {
     scene.grainTimer -= 0.08;
     scene.grainFrame = (scene.grainFrame + 3) % 997;
   }
+}
+
+function updateMissingPersonsWing(deltaSeconds) {
+  recordsScene.time += deltaSeconds;
+  recordsScene.grainTimer += deltaSeconds;
+  recordsProgress.messageTimer = Math.max(0, recordsProgress.messageTimer - deltaSeconds);
+  recordsProgress.errorTimer = Math.max(0, recordsProgress.errorTimer - deltaSeconds);
+
+  while (recordsScene.grainTimer >= 0.07) {
+    recordsScene.grainTimer -= 0.07;
+    recordsScene.grainFrame = (recordsScene.grainFrame + 9) % 997;
+  }
+
+  if (recordsProgress.activeCaseId === null) {
+    return;
+  }
+
+  const caseData = getMissingPersonCase(recordsProgress.activeCaseId);
+  if (!caseData) {
+    recordsProgress.activeCaseId = null;
+    return;
+  }
+
+  if (input.wasPressed("Escape")) {
+    recordsProgress.activeCaseId = null;
+    return;
+  }
+
+  if (input.wasPressed("ArrowUp") || input.wasPressed("KeyW")) {
+    recordsProgress.selectedRecordIndex = wrapRotation(
+      recordsProgress.selectedRecordIndex - 1,
+      caseData.records.length,
+    );
+    audioManager.playSfx("uiMove", { volume: 0.4 });
+  }
+  if (input.wasPressed("ArrowDown") || input.wasPressed("KeyS")) {
+    recordsProgress.selectedRecordIndex = wrapRotation(
+      recordsProgress.selectedRecordIndex + 1,
+      caseData.records.length,
+    );
+    audioManager.playSfx("uiMove", { volume: 0.4 });
+  }
+
+  for (let index = 0; index < caseData.records.length; index += 1) {
+    if (isMouseClickInRect(getMissingPersonRecordRect(index))) {
+      recordsProgress.selectedRecordIndex = index;
+      submitMissingPersonContradiction(caseData);
+      return;
+    }
+  }
+
+  if (input.wasPressed("KeyE") || input.wasPressed("Enter")) {
+    submitMissingPersonContradiction(caseData);
+  }
+}
+
+function updateUncataloguedClassroom(deltaSeconds) {
+  classroomScene.time += deltaSeconds;
+  classroomScene.grainTimer += deltaSeconds;
+  classroomProgress.messageTimer = Math.max(0, classroomProgress.messageTimer - deltaSeconds);
+
+  while (classroomScene.grainTimer >= 0.06) {
+    classroomScene.grainTimer -= 0.06;
+    classroomScene.grainFrame = (classroomScene.grainFrame + 13) % 997;
+  }
+
+  if (classroomProgress.previousFlashlightOn && !classroomScene.flashlightOn) {
+    classroomProgress.occupants = Math.min(4, classroomProgress.occupants + 1);
+    classroomProgress.message =
+      classroomProgress.occupants < 4
+        ? TEXT_CONTENT.distortedArchive.classroom.chairScrape
+        : TEXT_CONTENT.distortedArchive.classroom.freshInk;
+    classroomProgress.messageTimer = 2.5;
+    realityProgress.message = classroomProgress.message;
+    realityProgress.messageTimer = 2.5;
+    audioManager.playSfx("classroomShift", { volume: 0.58 });
+
+    if (classroomProgress.occupants === 4 && !classroomProgress.completed) {
+      classroomProgress.completed = true;
+      collectClue("uncataloguedAttendance");
+    }
+  }
+
+  classroomProgress.previousFlashlightOn = classroomScene.flashlightOn;
 }
 
 function updateDistortedScene(scene, deltaSeconds) {
@@ -3453,12 +3856,192 @@ function updateDistortedScene(scene, deltaSeconds) {
 
   if (realityProgress.silhouetteTimer === 0) {
     realityProgress.silhouetteActive = false;
-    audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.6, volume: 0.34 });
+    audioManager.playAmbience("distortedCorridorTone", { fadeSeconds: 1.6, volume: 0.28 });
     audioManager.playMusic("distortedPulse", {
       fadeSeconds: 1.8,
       volume: getDistortedMusicVolume(),
     });
   }
+}
+
+function updateEscapeSequence(deltaSeconds) {
+  escapeScene.time += deltaSeconds;
+  escapeScene.grainTimer += deltaSeconds;
+  escapeProgress.messageTimer = Math.max(0, escapeProgress.messageTimer - deltaSeconds);
+  escapeProgress.debrisInvulnerability = Math.max(
+    0,
+    escapeProgress.debrisInvulnerability - deltaSeconds,
+  );
+
+  while (escapeScene.grainTimer >= 0.06) {
+    escapeScene.grainTimer -= 0.06;
+    escapeScene.grainFrame = (escapeScene.grainFrame + 5) % 997;
+  }
+
+  if (!escapeProgress.protagonistEscaped) {
+    escapeProgress.timer += deltaSeconds;
+
+    if (escapeProgress.cameraChoiceActive) {
+      updateEscapeCameraChoice();
+      return;
+    }
+
+    updateEscapeDebris(deltaSeconds);
+    updateEscapeDetour();
+
+    if (player.x >= 3260 && escapeProgress.cameraChoice === null) {
+      escapeProgress.cameraChoiceActive = true;
+      escapeProgress.cameraChoiceIndex = 0;
+      player.velocityX = 0;
+      setCurrentObjective("chooseCamera");
+      return;
+    }
+
+    if (player.x >= ESCAPE_WORLD.EXIT_X && escapeProgress.cameraChoice !== null) {
+      escapeProgress.protagonistEscaped = true;
+      escapeProgress.escapeSequenceActive = false;
+      escapeProgress.revealTimer = 0;
+      player.velocityX = 0;
+      completeObjective("escapeUniversity");
+      audioManager.stopMusic({ fadeSeconds: 1.2 });
+      audioManager.playAmbience("exteriorAmbience", { fadeSeconds: 1.4, volume: 0.22 });
+    }
+    return;
+  }
+
+  escapeProgress.revealTimer += deltaSeconds;
+  if (escapeProgress.revealTimer >= 9 && !escapeProgress.notificationPlayed) {
+    escapeProgress.notificationPlayed = true;
+    audioManager.playSfx("finalNotification", { volume: 0.68 });
+  }
+
+  if (
+    escapeProgress.revealTimer >= 20 &&
+    !escapeProgress.endingStarted &&
+    !transitionState.active
+  ) {
+    escapeProgress.endingStarted = true;
+    startSceneTransition(GAME_STATES.ENDING, {
+      spawnX: player.x,
+      facing: player.facing,
+      duration: 1.5,
+      doorSfx: null,
+    });
+  }
+}
+
+function updateEscapeDetour() {
+  if (escapeProgress.detourCompleted) {
+    return;
+  }
+
+  if (!escapeProgress.detourActive && player.x >= 1540) {
+    player.x = 1540;
+    player.velocityX = 0;
+    escapeProgress.message = TEXT_CONTENT.escape.messages.corridorBuried;
+    escapeProgress.messageTimer = 2.4;
+    if (input.wasPressed("ArrowUp")) {
+      escapeProgress.detourActive = true;
+      player.y = PLAYER_CONFIG.SPAWN_Y - 68;
+      audioManager.playSfx("ladderClimb", { volume: 0.52 });
+    }
+    return;
+  }
+
+  if (escapeProgress.detourActive) {
+    player.y = PLAYER_CONFIG.SPAWN_Y - 68;
+    if (player.x >= 2110) {
+      escapeProgress.detourActive = false;
+      escapeProgress.detourCompleted = true;
+      player.y = PLAYER_CONFIG.SPAWN_Y;
+      escapeProgress.message = TEXT_CONTENT.escape.messages.bypassCollapses;
+      escapeProgress.messageTimer = 2;
+      audioManager.playSfx("debrisImpact", { volume: 0.58 });
+    }
+  }
+}
+
+function updateEscapeDebris(deltaSeconds) {
+  for (const debris of escapeProgress.debris) {
+    if (debris.resolved || (debris.hardOnly && escapeProgress.cameraChoice !== "keep")) {
+      continue;
+    }
+    if (debris.timer < 0 && Math.abs(player.x - debris.x) < 155) {
+      debris.timer = 0.9;
+      audioManager.playSfx("debrisWarning", { volume: 0.54 });
+    }
+    if (debris.timer > 0) {
+      debris.timer = Math.max(0, debris.timer - deltaSeconds);
+      if (debris.timer === 0) {
+        debris.active = 0.46;
+        audioManager.playSfx("debrisImpact", { volume: 0.62 });
+      }
+      continue;
+    }
+    if (debris.active <= 0) {
+      continue;
+    }
+
+    debris.active = Math.max(0, debris.active - deltaSeconds);
+    if (
+      !debris.hit &&
+      escapeProgress.debrisInvulnerability === 0 &&
+      Math.abs(player.x + player.width / 2 - debris.x) < 48
+    ) {
+      debris.hit = true;
+      player.x = Math.max(48, player.x - 120);
+      escapeProgress.debrisInvulnerability = 1;
+      escapeProgress.message = TEXT_CONTENT.escape.messages.debrisStrikes;
+      escapeProgress.messageTimer = 1.8;
+      manuscriptProgress.glitchTimer = 0.35;
+    }
+    if (debris.active === 0) {
+      debris.resolved = true;
+    }
+  }
+}
+
+function updateEscapeCameraChoice() {
+  if (
+    input.wasPressed("ArrowUp") ||
+    input.wasPressed("ArrowLeft") ||
+    input.wasPressed("KeyA") ||
+    input.wasPressed("ArrowDown") ||
+    input.wasPressed("ArrowRight") ||
+    input.wasPressed("KeyD")
+  ) {
+    escapeProgress.cameraChoiceIndex = 1 - escapeProgress.cameraChoiceIndex;
+    audioManager.playSfx("uiMove", { volume: 0.44 });
+  }
+
+  for (let index = 0; index < 2; index += 1) {
+    if (isMouseClickInRect(getEscapeCameraChoiceRect(index))) {
+      chooseEscapeCameraOption(index);
+      return;
+    }
+  }
+  if (input.wasPressed("KeyE") || input.wasPressed("Enter")) {
+    chooseEscapeCameraOption(escapeProgress.cameraChoiceIndex);
+  }
+}
+
+function chooseEscapeCameraOption(index) {
+  escapeProgress.cameraChoice = index === 0 ? "keep" : "drop";
+  escapeProgress.evidencePreserved = index === 0;
+  escapeProgress.cameraChoiceActive = false;
+  setCurrentObjective("escapeUniversity");
+  if (escapeProgress.evidencePreserved) {
+    escapeProgress.message = TEXT_CONTENT.escape.messages.keepCamera;
+    audioManager.playSfx("cameraShutter", { volume: 0.56 });
+  } else {
+    escapeProgress.message = TEXT_CONTENT.escape.messages.dropCamera;
+    audioManager.playSfx("cameraDrop", { volume: 0.7 });
+  }
+  escapeProgress.messageTimer = 3;
+}
+
+function getEscapeCameraChoiceRect(index) {
+  return { x: 144, y: 184 + index * 50, width: 352, height: 38 };
 }
 
 function updateManuscriptScene(scene, deltaSeconds) {
@@ -3500,6 +4083,7 @@ function updateManuscriptScene(scene, deltaSeconds) {
     dialogueState.active ||
     journalState.open ||
     keypadState.active ||
+    recordsProgress.activeCaseId !== null ||
     inspectOverlayState.active
   ) {
     return;
@@ -3515,6 +4099,11 @@ function updateManuscriptScene(scene, deltaSeconds) {
 
   if (manuscriptProgress.stage === MANUSCRIPT_STAGES.RECONSTRUCT) {
     updatePageReconstructionInput();
+    return;
+  }
+
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    updatePatternInspectionInput();
     return;
   }
 
@@ -3561,18 +4150,19 @@ function updatePageReconstructionInput() {
     const rotateLeft = getPuzzleButtonRect("rotateLeft");
     const rotateRight = getPuzzleButtonRect("rotateRight");
 
-    if (selected && isPointInRect(mouse.x, mouse.y, rotateLeft)) {
-      rotateSelectedFragment(-1);
+    if (isPointInRect(mouse.x, mouse.y, rotateLeft)) {
+      requestFragmentRotation(-1);
       return;
     }
 
-    if (selected && isPointInRect(mouse.x, mouse.y, rotateRight)) {
-      rotateSelectedFragment(1);
+    if (isPointInRect(mouse.x, mouse.y, rotateRight)) {
+      requestFragmentRotation(1);
       return;
     }
 
     const clickedFragment = getFragmentAtPoint(mouse.x, mouse.y);
     if (clickedFragment && !clickedFragment.placed) {
+      // Selection is explicit and the pointer keeps its pickup offset while dragging.
       selectFragment(clickedFragment.id);
       manuscriptProgress.draggingFragmentId = clickedFragment.id;
       manuscriptProgress.dragOffsetX = mouse.x - clickedFragment.x;
@@ -3584,8 +4174,9 @@ function updatePageReconstructionInput() {
 
   const dragging = getFragmentById(manuscriptProgress.draggingFragmentId);
   if (dragging && mouse.isDown) {
-    dragging.x = clamp(mouse.x - manuscriptProgress.dragOffsetX, 26, CANVAS_WIDTH - dragging.width - 20);
-    dragging.y = clamp(mouse.y - manuscriptProgress.dragOffsetY, 48, CANVAS_HEIGHT - dragging.height - 24);
+    dragging.x = mouse.x - manuscriptProgress.dragOffsetX;
+    dragging.y = mouse.y - manuscriptProgress.dragOffsetY;
+    clampFragmentToBoard(dragging);
   }
 
   if (dragging && mouse.justReleased) {
@@ -3615,31 +4206,35 @@ function updatePageReconstructionInput() {
 
   const moveAmount = 6;
   if (input.wasPressed("ArrowLeft") || input.wasPressed("KeyA")) {
-    selected.x = clamp(selected.x - moveAmount, 26, CANVAS_WIDTH - selected.width - 20);
+    selected.x -= moveAmount;
+    clampFragmentToBoard(selected);
     setManuscriptCooldown(0.04);
   }
 
   if (input.wasPressed("ArrowRight") || input.wasPressed("KeyD")) {
-    selected.x = clamp(selected.x + moveAmount, 26, CANVAS_WIDTH - selected.width - 20);
+    selected.x += moveAmount;
+    clampFragmentToBoard(selected);
     setManuscriptCooldown(0.04);
   }
 
   if (input.wasPressed("ArrowUp")) {
-    selected.y = clamp(selected.y - moveAmount, 48, CANVAS_HEIGHT - selected.height - 24);
+    selected.y -= moveAmount;
+    clampFragmentToBoard(selected);
     setManuscriptCooldown(0.04);
   }
 
   if (input.wasPressed("ArrowDown")) {
-    selected.y = clamp(selected.y + moveAmount, 48, CANVAS_HEIGHT - selected.height - 24);
+    selected.y += moveAmount;
+    clampFragmentToBoard(selected);
     setManuscriptCooldown(0.04);
   }
 
   if (input.wasPressed("KeyQ")) {
-    rotateSelectedFragment(-1);
+    requestFragmentRotation(-1);
   }
 
   if (input.wasPressed("KeyE")) {
-    rotateSelectedFragment(1);
+    requestFragmentRotation(1);
   }
 
   if (input.wasPressed("Enter")) {
@@ -3679,7 +4274,7 @@ function updateSymbolInterpretationInput() {
 
   if (input.wasPressed("Backspace") || input.wasPressed("KeyR")) {
     manuscriptProgress.symbolSequence = [];
-    manuscriptProgress.message = "Sequence cleared.";
+    manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.sequenceCleared;
     manuscriptProgress.messageTimer = 1.5;
     setManuscriptCooldown(0.16);
   }
@@ -3692,6 +4287,19 @@ function updateSymbolInterpretationInput() {
 
   if (input.wasPressed("Enter") || input.wasPressed("KeyE")) {
     addSymbolToSequence(MANUSCRIPT_SYMBOLS[manuscriptProgress.selectedSymbolIndex].id);
+  }
+}
+
+function updatePatternInspectionInput() {
+  if (
+    input.wasPressed("KeyE") ||
+    input.wasPressed("Enter") ||
+    isMouseClickInRect(getPatternContinueButtonRect())
+  ) {
+    manuscriptProgress.stage = MANUSCRIPT_STAGES.SYMBOLS;
+    manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.orderRepeats;
+    manuscriptProgress.messageTimer = 2;
+    audioManager.playSfx("pageMovement", { volume: 0.44 });
   }
 }
 
@@ -3765,6 +4373,10 @@ function getManuscriptObjectiveForStage() {
     return "reconstructPage";
   }
 
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    return "interpretSymbols";
+  }
+
   if (manuscriptProgress.stage === MANUSCRIPT_STAGES.SYMBOLS) {
     return "interpretSymbols";
   }
@@ -3802,20 +4414,68 @@ function selectNextFragment() {
 }
 
 function getFragmentAtPoint(x, y) {
-  for (let index = manuscriptProgress.fragments.length - 1; index >= 0; index -= 1) {
-    const fragment = manuscriptProgress.fragments[index];
+  const selected = getSelectedFragment();
+  const hitOrder = selected
+    ? [selected, ...manuscriptProgress.fragments.filter((fragment) => fragment !== selected).reverse()]
+    : [...manuscriptProgress.fragments].reverse();
 
-    if (
-      x >= fragment.x &&
-      x <= fragment.x + fragment.width &&
-      y >= fragment.y &&
-      y <= fragment.y + fragment.height
-    ) {
+  for (const fragment of hitOrder) {
+    if (isPointInFragment(x, y, fragment)) {
       return fragment;
     }
   }
 
   return null;
+}
+
+function isPointInFragment(x, y, fragment) {
+  const centerX = fragment.x + fragment.width / 2;
+  const centerY = fragment.y + fragment.height / 2;
+  const quarterTurns = wrapRotation(fragment.rotation, 4);
+  const hitWidth = quarterTurns % 2 === 0 ? fragment.width : fragment.height;
+  const hitHeight = quarterTurns % 2 === 0 ? fragment.height : fragment.width;
+
+  return (
+    x >= centerX - hitWidth / 2 &&
+    x <= centerX + hitWidth / 2 &&
+    y >= centerY - hitHeight / 2 &&
+    y <= centerY + hitHeight / 2
+  );
+}
+
+function clampFragmentToBoard(fragment) {
+  const quarterTurns = wrapRotation(fragment.rotation, 4);
+  const displayWidth = quarterTurns % 2 === 0 ? fragment.width : fragment.height;
+  const displayHeight = quarterTurns % 2 === 0 ? fragment.height : fragment.width;
+  const centerX = fragment.x + fragment.width / 2;
+  const centerY = fragment.y + fragment.height / 2;
+  const clampedCenterX = clamp(
+    centerX,
+    MANUSCRIPT_VIEW.BOARD_X + displayWidth / 2,
+    MANUSCRIPT_VIEW.BOARD_X + MANUSCRIPT_VIEW.BOARD_WIDTH - displayWidth / 2,
+  );
+  const clampedCenterY = clamp(
+    centerY,
+    MANUSCRIPT_VIEW.BOARD_Y + displayHeight / 2,
+    MANUSCRIPT_VIEW.BOARD_Y + MANUSCRIPT_VIEW.BOARD_HEIGHT - displayHeight / 2,
+  );
+
+  fragment.x = clampedCenterX - fragment.width / 2;
+  fragment.y = clampedCenterY - fragment.height / 2;
+}
+
+function requestFragmentRotation(direction) {
+  const fragment = getSelectedFragment();
+
+  if (!fragment || fragment.placed) {
+    manuscriptProgress.message = fragment?.placed
+      ? TEXT_CONTENT.manuscript.messages.fragmentLocked
+      : TEXT_CONTENT.manuscript.messages.selectFragmentFirst;
+    manuscriptProgress.messageTimer = 1.5;
+    return;
+  }
+
+  rotateSelectedFragment(direction);
 }
 
 function rotateSelectedFragment(direction) {
@@ -3825,7 +4485,9 @@ function rotateSelectedFragment(direction) {
     return;
   }
 
+  // Rotation changes only the selected fragment and preserves its center position.
   fragment.rotation = wrapRotation(fragment.rotation + direction, 4);
+  clampFragmentToBoard(fragment);
   audioManager.playSfx("pageMovement", { volume: 0.45 });
   trySnapFragment(fragment);
   setManuscriptCooldown(0.12);
@@ -3835,6 +4497,7 @@ function trySnapFragment(fragment) {
   const data = getFragmentData(fragment.id);
   const distance = Math.hypot(fragment.x - data.targetX, fragment.y - data.targetY);
 
+  // A fragment snaps only when both its board-relative target and rotation match.
   if (distance <= MANUSCRIPT_VIEW.SNAP_DISTANCE && fragment.rotation === data.targetRotation) {
     fragment.x = data.targetX;
     fragment.y = data.targetY;
@@ -3845,8 +4508,10 @@ function trySnapFragment(fragment) {
     return true;
   }
 
-  manuscriptProgress.message = "Close, but the tear and marking must both line up.";
-  manuscriptProgress.messageTimer = 1.8;
+  if (distance <= MANUSCRIPT_VIEW.SNAP_DISTANCE) {
+    manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.rotateMarking;
+    manuscriptProgress.messageTimer = 1.8;
+  }
   return false;
 }
 
@@ -3859,11 +4524,15 @@ function checkPageReconstructionCompletion() {
   }
 
   manuscriptProgress.pageReconstructed = true;
+  manuscriptProgress.manuscriptCompleted = true;
+  manuscriptProgress.manuscriptPatternDiscovered = true;
+  manuscriptProgress.draggingFragmentId = null;
   manuscriptProgress.marginMarksRevealed = true;
-  manuscriptProgress.stage = MANUSCRIPT_STAGES.SYMBOLS;
-  manuscriptProgress.message = "Margin marks surfaced in the repaired seam.";
+  manuscriptProgress.stage = MANUSCRIPT_STAGES.PATTERN;
+  manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.reconstructionComplete;
   manuscriptProgress.messageTimer = 3;
   collectClue("reconstructedMargin");
+  collectClue("manuscriptPattern");
   completeObjective("reconstructPage");
   setCurrentObjective("interpretSymbols");
   audioManager.playSfx("stageCompletion", { volume: 0.64 });
@@ -3897,7 +4566,7 @@ function checkSymbolSequence() {
     manuscriptProgress.symbolSequence = [];
     manuscriptProgress.shakeTimer = 0.42;
     manuscriptProgress.inkMotionTimer = 1.2;
-    manuscriptProgress.message = "The ink recoils. That order does not match the records.";
+    manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.incorrectSymbolOrder;
     manuscriptProgress.messageTimer = 2.5;
     audioManager.playSfx("incorrectPuzzle", { volume: 0.68 });
     setManuscriptCooldown(0.28);
@@ -3905,7 +4574,7 @@ function checkSymbolSequence() {
   }
 
   manuscriptProgress.symbolStageSolved = true;
-  manuscriptProgress.message = "The three marks hold in the margin. The last page ring can be moved.";
+  manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.symbolStageComplete;
   manuscriptProgress.messageTimer = 3;
   completeObjective("interpretSymbols");
   audioManager.playSfx("stageCompletion", { volume: 0.64 });
@@ -3936,7 +4605,7 @@ function resetRingAlignment() {
   manuscriptProgress.rings.forEach((ring) => {
     ring.rotation = 0;
   });
-  manuscriptProgress.message = "Rings reset.";
+  manuscriptProgress.message = TEXT_CONTENT.manuscript.messages.ringsReset;
   manuscriptProgress.messageTimer = 1.6;
   audioManager.playSfx("ringRotation", { volume: 0.42 });
   setManuscriptCooldown(0.2);
@@ -3968,6 +4637,7 @@ function completeManuscriptPuzzle() {
   manuscriptProgress.returnTimer = getTrailerAdjustedDuration(1.55);
   archiveProgress.manuscriptSequenceStarted = true;
   completeObjective("alignMissingPage");
+  collectClue("manuscriptControlInterface");
   setCurrentObjective("escapeDistortion");
   audioManager.stopAmbience({ fadeSeconds: 0.05 });
   audioManager.stopMusic({ fadeSeconds: 0.05 });
@@ -3987,6 +4657,11 @@ function autoCompleteCurrentManuscriptStage() {
       fragment.placed = true;
     });
     checkPageReconstructionCompletion();
+    return;
+  }
+
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    manuscriptProgress.stage = MANUSCRIPT_STAGES.SYMBOLS;
     return;
   }
 
@@ -4050,11 +4725,11 @@ function getDeveloperCompleteButtonRect() {
 
 function getPuzzleButtonRect(id) {
   if (id === "rotateLeft") {
-    return { x: 430, y: 274, width: 76, height: MANUSCRIPT_VIEW.BUTTON_HEIGHT };
+    return { x: 422, y: 258, width: 88, height: MANUSCRIPT_VIEW.BUTTON_HEIGHT };
   }
 
   if (id === "rotateRight") {
-    return { x: 518, y: 274, width: 76, height: MANUSCRIPT_VIEW.BUTTON_HEIGHT };
+    return { x: 522, y: 258, width: 88, height: MANUSCRIPT_VIEW.BUTTON_HEIGHT };
   }
 
   return { x: 0, y: 0, width: 0, height: 0 };
@@ -4071,6 +4746,10 @@ function getSymbolButtonRect(index) {
 
 function getBeginAlignmentButtonRect() {
   return { x: 426, y: 266, width: 160, height: 28 };
+}
+
+function getPatternContinueButtonRect() {
+  return { x: 438, y: 258, width: 166, height: 28 };
 }
 
 function getStageThreeBackButtonRect() {
@@ -4106,6 +4785,931 @@ function wrapRotation(value, modulo) {
   return ((value % modulo) + modulo) % modulo;
 }
 
+function updateChamberRingPuzzle(deltaSeconds) {
+  chamberRingProgress.inputCooldown = Math.max(0, chamberRingProgress.inputCooldown - deltaSeconds);
+  chamberRingProgress.rejectionTimer = Math.max(0, chamberRingProgress.rejectionTimer - deltaSeconds);
+  chamberRingProgress.messageTimer = Math.max(0, chamberRingProgress.messageTimer - deltaSeconds);
+  realityProgress.messageTimer = Math.max(0, realityProgress.messageTimer - deltaSeconds);
+
+  if (chamberRingProgress.ringSolved) {
+    if (chamberRingProgress.messageTimer === 0 && !transitionState.active) {
+      startSceneTransition(GAME_STATES.ARCHIVIST, {
+        spawnX: ARCHIVIST_CHAMBER.START_X,
+        facing: 1,
+        duration: 1.1,
+        doorSfx: null,
+      });
+    }
+    return;
+  }
+
+  if (
+    chamberRingProgress.inputCooldown > 0 ||
+    journalState.open ||
+    controlsState.open ||
+    transitionState.active
+  ) {
+    return;
+  }
+
+  for (let index = 0; index < ARCHIVE_SYMBOL_PATTERN.length; index += 1) {
+    if (isMouseClickInRect(getChamberRingSectionRect(index))) {
+      if (chamberRingProgress.selectedSection === index) {
+        cycleChamberRingSymbol(1);
+        return;
+      }
+      chamberRingProgress.selectedSection = index;
+      audioManager.playSfx("uiMove", { volume: 0.38 });
+      return;
+    }
+  }
+
+  if (input.wasPressed("ArrowLeft") || input.wasPressed("KeyA") || input.wasPressed("Tab")) {
+    chamberRingProgress.selectedSection = wrapRotation(
+      chamberRingProgress.selectedSection - 1,
+      ARCHIVE_SYMBOL_PATTERN.length,
+    );
+    return;
+  }
+
+  if (input.wasPressed("ArrowRight") || input.wasPressed("KeyD")) {
+    chamberRingProgress.selectedSection = wrapRotation(
+      chamberRingProgress.selectedSection + 1,
+      ARCHIVE_SYMBOL_PATTERN.length,
+    );
+    return;
+  }
+
+  if (input.wasPressed("KeyQ") || isMouseClickInRect(getChamberRingRotateRect(-1))) {
+    cycleChamberRingSymbol(-1);
+    return;
+  }
+
+  if (input.wasPressed("KeyE") || isMouseClickInRect(getChamberRingRotateRect(1))) {
+    cycleChamberRingSymbol(1);
+    return;
+  }
+
+  if (input.wasPressed("Enter") || isMouseClickInRect(getChamberRingEngageRect())) {
+    testChamberRingAlignment();
+  }
+}
+
+function cycleChamberRingSymbol(direction) {
+  const index = chamberRingProgress.selectedSection;
+  chamberRingProgress.symbols[index] = wrapRotation(
+    chamberRingProgress.symbols[index] + direction,
+    ARCHIVE_SYMBOL_PATTERN.length,
+  );
+  chamberRingProgress.inputCooldown = 0.1;
+  audioManager.playSfx("ringRotation", { volume: 0.5 });
+}
+
+function testChamberRingAlignment() {
+  if (!manuscriptProgress.manuscriptPatternDiscovered) {
+    chamberRingProgress.message = TEXT_CONTENT.archivist.chamber.noMeaning;
+    chamberRingProgress.messageTimer = 2.4;
+    return;
+  }
+
+  const correct = chamberRingProgress.symbols.every((symbolIndex, index) => symbolIndex === index);
+
+  if (!correct) {
+    chamberRingProgress.rejectionTimer = 0.75;
+    chamberRingProgress.message = TEXT_CONTENT.archivist.chamber.orderRecognizedNotAccepted;
+    chamberRingProgress.messageTimer = 2.4;
+    audioManager.playSfx("ringFailure", { volume: 0.58 });
+    audioManager.playSfx("lightFlicker", { volume: 0.4 });
+    return;
+  }
+
+  chamberRingProgress.ringSolved = true;
+  chamberRingProgress.message = TEXT_CONTENT.archivist.chamber.chamberOpens;
+  chamberRingProgress.messageTimer = 2.8;
+  completeObjective("unlockRestrictedChamber");
+  audioManager.playSfx("ringSuccess", { volume: 0.74 });
+  audioManager.playSfx("passageOpenBass", { volume: 0.54 });
+}
+
+function getChamberRingSectionRect(index) {
+  const positions = [
+    { x: 178, y: 68 },
+    { x: 292, y: 142 },
+    { x: 178, y: 216 },
+    { x: 64, y: 142 },
+  ];
+  return { ...positions[index], width: 92, height: 58 };
+}
+
+function getChamberRingRotateRect(direction) {
+  return direction < 0
+    ? { x: 438, y: 248, width: 78, height: 28 }
+    : { x: 526, y: 248, width: 78, height: 28 };
+}
+
+function getChamberRingEngageRect() {
+  return { x: 438, y: 286, width: 166, height: 28 };
+}
+
+function updateLegacyArchivistEncounter(deltaSeconds) {
+  archivistScene.time += deltaSeconds;
+  archivistScene.grainTimer += deltaSeconds;
+  realityProgress.messageTimer = Math.max(0, realityProgress.messageTimer - deltaSeconds);
+  archivistProgress.messageTimer = Math.max(0, archivistProgress.messageTimer - deltaSeconds);
+  archivistProgress.stabilityCooldown = Math.max(0, archivistProgress.stabilityCooldown - deltaSeconds);
+  archivistProgress.interferenceTimer -= deltaSeconds;
+
+  while (archivistScene.grainTimer >= 0.06) {
+    archivistScene.grainTimer -= 0.06;
+    archivistScene.grainFrame = (archivistScene.grainFrame + 7) % 997;
+  }
+
+  if (archivistProgress.interferenceActive) {
+    archivistProgress.interferenceDuration = Math.max(
+      0,
+      archivistProgress.interferenceDuration - deltaSeconds,
+    );
+    if (archivistProgress.interferenceDuration === 0) {
+      archivistProgress.interferenceActive = false;
+    }
+  } else if (archivistProgress.interferenceTimer <= 0 && archivistProgress.bossPhase < 4) {
+    archivistProgress.interferenceActive = true;
+    archivistProgress.interferenceDuration = 0.8;
+    archivistProgress.interferenceTimer = 4.5 + archivistProgress.bossPhase;
+    audioManager.playSfx("lightFlicker", { volume: 0.48 });
+  }
+
+  if (archivistProgress.gameEnding) {
+    archivistProgress.endingTimer = Math.max(0, archivistProgress.endingTimer - deltaSeconds);
+    const endingElapsed = 20 - archivistProgress.endingTimer;
+    archivistScene.flashlightOn =
+      !(
+        (endingElapsed > 5.5 && endingElapsed < 6.3) ||
+        (endingElapsed > 10.5 && endingElapsed < 11.7) ||
+        endingElapsed > 16
+      );
+    if (archivistProgress.endingTimer === 0 && !transitionState.active) {
+      startSceneTransition(GAME_STATES.ENDING, {
+        spawnX: player.x,
+        facing: player.facing,
+        duration: 1.4,
+        doorSfx: null,
+      });
+    }
+    return;
+  }
+
+  if (archivistProgress.bossPhase === 1) {
+    archivistProgress.teleportTimer -= deltaSeconds;
+    if (archivistProgress.teleportTimer <= 0) {
+      const positions = [180, 520, 980, 1380];
+      const current = positions.findIndex((value) => value === archivistProgress.archivistX);
+      archivistProgress.archivistX = positions[(current + 1 + archivistProgress.corruptedNodesDisabled.size) % positions.length];
+      archivistProgress.teleportTimer = 3.2;
+      archivistProgress.message = TEXT_CONTENT.archivist.messages.falsePrompt;
+      archivistProgress.messageTimer = 1.5;
+    }
+
+    if (
+      Math.abs(player.x + player.width / 2 - archivistProgress.archivistX) < 42 &&
+      archivistProgress.stabilityCooldown === 0
+    ) {
+      applyStabilityHit(TEXT_CONTENT.boss.messages.rewritesSpace);
+    }
+  }
+}
+
+function disableCorruptedNode(index) {
+  if (
+    archivistProgress.bossPhase !== 1 ||
+    archivistProgress.interferenceActive ||
+    archivistProgress.corruptedNodesDisabled.has(index)
+  ) {
+    archivistProgress.message = TEXT_CONTENT.archivist.messages.recordHidden;
+    archivistProgress.messageTimer = 1.5;
+    return;
+  }
+
+  archivistProgress.corruptedNodesDisabled.add(index);
+  audioManager.playSfx("corruptedNode", { volume: 0.62 });
+  archivistProgress.message = formatText(TEXT_CONTENT.archivist.messages.corruptedRecordsDisabled, {
+    count: archivistProgress.corruptedNodesDisabled.size,
+  });
+  archivistProgress.messageTimer = 2;
+
+  if (archivistProgress.corruptedNodesDisabled.size < 3) {
+    return;
+  }
+
+  archivistProgress.bossPhase = 2;
+  archivistProgress.realCopyIndex = 1;
+  setCurrentObjective("identifyTrueArchivist");
+  audioManager.playSfx("bossPhase", { volume: 0.65 });
+}
+
+function testArchivistCopy(index) {
+  if (archivistProgress.bossPhase !== 2 || archivistProgress.interferenceActive) {
+    return;
+  }
+
+  if (index !== archivistProgress.realCopyIndex) {
+    archivistProgress.realCopyIndex = (archivistProgress.realCopyIndex + 1) % 3;
+    applyStabilityHit(TEXT_CONTENT.boss.messages.copyCollapses);
+    return;
+  }
+
+  archivistProgress.trueArchivistIdentified = true;
+  archivistProgress.bossPhase = 3;
+  setCurrentObjective("breakUpdateLoop");
+  archivistProgress.message = TEXT_CONTENT.archivist.messages.trueSequence;
+  archivistProgress.messageTimer = 2.6;
+  audioManager.playSfx("bossPhase", { volume: 0.65 });
+}
+
+function activateArchiveLoopControl(index) {
+  if (
+    archivistProgress.bossPhase !== 3 ||
+    archivistProgress.interferenceActive ||
+    archivistProgress.finalSequenceSolved
+  ) {
+    return;
+  }
+
+  const expectedIndex = archivistProgress.finalSequence.length;
+  if (index !== expectedIndex) {
+    archivistProgress.finalSequence = [];
+    applyStabilityHit(TEXT_CONTENT.boss.messages.updateLoopRejects);
+    return;
+  }
+
+  archivistProgress.finalSequence.push(index);
+  audioManager.playSfx("wallSwitch", { volume: 0.58 });
+  archivistProgress.message = formatText(TEXT_CONTENT.archivist.messages.controlsHolding, {
+    count: archivistProgress.finalSequence.length,
+  });
+  archivistProgress.messageTimer = 1.6;
+
+  if (archivistProgress.finalSequence.length < ARCHIVE_SYMBOL_PATTERN.length) {
+    return;
+  }
+
+  archivistProgress.finalSequenceSolved = true;
+  archivistProgress.bossPhase = 4;
+  archivistProgress.archivistX = -200;
+  setCurrentObjective("inspectFinalEntry");
+  audioManager.stopMusic({ fadeSeconds: 0.7 });
+  audioManager.playSfx("archiveShutdown", { volume: 0.76 });
+  archivistProgress.message = TEXT_CONTENT.archivist.messages.updateLoopCollapses;
+  archivistProgress.messageTimer = 4;
+}
+
+function applyLegacyStabilityHit(message) {
+  if (archivistProgress.stabilityCooldown > 0 || archivistProgress.gameEnding) {
+    return;
+  }
+
+  archivistProgress.playerStability -= 1;
+  archivistProgress.stabilityCooldown = 1.4;
+  archivistProgress.message = message;
+  archivistProgress.messageTimer = 2.2;
+  player.x = clamp(player.x - player.facing * 86, 42, ARCHIVIST_CHAMBER.WIDTH - 72);
+  audioManager.playSfx("stabilityHit", { volume: 0.65 });
+
+  if (archivistProgress.playerStability > 0) {
+    return;
+  }
+
+  archivistProgress.playerStability = 3;
+  archivistProgress.bossPhase = 1;
+  archivistProgress.corruptedNodesDisabled = new Set();
+  archivistProgress.trueArchivistIdentified = false;
+  archivistProgress.finalSequence = [];
+  archivistProgress.finalSequenceSolved = false;
+  archivistProgress.archivistX = 1180;
+  player.x = ARCHIVIST_CHAMBER.START_X;
+  setCurrentObjective("disableCorruptedNodes");
+  archivistProgress.message = TEXT_CONTENT.archivist.messages.recordTears;
+  archivistProgress.messageTimer = 4;
+}
+
+function inspectFinalArchiveTerminal() {
+  if (archivistProgress.bossPhase !== 4 || archivistProgress.gameEnding) {
+    return;
+  }
+
+  archivistProgress.finalTerminalInspected = true;
+  archivistProgress.gameEnding = true;
+  archivistProgress.endingTimer = 20;
+  completeObjective("inspectFinalEntry");
+  audioManager.stopAmbience({ fadeSeconds: 2.2 });
+  audioManager.playSfx("finalPageReveal", { volume: 0.54 });
+}
+
+function resetArchivistCombat() {
+  Object.assign(archivistProgress, createArchivistProgress());
+  archivistProgress.bossStarted = true;
+  archivistProgress.bossActive = true;
+  archivistProgress.bossHealth = BOSS_COMBAT.MAX_HEALTH;
+  archivistProgress.playerStability = BOSS_COMBAT.MAX_STABILITY;
+  archivistProgress.manuscriptCharge = BOSS_COMBAT.MAX_CHARGE;
+  archivistProgress.bossPhase = 1;
+  archivistProgress.archivistX = 1180;
+  archivistProgress.attackCounter = 0;
+  archivistProgress.defeatTimer = 0;
+  archivistScene.flashlightOn = true;
+  player.x = ARCHIVIST_CHAMBER.START_X;
+  player.y = PLAYER_CONFIG.SPAWN_Y;
+  player.velocityX = 0;
+  player.facing = 1;
+  clampCameraToCurrentWorld(camera, player);
+}
+
+function updateArchivistEncounter(deltaSeconds) {
+  archivistScene.time += deltaSeconds;
+  archivistScene.grainTimer += deltaSeconds;
+  archivistProgress.messageTimer = Math.max(0, archivistProgress.messageTimer - deltaSeconds);
+  archivistProgress.playerInvulnerable = Math.max(
+    0,
+    archivistProgress.playerInvulnerable - deltaSeconds,
+  );
+  archivistProgress.dodgeActive = Math.max(0, archivistProgress.dodgeActive - deltaSeconds);
+  archivistProgress.dodgeCooldown = Math.max(0, archivistProgress.dodgeCooldown - deltaSeconds);
+  archivistProgress.bossHitReaction = Math.max(0, archivistProgress.bossHitReaction - deltaSeconds);
+  archivistProgress.beamPulseTimer = Math.max(0, archivistProgress.beamPulseTimer - deltaSeconds);
+  archivistProgress.bossBlockedSoundCooldown = Math.max(
+    0,
+    archivistProgress.bossBlockedSoundCooldown - deltaSeconds,
+  );
+  archivistProgress.sealErrorTimer = Math.max(0, archivistProgress.sealErrorTimer - deltaSeconds);
+  archivistProgress.tutorialTimer = Math.max(0, archivistProgress.tutorialTimer - deltaSeconds);
+
+  while (archivistScene.grainTimer >= 0.06) {
+    archivistScene.grainTimer -= 0.06;
+    archivistScene.grainFrame = (archivistScene.grainFrame + 7) % 997;
+  }
+
+  if (archivistProgress.playerDefeated) {
+    updateBossDefeatMenu();
+    return;
+  }
+
+  if (archivistProgress.bossDefeated) {
+    archivistProgress.defeatTimer = Math.max(0, archivistProgress.defeatTimer - deltaSeconds);
+    if (archivistProgress.defeatTimer === 0 && !transitionState.active) {
+      startSceneTransition(GAME_STATES.ESCAPE, {
+        spawnX: 72,
+        facing: 1,
+        duration: 1.2,
+        doorSfx: null,
+      });
+    }
+    return;
+  }
+
+  const movementInput = getHorizontalInput();
+  if (movementInput !== 0) {
+    archivistProgress.tutorialMoved = true;
+  }
+
+  if (input.wasPressed("Space") && archivistProgress.dodgeCooldown === 0) {
+    archivistProgress.dodgeActive = BOSS_COMBAT.DODGE_SECONDS;
+    archivistProgress.dodgeCooldown = BOSS_COMBAT.DODGE_COOLDOWN;
+    archivistProgress.playerInvulnerable = Math.max(
+      archivistProgress.playerInvulnerable,
+      BOSS_COMBAT.DODGE_SECONDS,
+    );
+    archivistProgress.tutorialDodged = true;
+    audioManager.playSfx("paperMove", { volume: 0.44 });
+  }
+
+  if (archivistProgress.dodgeActive > 0) {
+    const dodgeDirection = movementInput || player.facing || 1;
+    player.x = clamp(
+      player.x + dodgeDirection * 330 * deltaSeconds,
+      42,
+      ARCHIVIST_CHAMBER.WIDTH - 72,
+    );
+  }
+
+  updateCombatBeam(deltaSeconds);
+  updateBossProjectiles(deltaSeconds);
+  updateBossFloorHazards(deltaSeconds);
+
+  if (archivistProgress.phaseTransitionTimer > 0) {
+    archivistProgress.phaseTransitionTimer = Math.max(
+      0,
+      archivistProgress.phaseTransitionTimer - deltaSeconds,
+    );
+    if (archivistProgress.phaseTransitionTimer === 0) {
+      archivistProgress.bossInvulnerable = archivistProgress.symbolInterruptionActive;
+    }
+    return;
+  }
+
+  updateBossAttack(deltaSeconds);
+
+  if (!archivistProgress.symbolInterruptionActive) {
+    updateArchivistMovement(deltaSeconds);
+  } else if (archivistProgress.bossAttackState === null) {
+    archivistProgress.bossAttackCooldown = Math.max(
+      0,
+      archivistProgress.bossAttackCooldown - deltaSeconds,
+    );
+    if (archivistProgress.bossAttackCooldown === 0) {
+      archivistProgress.bossAttackState = {
+        type: "projectile",
+        timer: 0.82,
+        fired: false,
+      };
+      archivistProgress.bossAttackCooldown = 1.8;
+      audioManager.playSfx("bossWindup", { volume: 0.42 });
+    }
+  }
+
+  if (
+    archivistProgress.bossAttackState === null &&
+    !archivistProgress.symbolInterruptionActive
+  ) {
+    archivistProgress.bossAttackCooldown = Math.max(
+      0,
+      archivistProgress.bossAttackCooldown - deltaSeconds,
+    );
+    if (archivistProgress.bossAttackCooldown === 0) {
+      startNextBossAttack();
+    }
+  }
+}
+
+function updateCombatBeam(deltaSeconds) {
+  const wantsBeam =
+    archivistProgress.bossActive &&
+    !archivistProgress.playerDefeated &&
+    (mouse.isDown || input.isPressed("KeyE"));
+  const canBeam = wantsBeam && archivistProgress.manuscriptCharge > 0;
+  archivistProgress.beamActive = canBeam;
+
+  if (!canBeam) {
+    archivistProgress.beamSoundActive = false;
+    archivistProgress.manuscriptCharge = Math.min(
+      BOSS_COMBAT.MAX_CHARGE,
+      archivistProgress.manuscriptCharge + BOSS_COMBAT.CHARGE_REGEN_PER_SECOND * deltaSeconds,
+    );
+    return;
+  }
+
+  archivistProgress.tutorialAttacked = true;
+  if (!archivistProgress.beamSoundActive) {
+    archivistProgress.beamSoundActive = true;
+    audioManager.playSfx("chargedBeam", { volume: 0.5 });
+  }
+  player.facing = archivistProgress.archivistX >= player.x ? 1 : -1;
+  archivistProgress.manuscriptCharge = Math.max(
+    0,
+    archivistProgress.manuscriptCharge - BOSS_COMBAT.CHARGE_DRAIN_PER_SECOND * deltaSeconds,
+  );
+
+  if (archivistProgress.manuscriptCharge === 0) {
+    audioManager.playSfx("chargeEmpty", { volume: 0.48 });
+  }
+
+  if (archivistProgress.beamPulseTimer > 0) {
+    return;
+  }
+
+  archivistProgress.beamPulseTimer = BOSS_COMBAT.BEAM_PULSE_SECONDS;
+
+  const beamStart = player.x + player.width / 2;
+  const beamEnd = beamStart + player.facing * BOSS_COMBAT.BEAM_RANGE;
+  const minX = Math.min(beamStart, beamEnd);
+  const maxX = Math.max(beamStart, beamEnd);
+
+  const copyIndex = archivistProgress.falseCopies.findIndex(
+    (copyX) => copyX >= minX && copyX <= maxX,
+  );
+  if (copyIndex !== -1) {
+    archivistProgress.falseCopies.splice(copyIndex, 1);
+    audioManager.playSfx("glitchBurst", { volume: 0.34 });
+    return;
+  }
+
+  if (archivistProgress.archivistX >= minX && archivistProgress.archivistX <= maxX) {
+    damageArchivist(BOSS_COMBAT.BEAM_DAMAGE);
+  }
+}
+
+function updateArchivistMovement(deltaSeconds) {
+  if (!archivistProgress.bossActive || archivistProgress.bossAttackState?.type === "finalBeam") {
+    return;
+  }
+
+  const playerCenter = player.x + player.width / 2;
+  const distance = playerCenter - archivistProgress.archivistX;
+  const desiredDistance = archivistProgress.bossPhase === 1 ? 82 : 118;
+  const speed = archivistProgress.bossPhase === 1 ? 42 : archivistProgress.bossPhase === 2 ? 56 : 68;
+
+  if (Math.abs(distance) > desiredDistance) {
+    archivistProgress.archivistX += Math.sign(distance) * speed * deltaSeconds;
+  }
+  archivistProgress.archivistX = clamp(
+    archivistProgress.archivistX,
+    80,
+    ARCHIVIST_CHAMBER.WIDTH - 80,
+  );
+}
+
+function startNextBossAttack() {
+  const distance = Math.abs(player.x + player.width / 2 - archivistProgress.archivistX);
+  const phase = archivistProgress.bossPhase;
+  const counter = archivistProgress.attackCounter++;
+  let type;
+
+  if (distance < 120 && counter % 2 === 0) {
+    type = "slash";
+  } else if (phase >= 3 && counter % 5 === 4) {
+    type = "collapse";
+  } else if (phase >= 3 && counter % 4 === 3) {
+    type = "lightFailure";
+  } else if (phase >= 2 && counter % 3 === 2) {
+    type = "spikes";
+  } else {
+    type = "projectile";
+  }
+
+  const durations = {
+    slash: 0.78,
+    projectile: 0.82,
+    spikes: 1,
+    lightFailure: 3.2,
+    collapse: 1.25,
+  };
+  archivistProgress.bossAttackState = {
+    type,
+    timer: durations[type],
+    fired: false,
+  };
+  if (type === "projectile" && distance < 210) {
+    const retreatDirection =
+      archivistProgress.archivistX >= player.x + player.width / 2 ? 1 : -1;
+    archivistProgress.archivistX = clamp(
+      archivistProgress.archivistX + retreatDirection * 100,
+      80,
+      ARCHIVIST_CHAMBER.WIDTH - 80,
+    );
+  }
+  audioManager.playSfx("bossWindup", { volume: 0.5 });
+
+  if (type === "spikes") {
+    createSpikeWarnings();
+  } else if (type === "collapse") {
+    createCollapseWarnings();
+  }
+}
+
+function updateBossAttack(deltaSeconds) {
+  const attack = archivistProgress.bossAttackState;
+  if (!attack) {
+    return;
+  }
+
+  attack.timer = Math.max(0, attack.timer - deltaSeconds);
+
+  if (attack.type === "slash" && attack.timer <= 0.22 && !attack.fired) {
+    attack.fired = true;
+    audioManager.playSfx("recordSlash", { volume: 0.62 });
+    if (Math.abs(player.x + player.width / 2 - archivistProgress.archivistX) < 112) {
+      applyStabilityHit(TEXT_CONTENT.boss.messages.slashCuts, archivistProgress.archivistX);
+    }
+  } else if (attack.type === "projectile" && attack.timer <= 0.3 && !attack.fired) {
+    attack.fired = true;
+    const direction = player.x >= archivistProgress.archivistX ? 1 : -1;
+    archivistProgress.projectiles.push({
+      x: archivistProgress.archivistX,
+      y: 228,
+      velocityX: direction * (archivistProgress.bossPhase >= 2 ? 205 : 165),
+    });
+    audioManager.playSfx("inkProjectile", { volume: 0.58 });
+  } else if (attack.type === "lightFailure") {
+    archivistScene.flashlightOn = Math.sin(archivistScene.time * 5) > -0.45;
+  } else if (attack.type === "finalBeam" && attack.timer <= 0.28 && !attack.fired) {
+    attack.fired = true;
+    if (archivistProgress.dodgeActive === 0) {
+      applyStabilityHit(TEXT_CONTENT.boss.messages.finalRecordCloses, archivistProgress.archivistX);
+    }
+  }
+
+  if (attack.timer > 0) {
+    return;
+  }
+
+  if (attack.type === "lightFailure") {
+    archivistScene.flashlightOn = true;
+  }
+  if (attack.type === "finalBeam") {
+    archivistProgress.bossInvulnerable = false;
+    archivistProgress.message = TEXT_CONTENT.boss.messages.finalEntryExposed;
+    archivistProgress.messageTimer = 2.2;
+  }
+  archivistProgress.bossAttackState = null;
+  archivistProgress.bossAttackCooldown =
+    archivistProgress.bossPhase === 1 ? 1.4 : archivistProgress.bossPhase === 2 ? 1.1 : 0.85;
+}
+
+function updateBossProjectiles(deltaSeconds) {
+  archivistProgress.projectiles = archivistProgress.projectiles.filter((projectile) => {
+    projectile.x += projectile.velocityX * deltaSeconds;
+    if (projectile.x < 20 || projectile.x > ARCHIVIST_CHAMBER.WIDTH - 20) {
+      return false;
+    }
+    if (
+      Math.abs(projectile.x - (player.x + player.width / 2)) < 18 &&
+      archivistProgress.playerInvulnerable === 0
+    ) {
+      applyStabilityHit(TEXT_CONTENT.boss.messages.corruptedInk, projectile.x);
+      return false;
+    }
+    return true;
+  });
+}
+
+function createSpikeWarnings() {
+  const baseX = player.x;
+  archivistProgress.spikeWarnings = [-110, 30, 170].map((offset) => ({
+    x: clamp(baseX + offset, 50, ARCHIVIST_CHAMBER.WIDTH - 70),
+    timer: 0.9,
+    active: 0,
+    hit: false,
+  }));
+  audioManager.playSfx("spikeWarning", { volume: 0.48 });
+}
+
+function createCollapseWarnings() {
+  const baseX = player.x;
+  archivistProgress.collapseWarnings = [0, 240].map((offset) => ({
+    x: clamp(baseX + offset, 50, ARCHIVIST_CHAMBER.WIDTH - 90),
+    timer: 1.1,
+    active: 0,
+    hit: false,
+  }));
+  audioManager.playSfx("spikeWarning", { volume: 0.5 });
+}
+
+function updateBossFloorHazards(deltaSeconds) {
+  for (const warning of [...archivistProgress.spikeWarnings, ...archivistProgress.collapseWarnings]) {
+    if (warning.timer > 0) {
+      warning.timer = Math.max(0, warning.timer - deltaSeconds);
+      if (warning.timer === 0) {
+        warning.active = 0.36;
+      }
+    } else {
+      warning.active = Math.max(0, warning.active - deltaSeconds);
+      if (
+        warning.active > 0 &&
+        !warning.hit &&
+        Math.abs(player.x + player.width / 2 - warning.x) < 42
+      ) {
+        warning.hit = true;
+        applyStabilityHit(TEXT_CONTENT.boss.messages.floorErupts, warning.x);
+      }
+    }
+  }
+  archivistProgress.spikeWarnings = archivistProgress.spikeWarnings.filter(
+    (warning) => warning.timer > 0 || warning.active > 0,
+  );
+  archivistProgress.collapseWarnings = archivistProgress.collapseWarnings.filter(
+    (warning) => warning.timer > 0 || warning.active > 0,
+  );
+}
+
+function damageArchivist(amount) {
+  if (!archivistProgress.bossActive || archivistProgress.bossDefeated) {
+    return false;
+  }
+
+  if (archivistProgress.bossInvulnerable) {
+    playArchivistBlockedFeedback();
+    return false;
+  }
+
+  archivistProgress.bossHealth = Math.max(0, archivistProgress.bossHealth - amount);
+  archivistProgress.bossHitReaction = 0.2;
+  archivistProgress.hitsSinceTeleport += 1;
+  audioManager.playSfx("archivistHit", { volume: 0.65 });
+
+  if (archivistProgress.hitsSinceTeleport >= 4 && archivistProgress.bossHealth > 10) {
+    archivistProgress.hitsSinceTeleport = 0;
+    teleportArchivist();
+  }
+
+  if (archivistProgress.bossHealth === 0) {
+    defeatArchivist();
+    return true;
+  }
+
+  if (archivistProgress.bossPhase === 1 && archivistProgress.bossHealth <= 70) {
+    beginCombatPhaseTwo();
+  } else if (
+    archivistProgress.bossPhase === 2 &&
+    archivistProgress.bossHealth <= 35 &&
+    !archivistProgress.symbolInterruptionActive
+  ) {
+    beginSymbolInterruption();
+  } else if (
+    archivistProgress.bossPhase === 3 &&
+    archivistProgress.bossHealth <= 10 &&
+    !archivistProgress.finalStandTriggered
+  ) {
+    beginFinalStand();
+  }
+  return true;
+}
+
+function playArchivistBlockedFeedback() {
+  if (archivistProgress.bossBlockedSoundCooldown > 0) {
+    return;
+  }
+
+  archivistProgress.bossBlockedSoundCooldown = BOSS_COMBAT.BLOCKED_SOUND_COOLDOWN;
+  audioManager.playSfx("archivistBlocked", { volume: 0.55 });
+}
+
+function teleportArchivist() {
+  const previousX = archivistProgress.archivistX;
+  const behindPlayer = player.x - player.facing * 170;
+  archivistProgress.archivistX = clamp(
+    archivistProgress.bossPhase >= 2
+      ? behindPlayer
+      : archivistProgress.archivistX < ARCHIVIST_CHAMBER.WIDTH / 2
+        ? 1280
+        : 320,
+    80,
+    ARCHIVIST_CHAMBER.WIDTH - 80,
+  );
+  if (archivistProgress.bossPhase === 2) {
+    archivistProgress.falseCopies.push(previousX);
+    archivistProgress.falseCopies = archivistProgress.falseCopies.slice(-3);
+  }
+  audioManager.playSfx("archivistTeleport", { volume: 0.58 });
+}
+
+function beginCombatPhaseTwo() {
+  archivistProgress.bossPhase = 2;
+  archivistProgress.bossHealth = 70;
+  archivistProgress.bossInvulnerable = true;
+  archivistProgress.phaseTransitionTimer = 2.4;
+  archivistProgress.falseCopies = [420, 1020];
+  player.x = clamp(player.x - player.facing * 90, 42, ARCHIVIST_CHAMBER.WIDTH - 72);
+  archivistProgress.message = TEXT_CONTENT.boss.messages.observerRecord;
+  archivistProgress.messageTimer = 4;
+  audioManager.playSfx("bossPhase", { volume: 0.65 });
+  audioManager.playSfx("lightFlicker", { volume: 0.5 });
+}
+
+function beginSymbolInterruption() {
+  archivistProgress.bossHealth = 35;
+  archivistProgress.bossInvulnerable = true;
+  archivistProgress.symbolInterruptionActive = true;
+  archivistProgress.symbolInterruptionSequence = [];
+  archivistProgress.bossAttackState = null;
+  archivistProgress.bossAttackCooldown = 1.4;
+  setCurrentObjective("breakArchivistSeal");
+  archivistProgress.message = TEXT_CONTENT.boss.messages.machineSeal;
+  archivistProgress.messageTimer = 3;
+  audioManager.playSfx("bossPhase", { volume: 0.65 });
+}
+
+function activateCombatSealControl(index) {
+  if (!archivistProgress.symbolInterruptionActive || archivistProgress.playerDefeated) {
+    return;
+  }
+
+  const expected = archivistProgress.symbolInterruptionSequence.length;
+  if (index !== expected) {
+    archivistProgress.symbolInterruptionSequence = [];
+    archivistProgress.sealErrorTimer = 0.48;
+    archivistProgress.message = TEXT_CONTENT.boss.messages.sealRejects;
+    archivistProgress.messageTimer = 1.5;
+    audioManager.playSfx("ringFailure", { volume: 0.44 });
+    return;
+  }
+
+  archivistProgress.symbolInterruptionSequence.push(index);
+  audioManager.playSfx("wallSwitch", { volume: 0.54 });
+  if (archivistProgress.symbolInterruptionSequence.length < 4) {
+    return;
+  }
+
+  archivistProgress.symbolInterruptionActive = false;
+  archivistProgress.bossInvulnerable = false;
+  archivistProgress.bossPhase = 3;
+  archivistProgress.falseCopies = [];
+  archivistProgress.bossAttackCooldown = 1.1;
+  setCurrentObjective("confrontArchivist");
+  archivistProgress.message = TEXT_CONTENT.boss.messages.sealBreaks;
+  archivistProgress.messageTimer = 2.5;
+  audioManager.playSfx("bossPhase", { volume: 0.65 });
+}
+
+function beginFinalStand() {
+  archivistProgress.finalStandTriggered = true;
+  archivistProgress.bossHealth = 10;
+  archivistProgress.bossInvulnerable = true;
+  archivistProgress.bossAttackState = {
+    type: "finalBeam",
+    timer: 1.65,
+    fired: false,
+  };
+  archivistProgress.message = TEXT_CONTENT.boss.messages.finalRecordCharging;
+  archivistProgress.messageTimer = 2;
+  audioManager.playSfx("bossWindup", { volume: 0.65 });
+}
+
+function applyStabilityHit(message, sourceX = archivistProgress.archivistX) {
+  if (
+    archivistProgress.playerInvulnerable > 0 ||
+    archivistProgress.playerDefeated ||
+    archivistProgress.bossDefeated
+  ) {
+    return false;
+  }
+
+  archivistProgress.playerStability = Math.max(0, archivistProgress.playerStability - 1);
+  archivistProgress.playerInvulnerable = 1;
+  archivistProgress.message = message;
+  archivistProgress.messageTimer = 1.8;
+  const pushDirection = player.x + player.width / 2 >= sourceX ? 1 : -1;
+  player.x = clamp(player.x + pushDirection * 72, 42, ARCHIVIST_CHAMBER.WIDTH - 72);
+  audioManager.playSfx("stabilityHit", { volume: 0.65 });
+  manuscriptProgress.glitchTimer = 0.45;
+
+  if (archivistProgress.playerStability === 0) {
+    archivistProgress.playerDefeated = true;
+    archivistProgress.bossActive = false;
+    archivistProgress.beamActive = false;
+    audioManager.stopMusic({ fadeSeconds: 0.7 });
+  }
+  return true;
+}
+
+function defeatArchivist() {
+  archivistProgress.bossHealth = 0;
+  archivistProgress.bossActive = false;
+  archivistProgress.bossDefeated = true;
+  archivistProgress.bossInvulnerable = true;
+  archivistProgress.beamActive = false;
+  archivistProgress.defeatTimer = 6;
+  archivistProgress.message = TEXT_CONTENT.boss.messages.cannotLeave;
+  archivistProgress.messageTimer = 6;
+  completeObjective("confrontArchivist");
+  audioManager.stopMusic({ fadeSeconds: 1 });
+  audioManager.playSfx("archivistDefeat", { volume: 0.7 });
+  audioManager.playSfx("archiveShutdown", { volume: 0.64 });
+}
+
+function updateBossDefeatMenu() {
+  if (
+    input.wasPressed("ArrowUp") ||
+    input.wasPressed("ArrowLeft") ||
+    input.wasPressed("KeyA") ||
+    input.wasPressed("ArrowDown") ||
+    input.wasPressed("ArrowRight") ||
+    input.wasPressed("KeyD")
+  ) {
+    archivistProgress.defeatMenuIndex = 1 - archivistProgress.defeatMenuIndex;
+  }
+
+  if (input.wasPressed("KeyE") || input.wasPressed("Enter")) {
+    activateBossDefeatOption(archivistProgress.defeatMenuIndex);
+  }
+
+  if (mouse.justPressed) {
+    for (let index = 0; index < 2; index += 1) {
+      if (isPointInRect(mouse.x, mouse.y, getBossDefeatButtonRect(index))) {
+        activateBossDefeatOption(index);
+      }
+    }
+  }
+}
+
+function activateBossDefeatOption(index) {
+  if (index === 0) {
+    resetArchivistCombat();
+    setCurrentObjective("confrontArchivist");
+    audioManager.playMusic("distortedPulse", { fadeSeconds: 0.8, volume: 0.3 });
+    return;
+  }
+
+  startSceneTransition(GAME_STATES.TITLE, {
+    spawnX: PLAYER_CONFIG.SPAWN_X,
+    facing: 1,
+    duration: 0.9,
+    doorSfx: null,
+  });
+}
+
+function getBossDefeatButtonRect(index) {
+  return { x: 220, y: 224 + index * 38, width: 200, height: 30 };
+}
+
 function updatePlayer(target, deltaSeconds) {
   if (isMovementPaused()) {
     target.velocityX = 0;
@@ -4119,7 +5723,9 @@ function updatePlayer(target, deltaSeconds) {
   const speedScale =
     gameState.current === GAME_STATES.DISTORTED && realityProgress.silhouetteActive
       ? 0.46
-      : 1;
+      : gameState.current === GAME_STATES.ESCAPE && escapeProgress.cameraChoice === "drop"
+        ? 1.18
+        : 1;
   const targetVelocityX = movementInput * PLAYER_CONFIG.SPEED * speedScale;
 
   if (movementInput !== 0) {
@@ -4163,8 +5769,18 @@ function isMovementPaused() {
     journalState.open ||
     keypadState.active ||
     inspectOverlayState.active ||
+    recordsProgress.activeCaseId !== null ||
     controlsState.open ||
     gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    (gameState.current === GAME_STATES.PROLOGUE && !prologueProgress.controlGranted) ||
+    (gameState.current === GAME_STATES.ESCAPE && escapeProgress.protagonistEscaped) ||
+    escapeProgress.cameraChoiceActive ||
+    archivistProgress.playerDefeated ||
+    archiveProgress.ladderSequenceActive ||
+    archiveProgress.ladderPushActive ||
+    circuitPuzzleState.active ||
+    archivistProgress.gameEnding ||
     transitionState.active
   );
 }
@@ -4173,12 +5789,21 @@ function shouldShowInteractionPrompt() {
   return (
     (gameState.current === GAME_STATES.CORRIDOR ||
       gameState.current === GAME_STATES.ARCHIVE ||
-      gameState.current === GAME_STATES.DISTORTED) &&
+      gameState.current === GAME_STATES.RECORDS ||
+      gameState.current === GAME_STATES.DISTORTED ||
+      gameState.current === GAME_STATES.CLASSROOM ||
+      gameState.current === GAME_STATES.ARCHIVIST) &&
     !dialogueState.active &&
     !journalState.open &&
     !keypadState.active &&
     !inspectOverlayState.active &&
+    recordsProgress.activeCaseId === null &&
     !controlsState.open &&
+    !circuitPuzzleState.active &&
+    !archiveProgress.ladderSequenceActive &&
+    !archiveProgress.ladderPushActive &&
+    !archivistProgress.gameEnding &&
+    !archivistProgress.playerDefeated &&
     !transitionState.active
   );
 }
@@ -4252,6 +5877,15 @@ function interactWith(definition) {
     return false;
   }
 
+  if (definition.requiresFlashlight && !getActiveVisualScene().flashlightOn) {
+    const darknessLines = TEXT_CONTENT.notifications.darknessLines;
+    realityProgress.message =
+      darknessLines[realityProgress.darkAttemptIndex % darknessLines.length];
+    realityProgress.darkAttemptIndex += 1;
+    realityProgress.messageTimer = 2;
+    return false;
+  }
+
   if (typeof definition.onInteract === "function") {
     definition.onInteract(definition);
     return true;
@@ -4272,7 +5906,7 @@ function handleDirectoryInteract(definition) {
 
 function handleSecurityMemoInteract(definition) {
   chapterProgress.securityMemoRead = true;
-  collectClue(definition.clueId);
+  collectClue(definition.clueId, { soundVolume: 0.1 });
   startDialogue(definition.dialogueId);
   if (chapterProgress.powerReset && hasRequiredNormalInvestigation()) {
     setCurrentObjective("enterCode");
@@ -4322,18 +5956,91 @@ function handleElectricalCabinetInteract() {
     return;
   }
 
-  if (chapterProgress.powerReset) {
+  if (chapterProgress.circuitPuzzleSolved) {
     setCurrentObjective(getNextCodeObjectiveId());
     startDialogue("powerReset");
     return;
   }
 
   chapterProgress.electricalCabinetOpen = true;
+  collectClue("circuitRoutingNote");
+  circuitPuzzleState.active = true;
+  circuitPuzzleState.sequence = [];
+  circuitPuzzleState.message = TEXT_CONTENT.corridor.breaker.initialMessage;
+  circuitPuzzleState.messageTimer = 3;
+  setCurrentObjective("resetPower");
+}
+
+function updateCircuitPuzzle(deltaSeconds) {
+  if (!circuitPuzzleState.active) {
+    return;
+  }
+
+  circuitPuzzleState.messageTimer = Math.max(0, circuitPuzzleState.messageTimer - deltaSeconds);
+  circuitPuzzleState.flickerTimer = Math.max(0, circuitPuzzleState.flickerTimer - deltaSeconds);
+
+  if (chapterProgress.circuitPuzzleSolved && circuitPuzzleState.messageTimer === 0) {
+    circuitPuzzleState.active = false;
+    return;
+  }
+
+  if (input.wasPressed("Escape")) {
+    circuitPuzzleState.active = false;
+    return;
+  }
+
+  for (let index = 0; index < CIRCUIT_SEQUENCE.length; index += 1) {
+    if (isMouseClickInRect(getCircuitSwitchRect(index))) {
+      activateCircuitSwitch(CIRCUIT_SEQUENCE[index]);
+      return;
+    }
+  }
+}
+
+function activateCircuitSwitch(switchId) {
+  if (circuitPuzzleState.sequence.includes(switchId)) {
+    return;
+  }
+
+  const expected = CIRCUIT_SEQUENCE[circuitPuzzleState.sequence.length];
+  audioManager.playSfx("circuitSwitch", { volume: 0.56 });
+
+  if (switchId !== expected) {
+    chapterProgress.circuitAttempts += 1;
+    circuitPuzzleState.sequence = [];
+    circuitPuzzleState.flickerTimer = 0.7;
+    circuitPuzzleState.message =
+      chapterProgress.circuitAttempts >= 3
+        ? TEXT_CONTENT.corridor.breaker.indicatorMessage
+        : TEXT_CONTENT.corridor.breaker.rejectionMessage;
+    circuitPuzzleState.messageTimer = 2.5;
+    audioManager.playSfx("circuitWrong", { volume: 0.62 });
+    audioManager.playSfx("lightFlicker", { volume: 0.42 });
+    return;
+  }
+
+  circuitPuzzleState.sequence.push(switchId);
+  circuitPuzzleState.message = formatText(TEXT_CONTENT.corridor.breaker.progressTemplate, {
+    count: circuitPuzzleState.sequence.length,
+  });
+  circuitPuzzleState.messageTimer = 1.4;
+
+  if (circuitPuzzleState.sequence.length !== CIRCUIT_SEQUENCE.length) {
+    return;
+  }
+
+  chapterProgress.circuitPuzzleSolved = true;
   chapterProgress.powerReset = true;
   collectClue("powerReset");
-  audioManager.playSfx("powerReturn");
-  startDialogue("powerReset");
+  completeObjective("resetPower");
   setCurrentObjective(getNextCodeObjectiveId());
+  circuitPuzzleState.message = TEXT_CONTENT.corridor.breaker.restoredMessage;
+  circuitPuzzleState.messageTimer = 3;
+  audioManager.playSfx("powerReturn", { volume: 0.72 });
+}
+
+function getCircuitSwitchRect(index) {
+  return { x: 122 + index * 104, y: 142, width: 82, height: 86 };
 }
 
 function handleLockPanelInteract() {
@@ -4396,7 +6103,7 @@ function handleArchiveExitInteract() {
     }
 
     if (realityProgress.discoveredSymbols.size < REALITY_CHANGE_SYMBOLS.length) {
-      realityProgress.message = "The exit sign points away from itself. Three changes still need names.";
+      realityProgress.message = TEXT_CONTENT.distortedArchive.messages.exitSignPointsAway;
       realityProgress.messageTimer = 3;
       setCurrentObjective("noticeArchiveChanges");
       audioManager.playSfx("corridorLoop", { volume: 0.48 });
@@ -4426,16 +6133,133 @@ function handleArchiveExitInteract() {
   });
 }
 
+function handleMissingPersonsWingDoor() {
+  startSceneTransition(GAME_STATES.RECORDS, {
+    spawnX: RECORDS_WORLD.ENTRANCE_X + 54,
+    facing: 1,
+    duration: 0.72,
+    doorSfx: "archiveDoorOpen",
+  });
+}
+
+function enterUncataloguedClassroom() {
+  classroomProgress.returnX = player.x;
+  startSceneTransition(GAME_STATES.CLASSROOM, {
+    spawnX: CLASSROOM_WORLD.ENTRANCE_X + 56,
+    facing: 1,
+    duration: 0.72,
+    doorSfx: "falseDoor",
+  });
+}
+
+function leaveMissingPersonsWing() {
+  startSceneTransition(GAME_STATES.ARCHIVE, {
+    spawnX: 1690,
+    facing: -1,
+    duration: 0.72,
+    doorSfx: "archiveDoorOpen",
+  });
+}
+
+function leaveUncataloguedClassroom() {
+  startSceneTransition(GAME_STATES.DISTORTED, {
+    spawnX: classroomProgress.returnX,
+    facing: -1,
+    duration: 0.72,
+    doorSfx: "falseDoor",
+  });
+}
+
+function getMissingPersonCase(caseId) {
+  return MISSING_PERSON_CASES.find((caseData) => caseData.id === caseId) ?? null;
+}
+
+function openMissingPersonCase(caseId) {
+  const caseData = getMissingPersonCase(caseId);
+  if (!caseData) {
+    return;
+  }
+
+  if (recordsProgress.solvedCases.has(caseId)) {
+    const clue = getJournalClue(caseData.clueId);
+    showInspectOverlay(clue.title, clue.text, caseData.clueId);
+    return;
+  }
+
+  recordsProgress.activeCaseId = caseId;
+  recordsProgress.selectedRecordIndex = 0;
+  recordsProgress.errorTimer = 0;
+}
+
+function submitMissingPersonContradiction(caseData) {
+  if (recordsProgress.selectedRecordIndex !== caseData.correctIndex) {
+    recordsProgress.errorTimer = 0.48;
+    recordsProgress.message = TEXT_CONTENT.recordsWing.messages.selectedCanCoexist;
+    recordsProgress.messageTimer = 2;
+    audioManager.playSfx("recordContradiction", { volume: 0.7 });
+    return;
+  }
+
+  recordsProgress.solvedCases.add(caseData.id);
+  recordsProgress.photographedCases.add(caseData.id);
+  recordsProgress.activeCaseId = null;
+  collectClue(caseData.clueId);
+  if (caseData.id === "jonah") {
+    collectClue("jonahAlignmentLog");
+  }
+  audioManager.playSfx("cameraShutter", { volume: 0.68 });
+  recordsProgress.message = formatText(TEXT_CONTENT.recordsWing.messages.contradictionPreserved, {
+    name: caseData.name,
+  });
+  recordsProgress.messageTimer = 2.4;
+  realityProgress.message = recordsProgress.message;
+  realityProgress.messageTimer = 2.4;
+
+  if (recordsProgress.solvedCases.size === MISSING_PERSON_CASES.length) {
+    recordsProgress.completed = true;
+    completeObjective("investigateMissingPersons");
+    setCurrentObjective("returnFromRecordsWing");
+  }
+
+  if (caseData.id === "jonah") {
+    showInspectOverlay(
+      TEXT_CONTENT.distortedArchive.overlays.jonahEmergencyTitle,
+      TEXT_CONTENT.distortedArchive.overlays.jonahEmergencyText,
+      null,
+    );
+  }
+}
+
+function inspectClassroomRegister() {
+  classroomProgress.registerInspected = true;
+  const names = [...TEXT_CONTENT.distortedArchive.classroom.caseNames];
+  if (classroomProgress.occupants >= 4) {
+    names.push(TEXT_CONTENT.distortedArchive.classroom.explorerName);
+  }
+  showInspectOverlay(
+    formatText(TEXT_CONTENT.distortedArchive.classroom.attendanceTitleTemplate, {
+      year: 2079 + classroomProgress.occupants * 2,
+    }),
+    formatText(TEXT_CONTENT.distortedArchive.classroom.attendanceLineTemplate, {
+      names: names.join(" / "),
+      suffix: classroomProgress.occupants < 4
+        ? TEXT_CONTENT.distortedArchive.classroom.blankLineSuffix
+        : TEXT_CONTENT.distortedArchive.classroom.presentSuffix,
+    }),
+    classroomProgress.completed ? "uncataloguedAttendance" : null,
+  );
+}
+
 function loopChangedArchiveExit() {
   realityProgress.archiveExitLooped = true;
-  realityProgress.message = "The threshold returns you to the same room. The archive has started correcting itself.";
+  realityProgress.message = TEXT_CONTENT.distortedArchive.messages.thresholdReturns;
   realityProgress.messageTimer = 4;
   player.x = ARCHIVE_WORLD.ENTRANCE_X + 22;
   player.velocityX = 0;
   clampCameraToCurrentWorld(camera, player);
   setCurrentObjective("noticeArchiveChanges");
   audioManager.playSfx("corridorLoop", { volume: 0.56 });
-  audioManager.playSfx("reverseElectricalHum", { volume: 0.36 });
+  audioManager.playSfx("electricalHum", { volume: 0.36 });
 }
 
 function handleTrailerArchiveRevealInteract() {
@@ -4447,6 +6271,14 @@ function handleTrailerArchiveRevealInteract() {
 }
 
 function handleArchiveIndexInteract(definition) {
+  if (!recordsProgress.completed) {
+    realityProgress.message = TEXT_CONTENT.archive.messages.quarantinedRecords;
+    realityProgress.messageTimer = 3.4;
+    setCurrentObjective("investigateMissingPersons");
+    audioManager.playSfx("lockedDoor", { volume: 0.42 });
+    return;
+  }
+
   archiveProgress.indexRead = true;
   collectClue(definition.clueId);
   audioManager.playSfx("paperMove", { volume: 0.48 });
@@ -4513,25 +6345,100 @@ function handleArchiveLadderInteract() {
     return;
   }
 
-  archiveProgress.ladderX = clamp(
-    ARCHIVE_ROOM.LADDER_TARGET_X,
-    ARCHIVE_ROOM.LADDER_MIN_X,
-    ARCHIVE_ROOM.LADDER_MAX_X,
-  );
-  archiveProgress.ladderMoved = true;
-  audioManager.playSfx("ladderMove", { volume: 0.58 });
-  startDialogue("ladderMoved");
-  completeObjective("moveArchiveLadder");
-  setCurrentObjective("retrieveStorageKey");
+  if (archiveProgress.ladderLockedAtC13) {
+    handleArchiveHighShelfInteract();
+    return;
+  }
+
+  archiveProgress.ladderPushActive = true;
+  player.x = archiveProgress.ladderX - 24;
+  player.velocityX = 0;
+  audioManager.playSfx("ladderWheel", { volume: 0.54 });
 }
 
 function handleArchiveHighShelfInteract() {
-  if (!archiveProgress.ladderMoved) {
+  if (archiveProgress.sealedStorageKeyCollected) {
+    realityProgress.message = TEXT_CONTENT.archive.messages.boxAlreadyEmpty;
+    realityProgress.messageTimer = 1.8;
+    return;
+  }
+
+  if (!archiveProgress.ladderLockedAtC13) {
     startDialogue("highShelfNeedsLadder");
     setCurrentObjective("moveArchiveLadder");
     return;
   }
 
+  if (archiveProgress.ladderSequenceActive) {
+    return;
+  }
+
+  archiveProgress.ladderSequenceActive = true;
+  archiveProgress.ladderSequenceTimer = 0;
+  archiveProgress.ladderClimbPhase = 0;
+  player.x = archiveProgress.ladderX + 10;
+  player.velocityX = 0;
+  player.facing = 1;
+  audioManager.playSfx("ladderClimb", { volume: 0.58 });
+}
+
+function updateLadderSequence(deltaSeconds) {
+  if (archiveProgress.ladderPushActive) {
+    if (!input.isPressed("KeyE") || gameState.current !== GAME_STATES.ARCHIVE) {
+      archiveProgress.ladderPushActive = false;
+      return;
+    }
+
+    const totalDistance = ARCHIVE_ROOM.LADDER_TARGET_X - ARCHIVE_ROOM.LADDER_START_X;
+    const movement = (totalDistance / 4.6) * deltaSeconds;
+    archiveProgress.ladderX = Math.min(
+      ARCHIVE_ROOM.LADDER_TARGET_X,
+      archiveProgress.ladderX + movement,
+    );
+    archiveProgress.ladderPosition = archiveProgress.ladderX;
+    player.x = archiveProgress.ladderX - 24;
+    player.animationMode = "interact";
+
+    if (archiveProgress.ladderX < ARCHIVE_ROOM.LADDER_TARGET_X) {
+      return;
+    }
+
+    archiveProgress.ladderPushActive = false;
+    archiveProgress.ladderMoved = true;
+    archiveProgress.ladderLockedAtC13 = true;
+    audioManager.playSfx("ladderLock", { volume: 0.68 });
+    startDialogue("ladderMoved");
+    completeObjective("moveArchiveLadder");
+    setCurrentObjective("retrieveStorageKey");
+    return;
+  }
+
+  if (!archiveProgress.ladderSequenceActive) {
+    return;
+  }
+
+  archiveProgress.ladderSequenceTimer += deltaSeconds;
+  const time = archiveProgress.ladderSequenceTimer;
+  const climbHeight = time < 1
+    ? 0
+    : time < 2.4
+      ? (time - 1) / 1.4
+      : time < 3.5
+        ? 1
+        : time < 4.9
+          ? 1 - (time - 3.5) / 1.4
+          : 0;
+  archiveProgress.ladderClimbPhase = Math.min(6, Math.floor(time / 0.72));
+  player.x = archiveProgress.ladderX + 10 + (time >= 2.4 && time < 3.5 ? 8 : 0);
+  player.y = PLAYER_CONFIG.SPAWN_Y - Math.round(clamp(climbHeight, 0, 1) * 112);
+  player.animationMode = climbHeight > 0 ? "interact" : "idle";
+
+  if (time < 5.1) {
+    return;
+  }
+
+  archiveProgress.ladderSequenceActive = false;
+  player.y = PLAYER_CONFIG.SPAWN_Y;
   archiveProgress.sealedStorageKeyCollected = true;
   collectClue("sealedStorageKey");
   audioManager.playSfx("paperMove", { volume: 0.5 });
@@ -4550,8 +6457,8 @@ function handleArchiveFilingCabinetInteract() {
 
   if (archiveProgress.filingCabinetUnlocked) {
     showInspectOverlay(
-      "Cabinet R-6",
-      "The drawer is open. Empty folder slots surround the photograph, card imprint, and removed-page note already copied into the journal.",
+      TEXT_CONTENT.archive.messages.cabinetR6Title,
+      TEXT_CONTENT.archive.messages.cabinetR6Open,
     );
     return;
   }
@@ -4596,7 +6503,7 @@ function handleManuscriptTableInteract(definition) {
 
 function handleChangedArchiveDetailInteract(definition) {
   if (!realityProgress.archiveExitLooped) {
-    realityProgress.message = "It looks almost normal until you try to leave.";
+    realityProgress.message = TEXT_CONTENT.distortedArchive.messages.looksAlmostNormal;
     realityProgress.messageTimer = 2.6;
     return;
   }
@@ -4610,15 +6517,15 @@ function handleOptionalArchiveChangeInteract(definition) {
 
   if (definition.optionalDetailId === "wrongExitSign") {
     showInspectOverlay(
-      "Exit sign",
-      "The arrow points deeper into the archive, but its reflected shadow points to the door.",
+      TEXT_CONTENT.distortedArchive.optionalDetails.wrongExitSignTitle,
+      TEXT_CONTENT.distortedArchive.optionalDetails.wrongExitSignText,
     );
     return;
   }
 
   showInspectOverlay(
-    "Extra door",
-    "The door has no hinges and no room behind it on any map you collected.",
+    TEXT_CONTENT.distortedArchive.optionalDetails.extraDoorTitle,
+    TEXT_CONTENT.distortedArchive.optionalDetails.extraDoorText,
   );
 }
 
@@ -4655,7 +6562,7 @@ function discoverRealitySymbol(detailId, options = {}) {
 
 function handleDistortedExitLoopInteract() {
   realityProgress.archiveExitLooped = true;
-  realityProgress.message = "The exit opens onto the same corridor. The wall marks have changed.";
+  realityProgress.message = TEXT_CONTENT.distortedArchive.messages.exitSameCorridor;
   realityProgress.messageTimer = 3.4;
   player.x = DISTORTED_CORRIDOR.RETURN_X;
   player.velocityX = 0;
@@ -4671,7 +6578,7 @@ function handleDistortedExitLoopInteract() {
 
 function handleDistortedDoorInteract(definition) {
   if (realityProgress.discoveredSymbols.size < REALITY_CHANGE_SYMBOLS.length) {
-    realityProgress.message = "The duplicate doors share too many symbols. The archive changes are the key.";
+    realityProgress.message = TEXT_CONTENT.distortedArchive.messages.duplicateDoorsHint;
     realityProgress.messageTimer = 3.2;
     setCurrentObjective("noticeArchiveChanges");
     return;
@@ -4696,7 +6603,7 @@ function handleDistortedDoorInteract(definition) {
 function handleFalseDistortedDoor(doorId) {
   realityProgress.falseDoorLoops += 1;
   realityProgress.loopDetailVariant = (realityProgress.loopDetailVariant + 1) % 4;
-  realityProgress.message = "False door. The corridor returns you safely, but one detail changes.";
+  realityProgress.message = TEXT_CONTENT.distortedArchive.messages.falseDoor;
   realityProgress.messageTimer = 3.2;
   collectClue("wrongDuplicateDoor", { silent: realityProgress.falseDoorLoops > 1 });
   player.x = DISTORTED_CORRIDOR.RETURN_X + realityProgress.falseDoorLoops * 12;
@@ -4719,7 +6626,7 @@ function handleDistortedWallSwitchInteract(definition) {
 
   if (definition.switchId !== expected) {
     realityProgress.switchSequence = [];
-    realityProgress.message = "The switches fall back into the wall. The order starts with staff assignment.";
+    realityProgress.message = TEXT_CONTENT.distortedArchive.messages.switchOrderReset;
     realityProgress.messageTimer = 3.2;
     audioManager.playSfx("incorrectPuzzle", { volume: 0.58 });
     return;
@@ -4729,7 +6636,9 @@ function handleDistortedWallSwitchInteract(definition) {
   audioManager.playSfx("wallSwitch", { volume: 0.56 });
 
   if (realityProgress.switchSequence.length < DISTORTED_CORRIDOR.SWITCH_ORDER.length) {
-    realityProgress.message = `${realityProgress.switchSequence.length}/3 switches accepted.`;
+    realityProgress.message = formatText(TEXT_CONTENT.distortedArchive.messages.switchProgressTemplate, {
+      count: realityProgress.switchSequence.length,
+    });
     realityProgress.messageTimer = 1.8;
     return;
   }
@@ -4770,8 +6679,8 @@ function handleMissingPageInteract() {
   completeObjective("reachMissingPage");
   completeObjective("findMissingPage");
   showInspectOverlay(
-    "Missing page",
-    "The page is real under the light. The ink is dry, but the shadow beneath it is still moving.",
+    TEXT_CONTENT.distortedArchive.finalPage.title,
+    TEXT_CONTENT.distortedArchive.finalPage.text,
     "missingPageVisible",
   );
 }
@@ -4840,71 +6749,92 @@ function handleGenericDialogueInteract(definition) {
 }
 
 function getArchiveDoorPrompt() {
-  return chapterProgress.archiveDoorUnlocked ? "Open archive door" : "Inspect archive door";
+  return chapterProgress.archiveDoorUnlocked
+    ? TEXT_CONTENT.corridor.prompts.openArchiveDoor
+    : TEXT_CONTENT.corridor.prompts.inspectArchiveDoor;
 }
 
 function getArchiveExitPrompt() {
   if (!manuscriptProgress.realityChanged) {
-    return "Return to corridor";
+    return TEXT_CONTENT.archive.prompts.returnToCorridor;
   }
 
   if (!realityProgress.archiveExitLooped) {
-    return "Try archive exit";
+    return TEXT_CONTENT.archive.prompts.tryArchiveExit;
   }
 
   if (realityProgress.discoveredSymbols.size < REALITY_CHANGE_SYMBOLS.length) {
-    return "Test wrong exit";
+    return TEXT_CONTENT.archive.prompts.testWrongExit;
   }
 
-  return "Enter distorted corridor";
+  return TEXT_CONTENT.archive.prompts.enterDistortedCorridor;
 }
 
 function getCoordinateFolderPrompt() {
-  return hasSearchedAllArchiveShelves() ? "Search loose folder" : "Inspect loose folder";
+  return hasSearchedAllArchiveShelves()
+    ? TEXT_CONTENT.archive.prompts.searchLooseFolder
+    : TEXT_CONTENT.archive.prompts.inspectLooseFolder;
 }
 
 function getArchiveLadderPrompt() {
-  return archiveProgress.ladderMoved ? "Inspect ladder" : "Move rolling ladder";
+  if (archiveProgress.ladderLockedAtC13) {
+    return TEXT_CONTENT.archive.prompts.climbLadderAtC13;
+  }
+
+  if (!archiveProgress.coordinateFound) {
+    return TEXT_CONTENT.archive.prompts.findCoordinateBeforeLadder;
+  }
+
+  const progress = Math.round(
+    ((archiveProgress.ladderX - ARCHIVE_ROOM.LADDER_START_X) /
+      (ARCHIVE_ROOM.LADDER_TARGET_X - ARCHIVE_ROOM.LADDER_START_X)) *
+      100,
+  );
+  return formatText(TEXT_CONTENT.archive.prompts.holdToPushLadder, { progress });
 }
 
 function getArchiveHighShelfPrompt() {
-  return archiveProgress.ladderMoved ? "Retrieve sealed key" : "Inspect high shelf";
+  return archiveProgress.ladderLockedAtC13
+    ? TEXT_CONTENT.archive.prompts.climbToShelfC13
+    : TEXT_CONTENT.archive.prompts.inspectShelfC13;
 }
 
 function getArchiveFilingCabinetPrompt() {
   if (archiveProgress.filingCabinetUnlocked) {
-    return "Inspect open cabinet";
+    return TEXT_CONTENT.archive.prompts.inspectOpenCabinet;
   }
 
   return archiveProgress.sealedStorageKeyCollected
-    ? "Use sealed key"
-    : "Inspect locked cabinet";
+    ? TEXT_CONTENT.archive.prompts.useSealedKey
+    : TEXT_CONTENT.archive.prompts.inspectLockedCabinet;
 }
 
 function getArchiveRestrictedCabinetPrompt() {
   if (archiveProgress.manuscriptTableRevealed) {
-    return "Inspect restricted cabinet";
+    return TEXT_CONTENT.archive.prompts.inspectRestrictedCabinet;
   }
 
   return archiveProgress.accessCardFound
-    ? "Use archive access card"
-    : "Inspect restricted cabinet";
+    ? TEXT_CONTENT.archive.prompts.useArchiveAccessCard
+    : TEXT_CONTENT.archive.prompts.inspectRestrictedCabinet;
 }
 
 function getLockPanelPrompt() {
-  return chapterProgress.powerReset ? "Use archive keypad" : "Inspect dead keypad";
+  return chapterProgress.powerReset
+    ? TEXT_CONTENT.corridor.prompts.useArchiveKeypad
+    : TEXT_CONTENT.corridor.prompts.inspectDeadKeypad;
 }
 
 function getElectricalCabinetPrompt() {
   if (chapterProgress.powerReset) {
-    return "Inspect electrical cabinet";
+    return TEXT_CONTENT.corridor.prompts.inspectElectricalCabinet;
   }
 
   if (chapterProgress.maintenanceKeyCollected) {
-    return "Use maintenance key";
+    return TEXT_CONTENT.corridor.prompts.useMaintenanceKey;
   }
 
-  return "Inspect electrical cabinet";
+  return TEXT_CONTENT.corridor.prompts.inspectElectricalCabinet;
 }
 
 function hasRequiredNormalInvestigation() {
@@ -4971,7 +6901,7 @@ function showInspectOverlay(title, text, clueId = null) {
 }
 
 function closeInspectOverlay() {
-  const shouldEnterEnding =
+  const shouldEnterRing =
     endingState.pendingAfterInspect &&
     gameState.current === GAME_STATES.DISTORTED &&
     realityProgress.finalPageCollected;
@@ -4981,12 +6911,12 @@ function closeInspectOverlay() {
   inspectOverlayState.text = "";
   inspectOverlayState.clueId = null;
 
-  if (shouldEnterEnding && !transitionState.active) {
+  if (shouldEnterRing && !transitionState.active) {
     endingState.pendingAfterInspect = false;
-    startSceneTransition(GAME_STATES.ENDING, {
-      spawnX: player.x,
-      facing: player.facing,
-      duration: getTrailerAdjustedDuration(0.86),
+    startSceneTransition(GAME_STATES.RING, {
+      spawnX: 96,
+      facing: 1,
+      duration: getTrailerAdjustedDuration(0.96),
       doorSfx: null,
     });
   }
@@ -4995,7 +6925,7 @@ function closeInspectOverlay() {
 function openKeypad() {
   keypadState.active = true;
   keypadState.enteredCode = "";
-  keypadState.message = "Enter four digits.";
+  keypadState.message = TEXT_CONTENT.corridor.keypad.enterFourDigits;
   keypadState.messageTimer = 2.5;
 }
 
@@ -5008,14 +6938,14 @@ function closeKeypad() {
 
 function submitKeypadCode() {
   if (keypadState.enteredCode.length < 4) {
-    keypadState.message = "Four digits required.";
+    keypadState.message = TEXT_CONTENT.corridor.keypad.fourDigitsRequired;
     keypadState.messageTimer = 2.2;
     audioManager.playSfx("wrongCode");
     return;
   }
 
   if (!TRAILER_MODE && !hasRequiredNormalInvestigation()) {
-    keypadState.message = "Sequence rejected. Missing context.";
+    keypadState.message = TEXT_CONTENT.corridor.keypad.missingContext;
     keypadState.messageTimer = 2.8;
     keypadState.enteredCode = "";
     audioManager.playSfx("wrongCode");
@@ -5023,14 +6953,14 @@ function submitKeypadCode() {
   }
 
   if (keypadState.enteredCode !== ARCHIVE_CODE) {
-    keypadState.message = "Incorrect code.";
+    keypadState.message = TEXT_CONTENT.corridor.keypad.incorrectCode;
     keypadState.messageTimer = 2.5;
     keypadState.enteredCode = "";
     audioManager.playSfx("wrongCode");
     return;
   }
 
-  keypadState.message = "Accepted.";
+  keypadState.message = TEXT_CONTENT.corridor.keypad.accepted;
   keypadState.messageTimer = 1;
   closeKeypad();
   unlockArchiveDoor();
@@ -5138,10 +7068,48 @@ function collectClue(clueId, options = {}) {
   clampJournalPage();
 
   if (!options.silent) {
-    audioManager.playSfx("clueCollected");
-    objectiveState.bannerText = `Clue collected: ${CLUE_DATA[clueId].title}`;
+    objectiveState.bannerText = formatText(TEXT_CONTENT.notifications.clueCollected, {
+      title: CLUE_DATA[clueId].title,
+    });
     objectiveState.bannerTimer = 4;
   }
+}
+
+function getJournalClue(clueId) {
+  const clue = CLUE_DATA[clueId];
+  const caseIdByClue = {
+    maraVossCase: "mara",
+    eliasWardCase: "elias",
+    jonahValeCase: "jonah",
+  };
+  const caseId = caseIdByClue[clueId];
+
+  if (!clue || !caseId || !recordsProgress.photographedCases.has(caseId)) {
+    return clue;
+  }
+  if (!manuscriptProgress.realityChanged) {
+    return clue;
+  }
+  if (clueId === "maraVossCase") {
+    return {
+      title: TEXT_CONTENT.journalClues.changedJournal.maraTitle,
+      text: TEXT_CONTENT.journalClues.changedJournal.maraText,
+    };
+  }
+  if (clueId === "eliasWardCase") {
+    return {
+      title: TEXT_CONTENT.journalClues.changedJournal.eliasTitle,
+      text: TEXT_CONTENT.journalClues.changedJournal.eliasText,
+    };
+  }
+  return {
+    title: realityProgress.finalPageCollected
+      ? TEXT_CONTENT.journalClues.changedJournal.explorerTitle
+      : TEXT_CONTENT.journalClues.changedJournal.jonahTitle,
+    text: realityProgress.finalPageCollected
+      ? TEXT_CONTENT.journalClues.changedJournal.explorerText
+      : TEXT_CONTENT.journalClues.changedJournal.jonahText,
+  };
 }
 
 function setCurrentObjective(objectiveId) {
@@ -5160,7 +7128,9 @@ function completeObjective(objectiveId) {
   }
 
   objectiveState.completedIds.add(objectiveId);
-  objectiveState.bannerText = `Completed: ${OBJECTIVE_DATA[objectiveId].title}`;
+  objectiveState.bannerText = formatText(TEXT_CONTENT.notifications.objectiveCompleted, {
+    title: OBJECTIVE_DATA[objectiveId].title,
+  });
   objectiveState.bannerTimer = 4.5;
 }
 
@@ -5238,6 +7208,11 @@ function render() {
 
   if (isTitleFamilyState()) {
     drawTitleScreen(titleScene);
+  } else if (gameState.current === GAME_STATES.PROLOGUE) {
+    drawPrologueScene(camera, prologueScene);
+    if (prologueProgress.controlGranted) {
+      drawPlayer(player, camera, prologueScene);
+    }
   } else if (gameState.current === GAME_STATES.ENDING) {
     drawEndingScreen(titleScene);
   } else if (gameState.current === GAME_STATES.CORRIDOR) {
@@ -5250,12 +7225,36 @@ function render() {
     drawPlayer(player, camera, archiveScene);
     drawArchiveForegroundOccluders(camera, archiveScene);
     drawSceneEffects(archiveScene, player, camera);
+  } else if (gameState.current === GAME_STATES.RECORDS) {
+    drawMissingPersonsWing(camera, recordsScene);
+    drawPlayer(player, camera, recordsScene);
+    drawSceneEffects(recordsScene, player, camera);
+    drawMissingPersonCaseOverlay();
   } else if (gameState.current === GAME_STATES.MANUSCRIPT) {
     drawManuscriptInspectionScene(manuscriptScene);
   } else if (gameState.current === GAME_STATES.DISTORTED) {
     drawDistortedCorridorScene(camera, distortedScene);
     drawPlayer(player, camera, distortedScene);
     drawDistortedSceneEffects(distortedScene, player, camera);
+  } else if (gameState.current === GAME_STATES.CLASSROOM) {
+    drawUncataloguedClassroom(camera, classroomScene);
+    drawPlayer(player, camera, classroomScene);
+    drawSceneEffects(classroomScene, player, camera);
+  } else if (gameState.current === GAME_STATES.RING) {
+    drawChamberRingScene();
+  } else if (gameState.current === GAME_STATES.ARCHIVIST) {
+    drawArchivistChamberScene(camera, archivistScene);
+    drawPlayer(player, camera, archivistScene);
+    drawArchivistEffects(archivistScene, player, camera);
+  } else if (gameState.current === GAME_STATES.ESCAPE) {
+    drawEscapeScene(camera, escapeScene);
+    if (!escapeProgress.protagonistEscaped) {
+      drawPlayer(player, camera, escapeScene);
+      drawFlashlightDarkness(escapeScene, player, camera);
+      drawEscapeGameplayUi();
+    } else {
+      drawEscapeReveal(escapeScene);
+    }
   } else {
     drawPlaceholderState();
   }
@@ -5276,6 +7275,7 @@ function render() {
   drawJournalScreen();
   drawInspectOverlay();
   drawKeypadScreen();
+  drawCircuitPuzzle();
   drawDialoguePanel();
   drawControlsHint();
   drawControlsOverlay();
@@ -5427,10 +7427,10 @@ function drawTitleMenu() {
   context.textBaseline = "top";
   context.fillStyle = "#e0ddca";
   context.font = "48px monospace";
-  context.fillText("VOYNICH", 70, 62);
+  context.fillText(TEXT_CONTENT.title.name, 70, 62);
   context.fillStyle = "#b6b091";
   context.font = "15px monospace";
-  context.fillText("Some truths are never meant to be discovered.", 74, 116);
+  context.fillText(TEXT_CONTENT.title.tagline, 74, 116);
 
   options.forEach((option, index) => {
     drawMenuButton(
@@ -5442,11 +7442,11 @@ function drawTitleMenu() {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText("Arrow keys, E, Enter, or mouse", 244, 328);
+  context.fillText(TEXT_CONTENT.title.navigationHint, 244, 328);
 
   if (TRAILER_MODE && !shouldHideCaptureUi()) {
     context.fillStyle = "#d8c16f";
-    context.fillText("Trailer route enabled. F6-F10 shortcuts are isolated from normal mode.", 48, 18);
+    context.fillText(TEXT_CONTENT.title.trailerNotice, 48, 18);
   }
 
   if (titleMenuState.exitMessageTimer > 0 && titleMenuState.exitMessage) {
@@ -5457,7 +7457,7 @@ function drawTitleMenu() {
 }
 
 function drawSettingsScreen() {
-  drawSubscreenPanel("SETTINGS", "Escape or Back returns");
+  drawSubscreenPanel(TEXT_CONTENT.settings.title, TEXT_CONTENT.settings.hint);
 
   SETTINGS_ITEMS.forEach((item, index) => {
     drawSettingsItem(item, index, index === settingsMenuState.selectedIndex);
@@ -5465,7 +7465,7 @@ function drawSettingsScreen() {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText("Left / Right adjusts selected ranges. Enter or E confirms.", 126, 314);
+  context.fillText(TEXT_CONTENT.settings.controlsHint, 126, 314);
 
   if (settingsMenuState.messageTimer > 0 && settingsMenuState.message) {
     context.fillStyle = "#d8c16f";
@@ -5514,16 +7514,16 @@ function drawSettingsSlider(item, index) {
 }
 
 function drawCreditsScreen() {
-  drawSubscreenPanel("CREDITS", "E, Enter, Escape, or mouse returns");
+  drawSubscreenPanel(TEXT_CONTENT.credits.title, TEXT_CONTENT.credits.hint);
 
   context.fillStyle = "#e0ddca";
   context.font = "15px monospace";
-  context.fillText("Created by Sohbal Jain and Ishaan Aggarwal.", 126, 92);
+  context.fillText(TEXT_CONTENT.credits.createdBy, 126, 92);
 
   context.fillStyle = "#aebabc";
   context.font = "12px monospace";
   drawWrappedText(
-    "The concept, story, and game design for VOYNICH are original.",
+    TEXT_CONTENT.credits.originality,
     126,
     124,
     390,
@@ -5532,19 +7532,19 @@ function drawCreditsScreen() {
 
   context.fillStyle = "#d8c16f";
   context.font = "13px monospace";
-  context.fillText("Licensed audio", 126, 178);
+  context.fillText(TEXT_CONTENT.credits.licensedAudio, 126, 178);
   context.fillStyle = "#88989c";
   context.font = "11px monospace";
-  context.fillText("Add track names, creators, licenses, and source links here before shipping.", 126, 199);
+  context.fillText(TEXT_CONTENT.credits.licensedAudioPlaceholder, 126, 199);
 
   context.fillStyle = "#d8c16f";
   context.font = "13px monospace";
-  context.fillText("Licensed assets", 126, 230);
+  context.fillText(TEXT_CONTENT.credits.licensedAssets, 126, 230);
   context.fillStyle = "#88989c";
   context.font = "11px monospace";
-  context.fillText("Add external asset credits here only after licensed assets are added.", 126, 251);
+  context.fillText(TEXT_CONTENT.credits.licensedAssetsPlaceholder, 126, 251);
 
-  drawMenuButton(getCreditsBackButtonRect(), "Back", true);
+  drawMenuButton(getCreditsBackButtonRect(), TEXT_CONTENT.credits.back, true);
 }
 
 function drawEndingScreen(scene) {
@@ -5558,16 +7558,26 @@ function drawEndingScreen(scene) {
   context.textBaseline = "top";
   context.fillStyle = "#e0ddca";
   context.font = "25px monospace";
-  context.fillText("THE MISSING PAGE", 192, 86);
-  context.fillStyle = "#b9b293";
-  context.font = "13px monospace";
-  drawWrappedText(
-    "The archive is quiet again. That does not mean it has let you leave.",
-    178,
-    128,
-    292,
-    18,
-  );
+  context.fillText(TEXT_CONTENT.title.name, 266, 86);
+  context.fillStyle = "#c6ad61";
+  context.font = "16px monospace";
+  if (escapeProgress.evidencePreserved) {
+    context.fillText(TEXT_CONTENT.ending.evidenceSurvived, 214, 124);
+    context.fillStyle = "#77888c";
+    context.font = "11px monospace";
+    context.fillText(TEXT_CONTENT.ending.recordContinues, 250, 148);
+  } else {
+    context.fillText(TEXT_CONTENT.ending.recordContinues, 218, 128);
+  }
+
+  ARCHIVE_SYMBOL_PATTERN.forEach((symbolId, index) => {
+    drawOriginalSymbol(symbolId, 250 + index * 42, 176, 0.82, true);
+  });
+  if (classroomProgress.completed) {
+    context.fillStyle = "#80729a";
+    context.font = "9px monospace";
+    context.fillText(TEXT_CONTENT.ending.attendancePresent, 264, 210);
+  }
 
   const options = getEndingMenuOptions();
   options.forEach((option, index) => {
@@ -5580,7 +7590,7 @@ function drawEndingScreen(scene) {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText("Arrow keys, E, Enter, or mouse", 224, 298);
+  context.fillText(TEXT_CONTENT.ending.navigationHint, 224, 298);
 }
 
 function drawSubscreenPanel(title, hint) {
@@ -5676,23 +7686,29 @@ function getEndingButtonRect(index, total) {
 
 function formatSettingValue(item) {
   if (item.id === "fullscreen") {
-    return typeof document !== "undefined" && document.fullscreenElement ? "Exit" : "Open";
+    return typeof document !== "undefined" && document.fullscreenElement
+      ? TEXT_CONTENT.settings.values.exit
+      : TEXT_CONTENT.settings.values.open;
   }
 
   if (item.id === "back") {
-    return "Return";
+    return TEXT_CONTENT.settings.values.return;
   }
 
   if (item.id === "textSpeed") {
-    return `${Math.round(settings.textSpeed)} cps`;
+    return formatText(TEXT_CONTENT.settings.values.textSpeedTemplate, {
+      speed: Math.round(settings.textSpeed),
+    });
   }
 
   if (item.type === "range") {
-    return `${Math.round(settings[item.id] * 100)}%`;
+    return formatText(TEXT_CONTENT.settings.values.percentTemplate, {
+      percent: Math.round(settings[item.id] * 100),
+    });
   }
 
   if (item.type === "toggle") {
-    return settings[item.id] ? "On" : "Off";
+    return settings[item.id] ? TEXT_CONTENT.settings.values.on : TEXT_CONTENT.settings.values.off;
   }
 
   return "";
@@ -5733,6 +7749,7 @@ function drawArchiveScene(view, scene) {
   drawArchiveFloor(view, scene);
   drawArchiveWallTexture(view);
   drawArchiveEntryDoor(view);
+  drawMissingPersonsWingDoor(view);
   drawArchiveIndexTerminalVisual(view);
   drawArchiveOldDesk(view);
   drawArchiveFilingCabinets(view);
@@ -5978,6 +7995,24 @@ function drawArchiveWallTexture(view) {
   }
 }
 
+function drawMissingPersonsWingDoor(view) {
+  const x = Math.round(1712 - view.x);
+  if (x < -100 || x > CANVAS_WIDTH + 100 || manuscriptProgress.realityChanged) {
+    return;
+  }
+  context.fillStyle = "#050708";
+  context.fillRect(x - 8, 144, 88, 148);
+  context.fillStyle = "#1b252a";
+  context.fillRect(x, 154, 72, 138);
+  context.strokeStyle = "#536269";
+  context.strokeRect(x + 0.5, 154.5, 72, 138);
+  context.fillStyle = "#b3aa8d";
+  context.font = "8px monospace";
+  context.fillText(TEXT_CONTENT.archive.labels.missingPersons, x + 4, 176);
+  context.fillStyle = "#774841";
+  context.fillRect(x + 8, 188, 56, 3);
+}
+
 function drawArchiveEntryDoor(view) {
   const x = Math.round(ARCHIVE_ROOM.ENTRANCE_X - view.x);
   const y = 154;
@@ -6154,7 +8189,7 @@ function drawArchiveForegroundShelves(view) {
     const realityOffset =
       manuscriptProgress.realityChanged &&
       realityProgress.archiveExitLooped &&
-      shelf.mark === "V-13"
+      shelf.mark === "C13"
         ? 48
         : 0;
     const x = Math.round(shelf.x + realityOffset - view.x);
@@ -6265,6 +8300,29 @@ function drawArchiveLadder(view) {
   context.fillStyle = "#050607";
   context.fillRect(x - 10, ARCHIVE_ROOM.FLOOR_Y - 3, 14, 5);
   context.fillRect(x + 33, ARCHIVE_ROOM.FLOOR_Y - 3, 14, 5);
+
+  if (archiveProgress.coordinateFound && !archiveProgress.ladderLockedAtC13) {
+    const progress = clamp(
+      (archiveProgress.ladderX - ARCHIVE_ROOM.LADDER_START_X) /
+        (ARCHIVE_ROOM.LADDER_TARGET_X - ARCHIVE_ROOM.LADDER_START_X),
+      0,
+      1,
+    );
+    context.fillStyle = "rgba(4, 7, 9, 0.78)";
+    context.beginPath();
+    context.arc(x + 17, 86, 16, 0, Math.PI * 2);
+    context.fill();
+    context.strokeStyle = "#33434a";
+    context.lineWidth = 4;
+    context.stroke();
+    context.strokeStyle = "#d8c16f";
+    context.beginPath();
+    context.arc(x + 17, 86, 16, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * progress);
+    context.stroke();
+    context.fillStyle = "#d8d7c8";
+    context.font = "8px monospace";
+    context.fillText(`${Math.round(progress * 100)}%`, x + 7, 82);
+  }
 }
 
 function drawArchiveFolders(view) {
@@ -6379,7 +8437,7 @@ function drawAlteredArchiveDetails(view, scene) {
     context.fillRect(signX, 92, 112, 28);
     context.fillStyle = "#b9a85d";
     context.font = "11px monospace";
-    context.fillText("EXIT  --->", signX + 14, 101);
+    context.fillText(TEXT_CONTENT.corridor.signs.exitArrow, signX + 14, 101);
     context.fillStyle = "rgba(216, 193, 111, 0.22)";
     context.fillRect(signX + 74, 111, 24, 2);
   }
@@ -6555,6 +8613,25 @@ function drawDistortedDuplicateDoors(viewX) {
       context.fillRect(x + 4, 158, 66, 128);
     }
   });
+
+  if (
+    realityProgress.archiveExitLooped &&
+    !realityProgress.correctDoorChosen &&
+    !classroomProgress.completed
+  ) {
+    const x = Math.round(1450 - viewX);
+    if (x > -120 && x < CANVAS_WIDTH + 120) {
+      context.fillStyle = "#020304";
+      context.fillRect(x - 10, 146, 96, 148);
+      context.fillStyle = "#0a0d0f";
+      context.fillRect(x, 154, 74, 136);
+      context.strokeStyle = "#4e3c38";
+      context.strokeRect(x + 0.5, 154.5, 74, 136);
+      context.fillStyle = "#78675a";
+      context.font = "9px monospace";
+      context.fillText(TEXT_CONTENT.archive.labels.noCatalogueEntry, x - 8, 132);
+    }
+  }
 }
 
 function drawDistortedWallSwitches(viewX) {
@@ -6711,6 +8788,8 @@ function drawManuscriptInspectionScene(scene) {
 
   if (manuscriptProgress.stage === MANUSCRIPT_STAGES.RECONSTRUCT) {
     drawPageReconstructionStage(scene);
+  } else if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    drawPatternInspectionStage(scene);
   } else if (manuscriptProgress.stage === MANUSCRIPT_STAGES.SYMBOLS) {
     drawSymbolInterpretationStage(scene);
   } else if (manuscriptProgress.stage === MANUSCRIPT_STAGES.ALIGNMENT) {
@@ -6808,11 +8887,19 @@ function drawFadedWriting(x, y, time) {
 }
 
 function drawMarginMarks(x, y, time) {
-  const glow = manuscriptProgress.marginMarksRevealed || manuscriptProgress.stage !== MANUSCRIPT_STAGES.RECONSTRUCT;
-  const symbols = glow ? MANUSCRIPT_SYMBOL_SEQUENCE : ["maintenance", "staff", "removed"];
+  const showingPagePattern =
+    manuscriptProgress.stage === MANUSCRIPT_STAGES.RECONSTRUCT ||
+    manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN;
+  const glow =
+    manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN ||
+    (!showingPagePattern && manuscriptProgress.marginMarksRevealed);
+  const symbols = showingPagePattern
+    ? ARCHIVE_SYMBOL_PATTERN
+    : MANUSCRIPT_SYMBOL_SEQUENCE;
+  const spacing = showingPagePattern ? 40 : 48;
 
   symbols.forEach((symbolId, index) => {
-    const markY = y + index * 48;
+    const markY = y + index * spacing;
     if (glow) {
       context.globalAlpha = 0.18 + Math.sin(time * 2.4 + index) * 0.04;
       context.fillStyle = "#cbb76f";
@@ -6825,12 +8912,51 @@ function drawMarginMarks(x, y, time) {
 }
 
 function drawPageReconstructionStage(scene) {
-  drawStageTitle("Stage 1", "Page reconstruction");
+  drawStagePanel();
+  drawStageTitle(TEXT_CONTENT.manuscript.ui.stage1Label, TEXT_CONTENT.manuscript.ui.stage1Title);
   drawPageOutline();
   drawFragments(scene);
-  drawStageMessage("Place all four fragments. Match the torn edge and rotate markings.");
-  drawButton(getPuzzleButtonRect("rotateLeft"), "Rotate -");
-  drawButton(getPuzzleButtonRect("rotateRight"), "Rotate +");
+  drawStageMessage(TEXT_CONTENT.manuscript.ui.stage1Message);
+  drawButton(getPuzzleButtonRect("rotateLeft"), TEXT_CONTENT.manuscript.ui.rotateLeft);
+  drawButton(getPuzzleButtonRect("rotateRight"), TEXT_CONTENT.manuscript.ui.rotateRight);
+}
+
+function drawPatternInspectionStage(scene) {
+  drawStagePanel();
+  drawStageTitle(
+    TEXT_CONTENT.manuscript.ui.pageRepairedLabel,
+    TEXT_CONTENT.manuscript.ui.orderRepeatsTitle,
+  );
+  drawPageOutline();
+  drawFragments(scene);
+  drawStageMessage(TEXT_CONTENT.manuscript.ui.patternMessage);
+  drawButton(getPatternContinueButtonRect(), TEXT_CONTENT.manuscript.ui.recordPattern);
+
+  manuscriptProgress.fragments.forEach((fragment, index) => {
+    const pulse = 0.12 + Math.sin(scene.time * 2 + index * 0.8) * 0.04;
+    context.globalAlpha = pulse;
+    context.fillStyle = "#d8c16f";
+    context.fillRect(fragment.x + 8, fragment.y + 8, fragment.width - 16, fragment.height - 16);
+  });
+  context.globalAlpha = 1;
+}
+
+function drawStagePanel() {
+  context.fillStyle = "rgba(5, 8, 10, 0.86)";
+  context.fillRect(
+    MANUSCRIPT_VIEW.PANEL_X,
+    MANUSCRIPT_VIEW.PANEL_Y,
+    MANUSCRIPT_VIEW.PANEL_WIDTH,
+    MANUSCRIPT_VIEW.PANEL_HEIGHT,
+  );
+  context.strokeStyle = "#303f45";
+  context.lineWidth = 2;
+  context.strokeRect(
+    MANUSCRIPT_VIEW.PANEL_X + 0.5,
+    MANUSCRIPT_VIEW.PANEL_Y + 0.5,
+    MANUSCRIPT_VIEW.PANEL_WIDTH,
+    MANUSCRIPT_VIEW.PANEL_HEIGHT,
+  );
 }
 
 function drawPageOutline() {
@@ -6851,11 +8977,16 @@ function drawPageOutline() {
 }
 
 function drawFragments(scene) {
-  manuscriptProgress.fragments.forEach((fragment) => {
-    const data = getFragmentData(fragment.id);
-    const selected = fragment.id === manuscriptProgress.selectedFragmentId;
+  const selected = getSelectedFragment();
+  const drawOrder = selected
+    ? [...manuscriptProgress.fragments.filter((fragment) => fragment !== selected), selected]
+    : manuscriptProgress.fragments;
 
-    drawTornFragment(fragment, data, scene.time, selected);
+  drawOrder.forEach((fragment) => {
+    const data = getFragmentData(fragment.id);
+    const isSelected = fragment.id === manuscriptProgress.selectedFragmentId;
+
+    drawTornFragment(fragment, data, scene.time, isSelected);
   });
 }
 
@@ -6887,6 +9018,8 @@ function drawTornFragment(fragment, data, time, selected) {
   context.fillText(data.label, -fragment.width / 2 + 8, -fragment.height / 2 + 7);
 
   if (selected) {
+    context.shadowColor = "#d8c16f";
+    context.shadowBlur = 7;
     context.strokeStyle = "#d8c16f";
     context.lineWidth = 2;
     context.strokeRect(
@@ -6895,6 +9028,7 @@ function drawTornFragment(fragment, data, time, selected) {
       fragment.width + 6,
       fragment.height + 6,
     );
+    context.shadowBlur = 0;
   }
 
   if (fragment.placed) {
@@ -6908,8 +9042,9 @@ function drawTornFragment(fragment, data, time, selected) {
 }
 
 function drawSymbolInterpretationStage(scene) {
-  drawStageTitle("Stage 2", "Symbol interpretation");
-  drawStageMessage("Use the records in the journal. The margin order is staff, restricted access, removed page.");
+  drawStagePanel();
+  drawStageTitle(TEXT_CONTENT.manuscript.ui.stage2Label, TEXT_CONTENT.manuscript.ui.stage2Title);
+  drawStageMessage(TEXT_CONTENT.manuscript.ui.stage2Message);
   drawSymbolMappingPanel();
   drawSymbolSequenceSlots();
 
@@ -6922,7 +9057,10 @@ function drawSymbolInterpretationStage(scene) {
   });
 
   if (manuscriptProgress.symbolStageSolved) {
-    drawButton(getBeginAlignmentButtonRect(), "Begin final alignment");
+    drawButton(
+      getBeginAlignmentButtonRect(),
+      TEXT_CONTENT.manuscript.ui.beginFinalAlignment,
+    );
   }
 
   drawInkPulse(scene);
@@ -6930,26 +9068,25 @@ function drawSymbolInterpretationStage(scene) {
 
 function drawSymbolMappingPanel() {
   const x = 418;
-  const y = 74;
+  const y = 146;
+  const height = 82;
 
   context.fillStyle = "rgba(7, 10, 12, 0.72)";
-  context.fillRect(x, y, 182, 138);
+  context.fillRect(x, y, 182, height);
   context.strokeStyle = "#303f45";
-  context.strokeRect(x + 0.5, y + 0.5, 182, 138);
+  context.strokeRect(x + 0.5, y + 0.5, 182, height);
   context.fillStyle = "#d8d7c8";
-  context.font = "12px monospace";
-  context.fillText("Journal mappings", x + 12, y + 10);
+  context.font = "10px monospace";
+  context.fillText(TEXT_CONTENT.manuscript.ui.journalMappings, x + 10, y + 7);
 
   MANUSCRIPT_SYMBOLS.forEach((symbol, index) => {
     const clueKnown = chapterProgress.clues.has(symbol.clueId);
-    const rowY = y + 34 + index * 25;
+    const rowY = y + 27 + index * 17;
 
-    drawOriginalSymbol(symbol.id, x + 16, rowY, 0.68, false);
+    drawOriginalSymbol(symbol.id, x + 12, rowY - 2, 0.52, false);
     context.fillStyle = clueKnown ? "#cfc5a0" : "#6b7375";
-    context.font = "10px monospace";
-    context.fillText(symbol.classLabel, x + 38, rowY - 4);
-    context.fillStyle = clueKnown ? "#7f9094" : "#4c5659";
-    context.fillRect(x + 38, rowY + 10, clueKnown ? 82 : 38, 2);
+    context.font = "9px monospace";
+    context.fillText(symbol.classLabel, x + 34, rowY);
   });
 }
 
@@ -6961,7 +9098,7 @@ function drawSymbolSequenceSlots() {
   context.fillRect(x - 14, y - 14, 232, 58);
   context.fillStyle = "#8c7d55";
   context.font = "11px monospace";
-  context.fillText("Margin sequence", x, y - 28);
+  context.fillText(TEXT_CONTENT.manuscript.ui.marginSequence, x, y - 28);
 
   for (let index = 0; index < MANUSCRIPT_SYMBOL_SEQUENCE.length; index += 1) {
     const slotX = x + index * 76;
@@ -7003,13 +9140,18 @@ function drawSymbolButton(symbol, rect, selected, chosen) {
 }
 
 function drawMissingPageAlignmentStage(scene) {
-  drawStageTitle("Stage 3", "Missing-page alignment");
-  drawStageMessage("Rotate each ring until the broken lines form one complete mark.");
+  drawStagePanel();
+  drawStageTitle(TEXT_CONTENT.manuscript.ui.stage3Label, TEXT_CONTENT.manuscript.ui.stage3Title);
+  drawStageMessage(
+    chapterProgress.clues.has("jonahAlignmentLog")
+      ? TEXT_CONTENT.manuscript.ui.jonahAlignmentHint
+      : TEXT_CONTENT.manuscript.ui.defaultAlignmentHint,
+  );
   drawManuscriptRings(scene);
-  drawButton(getRingRotateLeftButtonRect(), "Rotate -");
-  drawButton(getRingRotateRightButtonRect(), "Rotate +");
-  drawButton(getStageThreeBackButtonRect(), "Back");
-  drawButton(getStageThreeResetButtonRect(), "Reset");
+  drawButton(getRingRotateLeftButtonRect(), TEXT_CONTENT.manuscript.ui.rotateLeft);
+  drawButton(getRingRotateRightButtonRect(), TEXT_CONTENT.manuscript.ui.rotateRight);
+  drawButton(getStageThreeBackButtonRect(), TEXT_CONTENT.manuscript.ui.back);
+  drawButton(getStageThreeResetButtonRect(), TEXT_CONTENT.manuscript.ui.reset);
 }
 
 function drawManuscriptRings(scene) {
@@ -7041,11 +9183,14 @@ function drawManuscriptRings(scene) {
     context.restore();
 
     context.fillStyle = selected ? "#d8c16f" : "#7f9094";
-    context.font = "11px monospace";
+    context.font = "10px monospace";
     context.fillText(
-      `${ringData.label}: ${ring.rotation}`,
-      420,
-      112 + index * 24,
+      formatText(TEXT_CONTENT.manuscript.rings.rotationTemplate, {
+        label: ringData.label,
+        rotation: ring.rotation,
+      }),
+      MANUSCRIPT_VIEW.PANEL_X + 12,
+      MANUSCRIPT_VIEW.PANEL_Y + 96 + index * 22,
     );
   });
 
@@ -7053,33 +9198,42 @@ function drawManuscriptRings(scene) {
 }
 
 function drawSolvedManuscriptStage(scene) {
-  drawStageTitle("Solved", "The page is no longer paper");
+  drawStageTitle(TEXT_CONTENT.manuscript.ui.solvedLabel, TEXT_CONTENT.manuscript.ui.solvedTitle);
   context.globalAlpha = 0.72;
   drawOriginalSymbol("removed", 286, 160, 3.4, true);
   context.globalAlpha = 1;
-  drawStageMessage("The archive has accepted the missing page. Reality is changing.");
+  drawStageMessage(TEXT_CONTENT.manuscript.ui.solvedMessage);
 }
 
 function drawManuscriptChrome() {
   context.fillStyle = "#d8d7c8";
   context.font = "17px monospace";
   context.textBaseline = "top";
-  context.fillText("VOYNICH MANUSCRIPT", 28, 16);
+  context.fillText(TEXT_CONTENT.manuscript.title, 24, 16);
 
-  drawButton(getControlsButtonRect(), "C Controls");
+  drawButton(getControlsButtonRect(), TEXT_CONTENT.manuscript.ui.controlsButton);
 
   if (canCloseManuscriptInspection()) {
-    drawButton(getCloseManuscriptButtonRect(), "Close");
+    drawButton(getCloseManuscriptButtonRect(), TEXT_CONTENT.manuscript.ui.close);
   }
 
   if (TRAILER_MODE && !shouldHideCaptureUi() && !manuscriptProgress.finalTriggered) {
-    drawButton(getDeveloperCompleteButtonRect(), "DEV: Complete current stage");
+    drawButton(
+      getDeveloperCompleteButtonRect(),
+      TEXT_CONTENT.manuscript.ui.developerComplete,
+    );
   }
 
   if (manuscriptProgress.messageTimer > 0 && manuscriptProgress.message) {
     context.fillStyle = "#d8c16f";
-    context.font = "12px monospace";
-    drawWrappedText(manuscriptProgress.message, 54, 314, 330, 14);
+    context.font = "10px monospace";
+    drawWrappedText(
+      manuscriptProgress.message,
+      MANUSCRIPT_VIEW.PANEL_X + 12,
+      MANUSCRIPT_VIEW.PANEL_Y + 146,
+      MANUSCRIPT_VIEW.PANEL_WIDTH - 24,
+      12,
+    );
   }
 }
 
@@ -7095,7 +9249,13 @@ function drawStageTitle(label, title) {
 function drawStageMessage(text) {
   context.fillStyle = "#9ba9ad";
   context.font = "11px monospace";
-  drawWrappedText(text, MANUSCRIPT_VIEW.PANEL_X, MANUSCRIPT_VIEW.PANEL_Y + 48, 180, 13);
+  drawWrappedText(
+    text,
+    MANUSCRIPT_VIEW.PANEL_X + 12,
+    MANUSCRIPT_VIEW.PANEL_Y + 58,
+    MANUSCRIPT_VIEW.PANEL_WIDTH - 24,
+    14,
+  );
 }
 
 function drawButton(rect, label) {
@@ -7137,7 +9297,37 @@ function drawOriginalSymbol(symbolId, x, y, scale = 1, glowing = false) {
   context.fillStyle = glowing ? "#d8c16f" : "#3f3424";
   context.lineWidth = 2;
 
-  if (symbolId === "staff") {
+  if (symbolId === "eye") {
+    context.beginPath();
+    context.moveTo(0, 10);
+    context.quadraticCurveTo(10, 0, 22, 10);
+    context.quadraticCurveTo(10, 20, 0, 10);
+    context.stroke();
+    context.fillRect(9, 7, 5, 7);
+  } else if (symbolId === "spiral") {
+    context.beginPath();
+    context.arc(11, 11, 10, 0.2, Math.PI * 1.75);
+    context.arc(11, 11, 6, 0.2, Math.PI * 1.65);
+    context.arc(11, 11, 2, 0, Math.PI * 1.4);
+    context.stroke();
+  } else if (symbolId === "brokenSquare") {
+    context.beginPath();
+    context.arc(5, 8, 5, 0, Math.PI * 2);
+    context.moveTo(10, 8);
+    context.lineTo(22, 20);
+    context.moveTo(15, 13);
+    context.lineTo(18, 10);
+    context.moveTo(18, 16);
+    context.lineTo(21, 13);
+    context.stroke();
+  } else if (symbolId === "verticalLine") {
+    context.strokeRect(6.5, 9.5, 12, 12);
+    context.fillRect(7, 1, 3, 11);
+    context.fillRect(11, -1, 3, 13);
+    context.fillRect(15, 1, 3, 11);
+    context.fillRect(19, 5, 3, 11);
+    context.fillRect(2, 10, 6, 3);
+  } else if (symbolId === "staff") {
     context.strokeRect(1.5, 3.5, 18, 12);
     context.beginPath();
     context.moveTo(10, -2);
@@ -7581,7 +9771,7 @@ function drawArchiveSign(x, y) {
   context.fillStyle = "#b9d5dc";
   context.font = "14px monospace";
   context.textBaseline = "top";
-  context.fillText("ARCHIVE", x + 17, y + 6);
+  context.fillText(TEXT_CONTENT.corridor.signs.archive, x + 17, y + 6);
 }
 
 function drawVerticalSupports(view) {
@@ -7892,16 +10082,27 @@ function drawFilmGrain(scene) {
 }
 
 function drawObjectiveDisplay() {
-  if (journalState.open || keypadState.active || isInterfaceScreenState() || shouldHideCaptureUi()) {
+  if (
+    journalState.open ||
+    keypadState.active ||
+    recordsProgress.activeCaseId !== null ||
+    (gameState.current === GAME_STATES.PROLOGUE && !prologueProgress.controlGranted) ||
+    gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    (gameState.current === GAME_STATES.ESCAPE && escapeProgress.protagonistEscaped) ||
+    isInterfaceScreenState() ||
+    shouldHideCaptureUi()
+  ) {
     return;
   }
 
   const objective = OBJECTIVE_DATA[objectiveState.currentId];
   const alpha = objectiveState.bannerTimer > 0 ? 0.94 : 0.34;
-  const x = 360;
-  const y = 18;
-  const width = 256;
-  const height = 46;
+  const inBoss = gameState.current === GAME_STATES.ARCHIVIST;
+  const x = inBoss ? 408 : 360;
+  const y = inBoss ? 296 : 18;
+  const width = inBoss ? 216 : 256;
+  const height = inBoss ? 50 : 56;
 
   context.globalAlpha = alpha;
   context.fillStyle = "rgba(4, 7, 10, 0.72)";
@@ -7909,12 +10110,12 @@ function drawObjectiveDisplay() {
   context.fillStyle = "rgba(164, 181, 184, 0.28)";
   context.fillRect(x, y, width, 2);
   context.fillStyle = "#d8d7c8";
-  context.font = "13px monospace";
+  context.font = inBoss ? "10px monospace" : "13px monospace";
   context.textBaseline = "top";
   context.fillText(objective.title, x + 10, y + 8);
   context.fillStyle = "#93a3a6";
-  context.font = "11px monospace";
-  context.fillText(objective.detail, x + 10, y + 27);
+  context.font = inBoss ? "8px monospace" : "10px monospace";
+  drawWrappedText(objective.detail, x + 10, y + 27, width - 20, 11);
   context.globalAlpha = 1;
 }
 
@@ -7922,6 +10123,7 @@ function drawRealityMessage() {
   if (
     realityProgress.messageTimer <= 0 ||
     !realityProgress.message ||
+    gameState.current === GAME_STATES.RING ||
     shouldHideCaptureUi() ||
     dialogueState.active ||
     journalState.open ||
@@ -7949,6 +10151,11 @@ function drawRealityMessage() {
 
 function drawControlsHint() {
   if (
+    (gameState.current === GAME_STATES.PROLOGUE && !prologueProgress.controlGranted) ||
+    gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    gameState.current === GAME_STATES.ARCHIVIST ||
+    (gameState.current === GAME_STATES.ESCAPE && escapeProgress.protagonistEscaped) ||
     isInterfaceScreenState() ||
     shouldHideCaptureUi() ||
     controlsState.open ||
@@ -7960,7 +10167,7 @@ function drawControlsHint() {
     return;
   }
 
-  const text = "C Controls";
+  const text = TEXT_CONTENT.generalUI.controlsHint;
   const width = Math.ceil(measureTextWidth(text, "11px monospace")) + 18;
   const x = 18;
   const y = CANVAS_HEIGHT - 28;
@@ -7995,42 +10202,44 @@ function drawControlsOverlay() {
   context.fillStyle = "#d8d7c8";
   context.font = "20px monospace";
   context.textBaseline = "top";
-  context.fillText("CONTROLS", x + 22, y + 18);
+  context.fillText(TEXT_CONTENT.generalUI.controls.title, x + 22, y + 18);
 
   context.fillStyle = "#8fa0a4";
   context.font = "11px monospace";
-  context.fillText("C or Escape closes", x + width - 132, y + 23);
+  context.fillText(TEXT_CONTENT.generalUI.controls.closeHint, x + width - 132, y + 23);
 
-  drawControlsColumn(x + 24, y + 60, "Exploration", [
-    "A / D or Left / Right: move",
-    "E: interact, advance dialogue",
-    "F: flashlight",
-    "J: journal",
-    "F2: debug overlay",
-  ]);
+  drawControlsColumn(
+    x + 24,
+    y + 60,
+    TEXT_CONTENT.generalUI.controls.explorationTitle,
+    TEXT_CONTENT.generalUI.controls.explorationLines,
+  );
 
-  drawControlsColumn(x + 24, y + 164, "Journal and keypad", [
-    "Journal A / D: clue pages",
-    "Numbers: keypad digits",
-    "Backspace: erase digit",
-    "Enter or E: submit",
-    "Escape: close open panel",
-  ]);
+  drawControlsColumn(
+    x + 24,
+    y + 164,
+    TEXT_CONTENT.generalUI.controls.journalTitle,
+    TEXT_CONTENT.generalUI.controls.journalLines,
+  );
 
-  drawControlsColumn(x + 270, y + 60, "Manuscript puzzles", [
-    "Mouse: select, drag, press buttons",
-    "Tab or 1-4: choose fragment",
-    "Arrows: move selected item",
-    "Q / E: rotate selected item",
-    "Enter: place, choose, or rotate",
-    "R: reset sequence or rings",
-    "B: back from final rings",
-  ]);
+  drawControlsColumn(
+    x + 270,
+    y + 60,
+    TEXT_CONTENT.generalUI.controls.manuscriptTitle,
+    TEXT_CONTENT.generalUI.controls.manuscriptLines,
+  );
+
+  drawControlsColumn(
+    x + 270,
+    y + 196,
+    TEXT_CONTENT.generalUI.controls.climaxTitle,
+    TEXT_CONTENT.generalUI.controls.climaxLines,
+  );
 
   if (TRAILER_MODE && !shouldHideCaptureUi()) {
     context.fillStyle = "#d8c16f";
     context.font = "11px monospace";
-    context.fillText("Trailer only: F6 changed archive, F7 silhouette, F8 glitch, F9 final, F10 capture.", x + 270, y + 250);
+    context.fillText(TEXT_CONTENT.generalUI.controls.trailerShortcuts, x + 270, y + 250);
   }
 }
 
@@ -8055,7 +10264,9 @@ function drawInteractionPrompt() {
     return;
   }
 
-  const prompt = `[E] ${getInteractablePrompt(interactionState.activeInteractable)}`;
+  const prompt = formatText(TEXT_CONTENT.generalUI.interactionPromptTemplate, {
+    prompt: getInteractablePrompt(interactionState.activeInteractable),
+  });
   const x = Math.round(CANVAS_WIDTH / 2 - measureTextWidth(prompt, "15px monospace") / 2 - 12);
   const y = 306;
   const width = Math.ceil(measureTextWidth(prompt, "15px monospace")) + 24;
@@ -8093,11 +10304,11 @@ function drawJournalScreen() {
   context.fillStyle = "#d8d7c8";
   context.font = "20px monospace";
   context.textBaseline = "top";
-  context.fillText("JOURNAL", panelX + 22, panelY + 18);
+  context.fillText(TEXT_CONTENT.generalUI.journal.title, panelX + 22, panelY + 18);
 
   context.font = "14px monospace";
   context.fillStyle = "#b8c3c5";
-  context.fillText("Current objective", panelX + 24, panelY + 58);
+  context.fillText(TEXT_CONTENT.generalUI.journal.currentObjective, panelX + 24, panelY + 58);
   context.fillStyle = "#e2dbc4";
   context.fillText(objective.title, panelX + 24, panelY + 80);
   context.fillStyle = "#8fa0a4";
@@ -8106,7 +10317,7 @@ function drawJournalScreen() {
 
   context.fillStyle = "#b8c3c5";
   context.font = "14px monospace";
-  context.fillText("Collected clues", panelX + 24, panelY + 136);
+  context.fillText(TEXT_CONTENT.generalUI.journal.collectedClues, panelX + 24, panelY + 136);
 
   const clueIds = Array.from(chapterProgress.clues);
   const cluesPerPage = 2;
@@ -8117,10 +10328,10 @@ function drawJournalScreen() {
   context.font = "12px monospace";
   if (clueIds.length === 0) {
     context.fillStyle = "#65777b";
-    context.fillText("No clues recorded.", panelX + 24, panelY + 160);
+    context.fillText(TEXT_CONTENT.generalUI.journal.noClues, panelX + 24, panelY + 160);
   } else {
     visibleClues.forEach((clueId, index) => {
-      const clue = CLUE_DATA[clueId];
+      const clue = getJournalClue(clueId);
       const y = panelY + 158 + index * 58;
       context.fillStyle = "#d0c8ad";
       context.fillText(clue.title, panelX + 24, y);
@@ -8134,10 +10345,16 @@ function drawJournalScreen() {
   context.font = "11px monospace";
   const pageText =
     pageCount > 1
-      ? `A/D pages ${journalState.cluePage + 1}/${pageCount} - ${clueIds.length} clues`
-      : `${clueIds.length} clues`;
+      ? formatText(TEXT_CONTENT.generalUI.journal.pageTemplate, {
+        page: journalState.cluePage + 1,
+        pageCount,
+        clueCount: clueIds.length,
+      })
+      : formatText(TEXT_CONTENT.generalUI.journal.clueCountTemplate, {
+        clueCount: clueIds.length,
+      });
   context.fillText(pageText, panelX + 24, panelY + panelHeight - 24);
-  context.fillText("J / Escape closes", panelX + panelWidth - 132, panelY + panelHeight - 24);
+  context.fillText(TEXT_CONTENT.generalUI.journal.closeHint, panelX + panelWidth - 132, panelY + panelHeight - 24);
 }
 
 function drawInspectOverlay() {
@@ -8173,12 +10390,12 @@ function drawInspectOverlay() {
   if (inspectOverlayState.clueId) {
     context.fillStyle = "#756f4a";
     context.font = "11px monospace";
-    context.fillText("Copied to journal", panelX + 20, panelY + panelHeight - 25);
+    context.fillText(TEXT_CONTENT.generalUI.inspect.copiedToJournal, panelX + 20, panelY + panelHeight - 25);
   }
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText("E / Enter / Escape", panelX + panelWidth - 124, panelY + panelHeight - 25);
+  context.fillText(TEXT_CONTENT.generalUI.inspect.closeHint, panelX + panelWidth - 124, panelY + panelHeight - 25);
 }
 
 function drawTransitionOverlay() {
@@ -8200,7 +10417,7 @@ function drawAudioUnlockPrompt() {
     return;
   }
 
-  const text = "Click or press any key to enable audio";
+  const text = TEXT_CONTENT.generalUI.audio.unlockPrompt;
   const width = Math.ceil(measureTextWidth(text, "12px monospace")) + 28;
   const x = Math.round((CANVAS_WIDTH - width) / 2);
   const y = 18;
@@ -8238,7 +10455,7 @@ function drawKeypadScreen() {
   context.fillStyle = "#b8c9bd";
   context.font = "16px monospace";
   context.textBaseline = "top";
-  context.fillText("ARCHIVE ACCESS", x + 32, y + 18);
+  context.fillText(TEXT_CONTENT.corridor.keypad.title, x + 32, y + 18);
 
   context.fillStyle = "#10191e";
   context.fillRect(x + 34, y + 52, 136, 36);
@@ -8250,11 +10467,11 @@ function drawKeypadScreen() {
 
   context.fillStyle = keypadState.messageTimer > 0 ? "#d8c16f" : "#68787c";
   context.font = "12px monospace";
-  context.fillText(keypadState.message || "Type digits. Enter submits. Esc exits.", x + 22, y + 222);
+  context.fillText(keypadState.message || TEXT_CONTENT.corridor.keypad.defaultHint, x + 22, y + 222);
 }
 
 function drawKeypadButtons(x, y) {
-  const labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "<", "0", "OK"];
+  const labels = TEXT_CONTENT.corridor.keypad.buttons;
 
   labels.forEach((label, index) => {
     const column = index % 3;
@@ -8305,7 +10522,7 @@ function drawDialoguePanel() {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText("E / Enter", panelX + panelWidth - 78, panelY + panelHeight - 18);
+  context.fillText(TEXT_CONTENT.generalUI.dialogue.advanceHint, panelX + panelWidth - 78, panelY + panelHeight - 18);
 }
 
 function drawCollisionBoxes(target, view) {
@@ -8335,6 +10552,1043 @@ function drawCollisionBoxes(target, view) {
 
     context.strokeStyle = "#d8c16f";
     context.strokeRect(boxX + 0.5, boxY + 0.5, definition.width, definition.height);
+  });
+}
+
+function drawMissingPersonsWing(view, scene) {
+  const viewX = view.x;
+  context.fillStyle = "#05080a";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#152026";
+  context.fillRect(0, 64, CANVAS_WIDTH, GROUND_Y - 64);
+  context.fillStyle = "#1a120f";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+
+  for (let worldX = 0; worldX < RECORDS_WORLD.WIDTH; worldX += 190) {
+    const x = Math.round(worldX - viewX);
+    context.fillStyle = "#080d10";
+    context.fillRect(x, 74, 126, 202);
+    context.strokeStyle = "#2b3a40";
+    context.strokeRect(x + 0.5, 74.5, 126, 202);
+  }
+
+  const exitX = Math.round(RECORDS_WORLD.ENTRANCE_X - viewX);
+  context.fillStyle = "#070a0c";
+  context.fillRect(exitX, 166, 70, 126);
+  context.strokeStyle = "#46565b";
+  context.strokeRect(exitX + 0.5, 166.5, 70, 126);
+
+  MISSING_PERSON_CASES.forEach((caseData) => {
+    const x = Math.round(caseData.x - viewX);
+    const solved = recordsProgress.solvedCases.has(caseData.id);
+    context.fillStyle = solved ? "#172c26" : "#171b1b";
+    context.fillRect(x, 132, 112, 150);
+    context.strokeStyle = solved ? "#5a9872" : "#5b5144";
+    context.strokeRect(x + 0.5, 132.5, 112, 150);
+    context.fillStyle = "#bbb49d";
+    context.fillRect(x + 14, 150, 40, 48);
+    context.fillStyle = "#25282a";
+    context.fillRect(x + 25, 158, 18, 25);
+    context.fillStyle = "#d0c8ad";
+    context.font = "10px monospace";
+    context.fillText(caseData.name.toUpperCase(), x + 10, 210);
+    context.fillStyle = "#7f9094";
+    context.font = "8px monospace";
+    context.fillText(caseData.role.toUpperCase(), x + 10, 226);
+    context.fillText(
+      solved
+        ? TEXT_CONTENT.recordsWing.labels.contradictionCaptured
+        : TEXT_CONTENT.recordsWing.labels.fileAltered,
+      x + 10,
+      250,
+    );
+  });
+
+  context.fillStyle = "rgba(3, 5, 7, 0.78)";
+  context.fillRect(18, 18, 322, 34);
+  context.fillStyle = "#c7c1aa";
+  context.font = "11px monospace";
+  context.fillText(TEXT_CONTENT.recordsWing.labels.sceneTitle, 34, 29);
+  drawVignette();
+  drawFilmGrain(scene);
+}
+
+function getMissingPersonRecordRect(index) {
+  return { x: 112, y: 150 + index * 38, width: 416, height: 30 };
+}
+
+function drawMissingPersonCaseOverlay() {
+  if (recordsProgress.activeCaseId === null) {
+    return;
+  }
+
+  const caseData = getMissingPersonCase(recordsProgress.activeCaseId);
+  if (!caseData) return;
+
+  context.fillStyle = "rgba(0, 0, 0, 0.78)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#0b1114";
+  context.fillRect(70, 34, 500, 292);
+  context.strokeStyle = recordsProgress.errorTimer > 0 ? "#b6473f" : "#42545b";
+  context.lineWidth = recordsProgress.errorTimer > 0 ? 4 : 2;
+  context.strokeRect(70.5, 34.5, 500, 292);
+  context.fillStyle = "#e0ddca";
+  context.font = "19px monospace";
+  context.fillText(caseData.name.toUpperCase(), 94, 54);
+  context.fillStyle = "#9eaaac";
+  context.font = "11px monospace";
+  context.fillText(caseData.role, 96, 82);
+  context.fillText(TEXT_CONTENT.recordsWing.overlay.instruction, 96, 112);
+
+  caseData.records.forEach((record, index) => {
+    const rect = getMissingPersonRecordRect(index);
+    const selected = recordsProgress.selectedRecordIndex === index;
+    context.fillStyle = selected ? "#28383e" : "#11191d";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = selected ? "#d8c16f" : "#314047";
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    context.fillStyle = selected ? "#e2dbc4" : "#9ba9ab";
+    context.font = "10px monospace";
+    context.fillText(record, rect.x + 10, rect.y + 10);
+  });
+
+  context.fillStyle = recordsProgress.errorTimer > 0 ? "#d35c51" : "#68787c";
+  context.font = "10px monospace";
+  context.fillText(
+    recordsProgress.errorTimer > 0
+      ? TEXT_CONTENT.recordsWing.labels.contradictionNotProven
+      : TEXT_CONTENT.recordsWing.overlay.controls,
+    118,
+    306,
+  );
+  if (recordsProgress.errorTimer > 0) {
+    context.fillStyle = "rgba(180, 28, 22, 0.16)";
+    context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  }
+}
+
+function drawUncataloguedClassroom(view, scene) {
+  const viewX = view.x;
+  context.fillStyle = "#050708";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#182024";
+  context.fillRect(0, 62, CANVAS_WIDTH, GROUND_Y - 62);
+  context.fillStyle = "#211711";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+
+  const boardX = 330 - viewX;
+  context.fillStyle = "#111c19";
+  context.fillRect(boardX, 84, 250, 86);
+  context.strokeStyle = "#505549";
+  context.strokeRect(boardX + 0.5, 84.5, 250, 86);
+  context.fillStyle = "#a8aa91";
+  context.font = "13px monospace";
+  context.fillText(String(2079 + classroomProgress.occupants * 2), boardX + 96, 110);
+  context.font = "9px monospace";
+  context.fillText(TEXT_CONTENT.distortedArchive.classroom.attendanceBoard, boardX + 30, 140);
+
+  for (let index = 0; index < 8; index += 1) {
+    const worldX = 190 + index * 88;
+    const x = worldX - viewX;
+    context.fillStyle = "#352a21";
+    context.fillRect(x, 232, 54, 8);
+    context.fillRect(x + 8, 240, 4, 34);
+    context.fillRect(x + 42, 240, 4, 34);
+    if (index < classroomProgress.occupants) {
+      context.fillStyle = "#030405";
+      context.fillRect(x + 18, 190, 20, 42);
+      context.beginPath();
+      context.arc(x + 28, 184, 10, 0, Math.PI * 2);
+      context.fill();
+    }
+  }
+
+  const exitX = CLASSROOM_WORLD.ENTRANCE_X - viewX;
+  context.fillStyle = "#080a0b";
+  context.fillRect(exitX, 164, 70, 128);
+  const registerX = 790 - viewX;
+  context.fillStyle = classroomProgress.completed ? "#c9bb78" : "#898270";
+  context.fillRect(registerX, 228, 76, 38);
+  context.fillStyle = "#1a1712";
+  context.font = "8px monospace";
+  context.fillText(TEXT_CONTENT.distortedArchive.classroom.register, registerX + 14, 242);
+
+  if (classroomProgress.completed) {
+    context.fillStyle = "rgba(3, 5, 7, 0.82)";
+    context.fillRect(188, 20, 264, 28);
+    context.fillStyle = "#d8c16f";
+    context.font = "11px monospace";
+    context.fillText(TEXT_CONTENT.distortedArchive.classroom.explorerPresent, 244, 29);
+  }
+  drawVignette();
+  drawFilmGrain(scene);
+}
+
+function drawPrologueScene(view, scene) {
+  context.fillStyle = "#020304";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  const buildingX = Math.round(250 - view.x * 0.35);
+  context.fillStyle = "#080b0d";
+  context.fillRect(buildingX, 70, 650, 222);
+  context.fillStyle = "#11181c";
+  context.fillRect(buildingX + 40, 104, 570, 188);
+  context.fillStyle = "#020405";
+  for (let column = 0; column < 7; column += 1) {
+    context.fillRect(buildingX + 72 + column * 74, 130, 38, 62);
+  }
+  const entranceX = Math.round(PROLOGUE_WORLD.ENTRANCE_X - view.x);
+  context.fillStyle = "#020303";
+  context.fillRect(entranceX, 154, 72, 138);
+  context.strokeStyle = "#3d4648";
+  context.strokeRect(entranceX + 0.5, 154.5, 72, 138);
+  context.fillStyle = "#17110d";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+  context.fillStyle = "rgba(174, 189, 194, 0.08)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  drawVignette();
+  drawFilmGrain(scene);
+
+  if (!prologueProgress.controlGranted) {
+    context.fillStyle = "rgba(0, 0, 0, 0.68)";
+    context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    const text = getPrologueText(prologueProgress.timer);
+    if (text) {
+      context.fillStyle = "#d8d7c8";
+      context.font = prologueProgress.timer < 3 ? "24px monospace" : "15px monospace";
+      context.textBaseline = "top";
+      const width = measureTextWidth(text, context.font);
+      context.fillText(text, (CANVAS_WIDTH - width) / 2, 150);
+    }
+    if (prologueProgress.timer >= 3) {
+      context.fillStyle = "#59696d";
+      context.font = "10px monospace";
+      context.fillText(TEXT_CONTENT.opening.skipHint, 248, 326);
+    }
+  } else {
+    context.fillStyle = "rgba(3, 5, 7, 0.76)";
+    context.fillRect(188, 24, 264, 26);
+    context.fillStyle = "#b8c3c5";
+    context.font = "11px monospace";
+    context.fillText(TEXT_CONTENT.opening.serviceEntranceHint, 204, 32);
+  }
+}
+
+function getPrologueText(time) {
+  const lines = TEXT_CONTENT.opening.prologueLines;
+  if (time < 3) return lines[0];
+  if (time < 6) return lines[1];
+  if (time < 9) return lines[2];
+  if (time < 12) return lines[3];
+  if (time < 15) return lines[4];
+  if (time < 18) return lines[5];
+  if (time < 24) return lines[6];
+  return "";
+}
+
+function drawEscapeScene(view, scene) {
+  const viewX = view.x;
+  context.fillStyle = "#030506";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#131c20";
+  context.fillRect(0, 58, CANVAS_WIDTH, GROUND_Y - 58);
+  context.fillStyle = "#211713";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+
+  for (let worldX = 0; worldX < ESCAPE_WORLD.WIDTH; worldX += 220) {
+    const x = Math.round(worldX - viewX);
+    if (x < -100 || x > CANVAS_WIDTH + 100) continue;
+    context.fillStyle = "#070a0c";
+    context.fillRect(x, 76, 34, 216);
+    context.fillStyle = "#34434a";
+    context.fillRect(x + 8, 82, 5, 198);
+  }
+
+  for (let index = 0; index < 14; index += 1) {
+    const worldX = 360 + index * 278;
+    const x = Math.round(worldX - viewX);
+    if (x < -90 || x > CANVAS_WIDTH + 90) continue;
+    const pulse = Math.sin(scene.time * 2.2 + index) > 0.45;
+    context.fillStyle = pulse ? "rgba(157, 67, 52, 0.34)" : "rgba(75, 45, 39, 0.18)";
+    context.fillRect(x - 34, GROUND_Y - 8, 84, 8);
+    context.fillStyle = "#15100d";
+    context.fillRect(x, 78 + (index % 3) * 24, 28, 52);
+  }
+
+  for (const debris of escapeProgress.debris) {
+    if (
+      debris.resolved ||
+      debris.timer < 0 ||
+      (debris.hardOnly && escapeProgress.cameraChoice !== "keep")
+    ) {
+      continue;
+    }
+    const x = Math.round(debris.x - viewX);
+    if (x < -100 || x > CANVAS_WIDTH + 100) continue;
+    if (debris.timer > 0) {
+      context.fillStyle = "rgba(193, 49, 39, 0.5)";
+      context.fillRect(x - 52, GROUND_Y - 10, 104, 10);
+      context.fillStyle = "#c94a40";
+      context.font = "9px monospace";
+      context.fillText(TEXT_CONTENT.escape.labels.falling, x - 22, GROUND_Y - 27);
+    } else if (debris.active > 0) {
+      context.fillStyle = "#211612";
+      fillPolygon([
+        [x - 48, 74],
+        [x - 8, 74],
+        [x + 36, GROUND_Y],
+        [x - 34, GROUND_Y],
+      ]);
+    }
+  }
+
+  const collapseX = Math.round(1660 - viewX);
+  if (!escapeProgress.detourCompleted && collapseX > -180 && collapseX < CANVAS_WIDTH + 180) {
+    context.fillStyle = "#130d0b";
+    context.fillRect(collapseX, 106, 430, 186);
+    context.fillStyle = "#392820";
+    for (let index = 0; index < 8; index += 1) {
+      context.fillRect(collapseX + index * 52, 112 + (index % 3) * 42, 66, 20);
+    }
+    context.fillStyle = "#29363b";
+    context.fillRect(collapseX - 120, 164, 570, 10);
+    context.fillStyle = "#849196";
+    context.font = "9px monospace";
+    context.fillText(TEXT_CONTENT.escape.labels.serviceBypass, collapseX - 104, 148);
+  }
+
+  const cameraX = Math.round(3260 - viewX);
+  if (escapeProgress.cameraChoice === null && cameraX > -80 && cameraX < CANVAS_WIDTH + 80) {
+    context.fillStyle = "#77705e";
+    context.fillRect(cameraX, GROUND_Y - 12, 24, 12);
+    context.fillStyle = "#17191a";
+    context.fillRect(cameraX + 7, GROUND_Y - 9, 8, 6);
+  }
+
+  const exitX = Math.round(ESCAPE_WORLD.EXIT_X - viewX);
+  if (exitX > -120 && exitX < CANVAS_WIDTH + 120) {
+    context.fillStyle = "rgba(211, 220, 194, 0.22)";
+    fillPolygon([
+      [exitX - 30, 60],
+      [exitX + 70, 60],
+      [exitX + 180, GROUND_Y],
+      [exitX - 110, GROUND_Y],
+    ]);
+    context.fillStyle = "#d5d6bd";
+    context.fillRect(exitX, 128, 70, 164);
+  }
+  drawVignette();
+  drawFilmGrain(scene);
+}
+
+function drawEscapeGameplayUi() {
+  if (escapeProgress.messageTimer > 0 && escapeProgress.message) {
+    context.fillStyle = "rgba(3, 5, 7, 0.88)";
+    context.fillRect(120, 82, 400, 42);
+    context.fillStyle = "#d0c8ad";
+    context.font = "11px monospace";
+    drawWrappedText(escapeProgress.message, 134, 94, 372, 13);
+  }
+
+  if (!escapeProgress.cameraChoiceActive) {
+    return;
+  }
+
+  context.fillStyle = "rgba(0, 0, 0, 0.82)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#0b1114";
+  context.fillRect(112, 54, 416, 250);
+  context.strokeStyle = "#46575d";
+  context.strokeRect(112.5, 54.5, 416, 250);
+  context.fillStyle = "#e0ddca";
+  context.font = "18px monospace";
+  context.fillText(TEXT_CONTENT.escape.cameraChoice.title, 154, 76);
+  context.fillStyle = "#91a0a3";
+  context.font = "10px monospace";
+  context.fillText(TEXT_CONTENT.escape.cameraChoice.description, 132, 112);
+
+  const options = [
+    [TEXT_CONTENT.escape.cameraChoice.keepLabel, TEXT_CONTENT.escape.cameraChoice.keepDetail],
+    [TEXT_CONTENT.escape.cameraChoice.dropLabel, TEXT_CONTENT.escape.cameraChoice.dropDetail],
+  ];
+  options.forEach(([label, detail], index) => {
+    const rect = getEscapeCameraChoiceRect(index);
+    const selected = escapeProgress.cameraChoiceIndex === index;
+    context.fillStyle = selected ? "#28383e" : "#11191d";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = selected ? "#d8c16f" : "#314047";
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    context.fillStyle = selected ? "#e2dbc4" : "#a1adaf";
+    context.font = "11px monospace";
+    context.fillText(label, rect.x + 12, rect.y + 6);
+    context.fillStyle = "#728286";
+    context.font = "8px monospace";
+    context.fillText(detail, rect.x + 12, rect.y + 22);
+  });
+  context.fillStyle = "#68787c";
+  context.font = "9px monospace";
+  context.fillText(TEXT_CONTENT.escape.cameraChoice.controls, 222, 286);
+}
+
+function drawEscapeReveal(scene) {
+  const time = escapeProgress.revealTimer;
+  context.fillStyle = time < 5 ? "#d0c9ab" : "#050708";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  drawFilmGrain(scene);
+  context.textBaseline = "top";
+
+  if (time < 4) {
+    context.fillStyle = "#202629";
+    context.font = "15px monospace";
+    context.fillText(TEXT_CONTENT.escape.reveal.morningLight, 104, 154);
+    return;
+  }
+  if (time < 8) {
+    context.fillStyle = "#d8d7c8";
+    context.font = "14px monospace";
+    context.fillText(
+      escapeProgress.evidencePreserved
+        ? TEXT_CONTENT.escape.reveal.evidenceUpload
+        : TEXT_CONTENT.escape.reveal.leftCamera,
+      escapeProgress.evidencePreserved ? 84 : 154,
+      128,
+    );
+    context.fillStyle = "#839296";
+    context.font = "11px monospace";
+    context.fillText(
+      escapeProgress.evidencePreserved
+        ? TEXT_CONTENT.escape.reveal.survivingImage
+        : TEXT_CONTENT.escape.reveal.phoneImage,
+      escapeProgress.evidencePreserved ? 84 : 72,
+      164,
+    );
+    context.fillText(TEXT_CONTENT.escape.reveal.didNotTakeIt, 256, 190);
+    return;
+  }
+
+  context.fillStyle = "#d8d7c8";
+  context.font = "17px monospace";
+  context.fillText(TEXT_CONTENT.escape.reveal.newEntry, 174, 78);
+  context.fillStyle = "#aebabc";
+  context.font = "13px monospace";
+  context.fillText(TEXT_CONTENT.escape.reveal.subjectExplorer, 210, 130);
+  context.fillStyle = "#c6ad61";
+  context.fillText(TEXT_CONTENT.escape.reveal.statusReleased, 228, 158);
+  context.fillText(TEXT_CONTENT.escape.reveal.observationContinuing, 202, 184);
+  if (escapeProgress.evidencePreserved) {
+    context.fillStyle = "#75b68b";
+    context.fillText(TEXT_CONTENT.escape.reveal.evidenceDistributed, 220, 208);
+  }
+  if (classroomProgress.completed) {
+    context.fillStyle = "#8d7eae";
+    context.fillText(TEXT_CONTENT.escape.reveal.attendanceOpen, 190, 226);
+  }
+
+  if (time >= 14) {
+    context.fillStyle = "#d8d7c8";
+    context.font = "12px monospace";
+    context.fillText(TEXT_CONTENT.escape.reveal.madeItOut, 260, classroomProgress.completed ? 250 : 238);
+    context.fillText(
+      TEXT_CONTENT.escape.reveal.archiveDidNotLetGo,
+      190,
+      classroomProgress.completed ? 270 : 260,
+    );
+  }
+}
+
+function drawCircuitPuzzle() {
+  if (!circuitPuzzleState.active) {
+    return;
+  }
+
+  context.fillStyle = "rgba(0, 0, 0, 0.78)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#080d10";
+  context.fillRect(72, 48, 496, 264);
+  context.strokeStyle = circuitPuzzleState.flickerTimer > 0 ? "#9a543f" : "#35464d";
+  context.lineWidth = 2;
+  context.strokeRect(72.5, 48.5, 496, 264);
+  context.fillStyle = "#d8d7c8";
+  context.font = "19px monospace";
+  context.fillText(TEXT_CONTENT.corridor.breaker.title, 96, 70);
+  context.fillStyle = "#7f9094";
+  context.font = "11px monospace";
+  context.fillText(TEXT_CONTENT.corridor.breaker.hint, 96, 99);
+
+  CIRCUIT_SEQUENCE.forEach((switchId, index) => {
+    const rect = getCircuitSwitchRect(index);
+    const active = circuitPuzzleState.sequence.includes(switchId);
+    context.fillStyle = active ? "#263e35" : "#11191e";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = active ? "#d8c16f" : "#3b4a50";
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    context.fillStyle = active ? "#d8c16f" : "#a8b4b6";
+    context.font = "10px monospace";
+    context.fillText(TEXT_CONTENT.corridor.breaker.switchLabels[switchId], rect.x + 8, rect.y + 12);
+    context.fillRect(rect.x + 35, rect.y + 38, 12, 30);
+    context.fillStyle = active ? "#c9b660" : "#2b3438";
+    context.fillRect(rect.x + 38, active ? rect.y + 32 : rect.y + 57, 6, 10);
+  });
+
+  for (let index = 0; index < 3; index += 1) {
+    context.fillStyle =
+      circuitPuzzleState.sequence.length > index ? "#d8c16f" : "#253238";
+    context.fillRect(254 + index * 42, 242, 24, 8);
+  }
+
+  context.fillStyle = "#aab7ba";
+  context.font = "11px monospace";
+  drawWrappedText(circuitPuzzleState.message, 100, 270, 390, 14);
+  context.fillStyle = "#65777b";
+  context.fillText(TEXT_CONTENT.corridor.breaker.closeHint, 378, 291);
+}
+
+function drawChamberRingScene() {
+  context.fillStyle = "#020405";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  const pulse = chamberRingProgress.rejectionTimer > 0
+    ? 0.18 + chamberRingProgress.rejectionTimer * 0.24
+    : 0.08;
+  context.fillStyle = `rgba(150, 68, 49, ${pulse})`;
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#17130f";
+  context.fillRect(42, 40, 354, 282);
+  context.strokeStyle = "#665a40";
+  context.lineWidth = 3;
+  context.strokeRect(42.5, 40.5, 354, 282);
+
+  context.strokeStyle = "#6c6044";
+  context.lineWidth = 18;
+  context.beginPath();
+  context.arc(224, 171, 112, 0, Math.PI * 2);
+  context.stroke();
+  context.lineWidth = 10;
+  context.strokeStyle = "#25211a";
+  context.beginPath();
+  context.arc(224, 171, 76, 0, Math.PI * 2);
+  context.stroke();
+
+  ARCHIVE_SYMBOL_PATTERN.forEach((_, index) => {
+    const rect = getChamberRingSectionRect(index);
+    const selected = chamberRingProgress.selectedSection === index;
+    context.fillStyle = selected ? "#202b31" : "#0f171b";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = selected ? "#d8c16f" : "#34464d";
+    context.lineWidth = 2;
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    const symbolId = ARCHIVE_SYMBOL_PATTERN[chamberRingProgress.symbols[index]];
+    drawOriginalSymbol(symbolId, rect.x + 34, rect.y + 18, 1.25, selected);
+  });
+
+  context.fillStyle = "#080d10";
+  context.fillRect(420, 40, 198, 282);
+  context.strokeStyle = "#303f45";
+  context.strokeRect(420.5, 40.5, 198, 282);
+  context.fillStyle = "#d8d7c8";
+  context.font = "17px monospace";
+  context.fillText(TEXT_CONTENT.archivist.chamber.lockTitle, 438, 62);
+  context.fillStyle = "#8fa0a4";
+  context.font = "11px monospace";
+  drawWrappedText(
+    TEXT_CONTENT.archivist.chamber.lockDescription,
+    438,
+    94,
+    164,
+    14,
+  );
+  context.fillStyle = "#66777b";
+  context.font = "10px monospace";
+  context.fillText(TEXT_CONTENT.archivist.chamber.journalHint, 438, 180);
+  drawButton(getChamberRingRotateRect(-1), TEXT_CONTENT.archivist.chamber.symbolMinus);
+  drawButton(getChamberRingRotateRect(1), TEXT_CONTENT.archivist.chamber.symbolPlus);
+  drawButton(getChamberRingEngageRect(), TEXT_CONTENT.archivist.chamber.engageMechanism);
+
+  if (chamberRingProgress.messageTimer > 0) {
+    context.fillStyle = "#c9b660";
+    context.font = "10px monospace";
+    drawWrappedText(chamberRingProgress.message, 438, 198, 164, 12);
+  }
+}
+
+function drawLegacyArchivistChamberScene(view, scene) {
+  const viewX = view.x;
+  const dim = archivistProgress.interferenceActive ? 0.34 : 1;
+  context.fillStyle = "#020304";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#10171b";
+  context.fillRect(0, 56, CANVAS_WIDTH, GROUND_Y - 56);
+  context.fillStyle = "#17110e";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+
+  for (let x = -(viewX % 120); x < CANVAS_WIDTH + 120; x += 120) {
+    context.fillStyle = "#080c0f";
+    context.fillRect(x, 70, 88, 184);
+    context.strokeStyle = "#26343a";
+    context.strokeRect(x + 0.5, 70.5, 88, 184);
+    context.fillStyle = "#59696d";
+    for (let row = 0; row < 7; row += 1) {
+      context.fillRect(x + 10, 86 + row * 23, 54 + ((row * 13) % 18), 2);
+    }
+  }
+
+  context.globalAlpha = dim;
+  if (archivistProgress.bossPhase === 1) {
+    ARCHIVIST_CHAMBER.NODES.forEach((worldX, index) => {
+      const x = Math.round(worldX - viewX);
+      if (archivistProgress.corruptedNodesDisabled.has(index)) {
+        context.fillStyle = "#17201c";
+        context.fillRect(x, 210, 56, 62);
+        return;
+      }
+      context.fillStyle = "#251416";
+      context.fillRect(x, 180, 56, 92);
+      context.strokeStyle = "#8b4f47";
+      context.strokeRect(x + 0.5, 180.5, 56, 92);
+      context.fillStyle = "#b07060";
+      context.font = "9px monospace";
+      context.fillText(TEXT_CONTENT.boss.ui.updating, x + 7, 192);
+      drawOriginalSymbol(ARCHIVE_SYMBOL_PATTERN[index], x + 17, 222, 1, true);
+    });
+    drawArchivistFigure(archivistProgress.archivistX - viewX, 154, true, scene.time);
+  } else if (archivistProgress.bossPhase === 2) {
+    ARCHIVIST_CHAMBER.COPIES.forEach((worldX, index) => {
+      const isReal = index === archivistProgress.realCopyIndex;
+      drawArchivistFigure(worldX - viewX, 154, isReal, scene.time + index);
+      if (scene.flashlightOn) {
+        const sequence = isReal ? [0, 1, 2, 3] : [index, 3, 1];
+        sequence.forEach((symbolIndex, symbolPosition) => {
+          drawOriginalSymbol(
+            ARCHIVE_SYMBOL_PATTERN[symbolIndex],
+            worldX - viewX - 22 + symbolPosition * 18,
+            126,
+            0.58,
+            isReal,
+          );
+        });
+      }
+    });
+  } else if (archivistProgress.bossPhase === 3) {
+    ARCHIVIST_CHAMBER.CONTROLS.forEach((worldX, index) => {
+      const x = Math.round(worldX - viewX);
+      const active = archivistProgress.finalSequence.includes(index);
+      context.fillStyle = active ? "#2c4036" : "#151d21";
+      context.fillRect(x, 210, 44, 70);
+      context.strokeStyle = active ? "#d8c16f" : "#35464d";
+      context.strokeRect(x + 0.5, 210.5, 44, 70);
+      drawOriginalSymbol(ARCHIVE_SYMBOL_PATTERN[index], x + 11, 224, 0.9, active);
+    });
+    drawArchivistFigure(1180 - viewX, 142, true, scene.time);
+  } else {
+    const terminalX = Math.round(ARCHIVIST_CHAMBER.TERMINAL_X - viewX);
+    context.fillStyle = "#0a1115";
+    context.fillRect(terminalX, 174, 72, 108);
+    context.fillStyle = "#b7ad77";
+    context.fillRect(terminalX + 10, 188, 52, 42);
+    context.fillStyle = "#18140f";
+    context.font = "8px monospace";
+    context.fillText(TEXT_CONTENT.boss.ui.entryReady, terminalX + 14, 204);
+  }
+  context.globalAlpha = 1;
+}
+
+function drawArchivistFigure(x, y, real, time) {
+  const sway = Math.sin(time * 2.1) * 3;
+  context.globalAlpha = real ? 0.82 : 0.48;
+  context.fillStyle = "#010202";
+  context.fillRect(x + sway, y + 34, 38, 92);
+  context.fillRect(x + 6 + sway, y + 10, 26, 30);
+  context.fillRect(x - 8 + sway, y + 52, 54, 18);
+  context.fillStyle = real ? "#7e6950" : "#3c4548";
+  context.fillRect(x + 11 + sway, y + 18, 4, 4);
+  context.fillRect(x + 23 + sway, y + 18, 4, 4);
+  context.globalAlpha = 1;
+}
+
+function drawLegacyArchivistEffects(scene, target, view) {
+  drawFlashlightDarkness(scene, target, view);
+  context.fillStyle = "rgba(118, 144, 150, 0.08)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  drawVignette();
+  drawFilmGrain(scene);
+
+  context.fillStyle = "rgba(4, 7, 9, 0.82)";
+  context.fillRect(18, 18, 142, 42);
+  context.fillStyle = "#8fa0a4";
+  context.font = "10px monospace";
+  context.fillText(
+    formatText(TEXT_CONTENT.boss.ui.stabilityTemplate, {
+      marks: "|".repeat(archivistProgress.playerStability),
+    }),
+    30,
+    29,
+  );
+  context.fillStyle = "#65777b";
+  context.fillText(
+    formatText(TEXT_CONTENT.boss.ui.phaseTemplate, {
+      phase: Math.min(3, archivistProgress.bossPhase),
+    }),
+    30,
+    44,
+  );
+
+  if (archivistProgress.messageTimer > 0 && !archivistProgress.symbolInterruptionActive) {
+    context.fillStyle = "rgba(4, 7, 9, 0.84)";
+    context.fillRect(150, 258, 340, 36);
+    context.fillStyle = "#d0c8ad";
+    context.font = "11px monospace";
+    drawWrappedText(archivistProgress.message, 162, 268, 316, 13);
+  }
+
+  if (archivistProgress.gameEnding) {
+    drawArchivistAftermath();
+  }
+}
+
+function drawArchivistAftermath() {
+  const elapsed = 20 - archivistProgress.endingTimer;
+  context.fillStyle = `rgba(0, 0, 0, ${clamp(elapsed / 8, 0.25, 0.9)})`;
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.textBaseline = "top";
+  context.fillStyle = "#d8d7c8";
+
+  if (elapsed >= 2) {
+    context.font = "18px monospace";
+    context.fillText(TEXT_CONTENT.boss.ui.archiveEntryCreated, 192, 104);
+  }
+  if (elapsed >= 6) {
+    context.font = "13px monospace";
+    context.fillText(TEXT_CONTENT.boss.ui.subjectRedacted, 218, 146);
+  }
+  if (elapsed >= 9) {
+    context.fillStyle = "#c6ad61";
+    context.fillText(TEXT_CONTENT.boss.ui.statusStillInside, 218, 170);
+  }
+  if (elapsed >= 13) {
+    context.fillStyle = "#aebabc";
+    context.font = "12px monospace";
+    context.fillText(TEXT_CONTENT.boss.ui.archivePreparing, 170, 222);
+    context.fillText(TEXT_CONTENT.boss.ui.nextEntry, 200, 242);
+  }
+}
+
+function drawArchivistChamberScene(view, scene) {
+  const viewX = view.x;
+  const lightFailure = archivistProgress.bossAttackState?.type === "lightFailure";
+  context.fillStyle = "#020304";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = lightFailure ? "#07090b" : "#11191d";
+  context.fillRect(0, 54, CANVAS_WIDTH, GROUND_Y - 54);
+  context.fillStyle = "#1b1310";
+  context.fillRect(0, GROUND_Y, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y);
+
+  for (let worldX = 0; worldX < ARCHIVIST_CHAMBER.WIDTH; worldX += 116) {
+    const x = Math.round(worldX - viewX);
+    if (x < -100 || x > CANVAS_WIDTH + 100) continue;
+    context.fillStyle = "#070b0d";
+    context.fillRect(x, 70, 82, 190);
+    context.strokeStyle = "#27353b";
+    context.strokeRect(x + 0.5, 70.5, 82, 190);
+    context.fillStyle = "#536268";
+    for (let row = 0; row < 7; row += 1) {
+      context.fillRect(x + 9, 86 + row * 23, 48 + ((row * 11) % 20), 2);
+    }
+  }
+
+  drawCombatFloorHazards(viewX);
+  drawCombatProjectiles(viewX);
+
+  for (const copyX of archivistProgress.falseCopies) {
+    drawArchivistFigure(copyX - viewX, 154, false, scene.time + copyX);
+  }
+
+  const bossX = archivistProgress.archivistX - viewX;
+  if (!archivistProgress.bossDefeated || archivistProgress.defeatTimer > 0) {
+    context.save();
+    if (archivistProgress.bossHitReaction > 0) {
+      context.globalAlpha = 0.44 + Math.sin(scene.time * 42) * 0.24;
+      context.translate(Math.sin(scene.time * 60) * 4, 0);
+    }
+    drawArchivistFigure(
+      bossX,
+      archivistProgress.bossDefeated ? 172 + (6 - archivistProgress.defeatTimer) * 8 : 148,
+      true,
+      scene.time,
+    );
+    context.restore();
+
+    if (
+      archivistProgress.beamActive ||
+      archivistProgress.bossPhase >= 2 ||
+      lightFailure ||
+      archivistProgress.bossDefeated
+    ) {
+      ARCHIVE_SYMBOL_PATTERN.forEach((symbolId, index) => {
+        drawOriginalSymbol(symbolId, bossX - 18 + index * 17, 126, 0.55, true);
+      });
+    }
+  }
+
+  drawBossAttackTelegraphs(bossX, viewX);
+
+  if (archivistProgress.symbolInterruptionActive) {
+    ARCHIVIST_CHAMBER.CONTROLS.forEach((worldX, index) => {
+      const x = Math.round(worldX - viewX);
+      const active = archivistProgress.symbolInterruptionSequence.includes(index);
+      const required = index === archivistProgress.symbolInterruptionSequence.length;
+      const pulse = 0.55 + Math.sin(scene.time * 7) * 0.28;
+      context.fillStyle = active ? "#183d2b" : required ? "#423a1f" : "#111a1e";
+      context.fillRect(x, 210, 44, 70);
+      context.strokeStyle = active ? "#62c784" : required ? "#e1c75e" : "#415158";
+      context.globalAlpha = required ? pulse : 1;
+      context.strokeRect(x + 0.5, 210.5, 44, 70);
+      drawOriginalSymbol(
+        ARCHIVE_SYMBOL_PATTERN[index],
+        x + 11,
+        226,
+        0.9,
+        active || required,
+      );
+      context.globalAlpha = 1;
+    });
+    drawArchivistSealGuidance(viewX, scene);
+  }
+
+  drawVignette();
+  drawFilmGrain(scene);
+}
+
+function drawArchivistSealGuidance(viewX, scene) {
+  const completed = archivistProgress.symbolInterruptionSequence.length;
+  context.fillStyle = "rgba(4, 7, 9, 0.94)";
+  context.fillRect(120, 70, 400, 66);
+  context.strokeStyle = archivistProgress.sealErrorTimer > 0 ? "#c8463f" : "#6c6040";
+  context.lineWidth = archivistProgress.sealErrorTimer > 0 ? 4 : 2;
+  context.strokeRect(120.5, 70.5, 400, 66);
+  context.fillStyle = "#d8c16f";
+  context.font = "14px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.sealActive, 236, 80);
+  context.fillStyle = "#aebabc";
+  context.font = "10px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.deactivateSymbols, 204, 101);
+
+  ARCHIVE_SYMBOL_PATTERN.forEach((symbolId, index) => {
+    const label = ARCHIVE_SYMBOL_LABELS[symbolId];
+    const x = 154 + index * 94;
+    const active = index < completed;
+    const required = index === completed;
+    context.fillStyle = active
+      ? "#62c784"
+      : required
+        ? `rgba(232, 207, 100, ${0.68 + Math.sin(scene.time * 8) * 0.25})`
+        : "#66777b";
+    context.fillText(`${label}${index < 3 ? "  >" : ""}`, x, 119);
+  });
+
+  const nextWorldX = ARCHIVIST_CHAMBER.CONTROLS[completed];
+  if (typeof nextWorldX === "number") {
+    const nextScreenX = nextWorldX - viewX;
+    context.fillStyle = "#e1c75e";
+    if (nextScreenX < 24) {
+      fillPolygon([[14, 202], [34, 190], [34, 214]]);
+      context.fillText(TEXT_CONTENT.boss.ui.next, 40, 198);
+    } else if (nextScreenX > CANVAS_WIDTH - 24) {
+      fillPolygon([[626, 202], [606, 190], [606, 214]]);
+      context.fillText(TEXT_CONTENT.boss.ui.next, 568, 198);
+    }
+  }
+
+  if (archivistProgress.sealErrorTimer > 0) {
+    context.fillStyle = "rgba(196, 31, 25, 0.2)";
+    context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  }
+}
+
+function drawCombatFloorHazards(viewX) {
+  for (const warning of archivistProgress.spikeWarnings) {
+    const x = warning.x - viewX;
+    context.fillStyle = warning.timer > 0 ? "rgba(153, 61, 48, 0.35)" : "#260d0d";
+    context.fillRect(x - 38, GROUND_Y - 8, 76, 8);
+    if (warning.active > 0) {
+      context.fillStyle = "#160707";
+      fillPolygon([
+        [x - 34, GROUND_Y],
+        [x - 18, GROUND_Y - 70],
+        [x, GROUND_Y],
+        [x + 18, GROUND_Y - 92],
+        [x + 34, GROUND_Y],
+      ]);
+    }
+  }
+
+  for (const warning of archivistProgress.collapseWarnings) {
+    const x = warning.x - viewX;
+    context.fillStyle = warning.timer > 0 ? "rgba(20, 10, 8, 0.4)" : "#0b0706";
+    context.fillRect(x - 48, 62, 96, 12);
+    if (warning.active > 0) {
+      context.fillStyle = "#19110d";
+      context.fillRect(x - 34, 76, 68, 180);
+      context.fillStyle = "#4c3e31";
+      context.fillRect(x - 26, 92, 52, 6);
+    }
+  }
+}
+
+function drawCombatProjectiles(viewX) {
+  for (const projectile of archivistProgress.projectiles) {
+    const x = projectile.x - viewX;
+    context.fillStyle = "rgba(142, 56, 52, 0.26)";
+    context.fillRect(x - 12, projectile.y - 12, 26, 26);
+    drawOriginalSymbol("brokenSquare", x - 8, projectile.y - 8, 0.72, true);
+  }
+}
+
+function drawBossAttackTelegraphs(bossX, viewX) {
+  const attack = archivistProgress.bossAttackState;
+  if (!attack) return;
+
+  if (attack.type === "slash") {
+    context.strokeStyle = attack.timer > 0.22 ? "rgba(184, 88, 66, 0.48)" : "#c66a58";
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(bossX - 90, 222);
+    context.lineTo(bossX + 126, 205);
+    context.stroke();
+  } else if (attack.type === "projectile") {
+    context.fillStyle = "rgba(170, 70, 57, 0.38)";
+    context.fillRect(bossX - 10, 210, 22, 22);
+  } else if (attack.type === "finalBeam") {
+    const targetX = player.x + player.width / 2 - viewX;
+    context.fillStyle =
+      attack.timer > 0.28 ? "rgba(178, 52, 45, 0.22)" : "rgba(208, 70, 55, 0.62)";
+    context.fillRect(Math.min(bossX, targetX), 180, Math.abs(targetX - bossX), 78);
+  }
+}
+
+function drawArchivistEffects(scene, target, view) {
+  drawFlashlightDarkness(scene, target, view);
+
+  if (archivistProgress.beamActive) {
+    const startX = target.x + target.width / 2 - view.x;
+    const endX = startX + target.facing * BOSS_COMBAT.BEAM_RANGE;
+    context.globalAlpha = 0.22;
+    context.fillStyle = "#e8d883";
+    fillPolygon([
+      [startX, target.y + 18],
+      [startX, target.y + 30],
+      [endX, target.y - 20],
+      [endX, target.y + 68],
+    ]);
+    context.globalAlpha = 1;
+    for (let index = 0; index < 4; index += 1) {
+      const symbolX = startX + target.facing * (58 + index * 54);
+      drawOriginalSymbol(
+        ARCHIVE_SYMBOL_PATTERN[index],
+        symbolX,
+        target.y + 12 + (index % 2) * 12,
+        0.62,
+        true,
+      );
+    }
+  }
+
+  if (archivistProgress.playerInvulnerable > 0) {
+    const playerX = target.x - view.x;
+    context.fillStyle = `rgba(207, 100, 81, ${
+      0.12 + Math.sin(scene.time * 35) * 0.08
+    })`;
+    context.fillRect(playerX - 8, target.y - 8, target.width + 16, target.height + 16);
+  }
+
+  drawBossCombatUi();
+
+  if (archivistProgress.playerDefeated) {
+    drawBossDefeatScreen();
+  }
+}
+
+function drawBossCombatUi() {
+  context.fillStyle = "rgba(3, 5, 7, 0.9)";
+  context.fillRect(154, 6, 332, 58);
+  context.fillStyle = "#e0ddca";
+  context.font = "15px monospace";
+  context.textBaseline = "top";
+  context.fillText(TEXT_CONTENT.boss.ui.name, 258, 10);
+  context.fillStyle = "#77888c";
+  context.font = "9px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.subtitle, 244, 27);
+  context.fillStyle = "#251113";
+  context.fillRect(180, 43, 280, 10);
+  context.fillStyle = archivistProgress.bossInvulnerable ? "#776b4d" : "#a84e46";
+  context.fillRect(
+    180,
+    43,
+    Math.round(280 * (archivistProgress.bossHealth / BOSS_COMBAT.MAX_HEALTH)),
+    10,
+  );
+  context.strokeStyle = "#4d5d62";
+  context.strokeRect(180.5, 43.5, 280, 10);
+
+  context.fillStyle = "rgba(3, 5, 7, 0.88)";
+  context.fillRect(16, 308, 184, 38);
+  context.fillStyle = "#aebabc";
+  context.font = "9px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.stability, 26, 314);
+  for (let index = 0; index < BOSS_COMBAT.MAX_STABILITY; index += 1) {
+    context.fillStyle =
+      index < archivistProgress.playerStability ? "#d8c16f" : "#28343a";
+    context.fillRect(84 + index * 20, 314, 14, 10);
+  }
+
+  context.fillStyle = "#aebabc";
+  context.fillText(TEXT_CONTENT.boss.ui.manuscriptCharge, 26, 330);
+  context.fillStyle = "#172126";
+  context.fillRect(126, 331, 62, 7);
+  context.fillStyle = "#d8c16f";
+  context.fillRect(
+    126,
+    331,
+    Math.round(62 * (archivistProgress.manuscriptCharge / BOSS_COMBAT.MAX_CHARGE)),
+    7,
+  );
+
+  if (archivistProgress.messageTimer > 0) {
+    context.fillStyle = "rgba(3, 5, 7, 0.86)";
+    context.fillRect(140, 70, 360, 36);
+    context.fillStyle = "#d0c8ad";
+    context.font = "10px monospace";
+    drawWrappedText(archivistProgress.message, 152, 80, 336, 12);
+  }
+
+  if (
+    archivistProgress.tutorialTimer > 0 &&
+    (!archivistProgress.tutorialMoved ||
+      !archivistProgress.tutorialDodged ||
+      !archivistProgress.tutorialAttacked)
+  ) {
+    context.fillStyle = "rgba(3, 5, 7, 0.8)";
+    context.fillRect(458, 116, 164, 68);
+    context.fillStyle = "#8fa0a4";
+    context.font = "9px monospace";
+    if (!archivistProgress.tutorialMoved) context.fillText(TEXT_CONTENT.boss.ui.move, 470, 126);
+    if (!archivistProgress.tutorialDodged) context.fillText(TEXT_CONTENT.boss.ui.dodge, 470, 144);
+    if (!archivistProgress.tutorialAttacked) context.fillText(TEXT_CONTENT.boss.ui.focusBeam, 470, 162);
+  }
+}
+
+function drawBossDefeatScreen() {
+  context.fillStyle = "rgba(0, 0, 0, 0.86)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#b8c3c5";
+  context.font = "18px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.archiveEntryCompleted, 184, 96);
+  context.fillStyle = "#a6544b";
+  context.font = "13px monospace";
+  context.fillText(TEXT_CONTENT.boss.ui.statusContained, 236, 132);
+  [TEXT_CONTENT.boss.ui.retryBoss, TEXT_CONTENT.boss.ui.returnToTitle].forEach((label, index) => {
+    drawMenuButton(
+      getBossDefeatButtonRect(index),
+      label,
+      archivistProgress.defeatMenuIndex === index,
+    );
   });
 }
 
@@ -8482,6 +11736,16 @@ function drawWrappedText(text, x, y, maxWidth, lineHeight) {
   if (line) {
     context.fillText(line, x, lineY);
   }
+}
+
+function formatText(template, values = {}) {
+  return template.replace(/\$\{([A-Za-z0-9_]+)\}/g, (match, key) => {
+    if (!Object.prototype.hasOwnProperty.call(values, key)) {
+      return match;
+    }
+
+    return String(values[key]);
+  });
 }
 
 function measureTextWidth(text, font) {
