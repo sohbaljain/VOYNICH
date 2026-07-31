@@ -209,9 +209,39 @@ const DEFAULT_SETTINGS = Object.freeze({
 const TITLE_MENU_ACTIONS = Object.freeze({
   START: "start",
   CONTINUE: "continue",
+  PRESENTATION: "presentation",
   SETTINGS: "settings",
   CREDITS: "credits",
   EXIT: "exit",
+});
+
+const PRESENTATION_MENU_ACTIONS = Object.freeze({
+  LOAD_SECTION: "loadSection",
+  RUN_FULL: "runFull",
+  BACK_TO_TITLE: "backToTitle",
+  RESTART_CURRENT: "restartCurrent",
+  NEXT_SECTION: "nextSection",
+  PREVIOUS_SECTION: "previousSection",
+  RESUME_SECTION: "resumeSection",
+});
+
+const PRESENTATION_UI = Object.freeze({
+  SAFE_X: 32,
+  SAFE_Y: 24,
+  MENU_WIDTH: 504,
+  MENU_HEIGHT: 312,
+  MENU_PADDING_X: 28,
+  MENU_PADDING_Y: 18,
+  CARD_MAX_WIDTH: 472,
+  CARD_PADDING_X: 30,
+  CARD_PADDING_Y: 24,
+  TITLE_FONT: "20px monospace",
+  CARD_TITLE_FONT: "21px monospace",
+  BODY_FONT: "12px monospace",
+  BUTTON_FONT: "10px monospace",
+  SMALL_FONT: "9px monospace",
+  INDICATOR_FONT: "10px monospace",
+  PROMPT_SECONDS: 2.2,
 });
 
 const SETTINGS_ITEMS = Object.freeze([
@@ -663,6 +693,7 @@ const GAME_STATES = Object.freeze({
   TITLE: "title",
   SETTINGS: "settings",
   CREDITS: "credits",
+  PRESENTATION_MENU: "presentationMenu",
   PROLOGUE: "prologue",
   CORRIDOR: "corridor",
   ARCHIVE: "archive",
@@ -675,6 +706,24 @@ const GAME_STATES = Object.freeze({
   ESCAPE: "escape",
   CLASSROOM: "classroom",
   ENDING: "ending",
+});
+
+const PRESENTATION_SECTION_IDS = Object.freeze([
+  "introduction",
+  "archiveMystery",
+  "manuscriptPuzzle",
+  "realityShift",
+  "archivistBoss",
+  "finalChoice",
+]);
+
+const PRESENTATION_SECTION_LOADERS = Object.freeze({
+  introduction: loadPresentationIntroduction,
+  archiveMystery: loadPresentationArchiveMystery,
+  manuscriptPuzzle: loadPresentationManuscript,
+  realityShift: loadPresentationRealityShift,
+  archivistBoss: loadPresentationBoss,
+  finalChoice: loadPresentationEnding,
 });
 
 const INTERACTABLE_DEFINITIONS = Object.freeze([
@@ -812,7 +861,8 @@ const INTERACTABLE_DEFINITIONS = Object.freeze([
     height: 28,
     range: 72,
     prompt: TEXT_CONTENT.archive.prompts.stageManuscriptReveal,
-    isAvailable: () => TRAILER_MODE && !archiveProgress.manuscriptTableRevealed,
+    isAvailable: () =>
+      TRAILER_MODE && !presentationState.active && !archiveProgress.manuscriptTableRevealed,
     onInteract: handleTrailerArchiveRevealInteract,
   }),
   Object.freeze({
@@ -1330,6 +1380,13 @@ const INPUT_KEYS = Object.freeze([
   { code: "KeyQ", label: "Q" },
   { code: "KeyR", label: "R" },
   { code: "KeyB", label: "B" },
+  { code: "KeyH", label: "H" },
+  { code: "KeyP", label: "P" },
+  { code: "KeyY", label: "Y" },
+  { code: "PageUp", label: "PageUp" },
+  { code: "PageDown", label: "PageDown" },
+  { code: "BracketLeft", label: "[" },
+  { code: "BracketRight", label: "]" },
   { code: "F6", label: "F6" },
   { code: "F7", label: "F7" },
   { code: "F9", label: "F9" },
@@ -1388,6 +1445,23 @@ const titleMenuState = {
   selectedIndex: 0,
   exitMessage: "",
   exitMessageTimer: 0,
+};
+const presentationState = {
+  active: false,
+  fullRoute: false,
+  selectedMenuIndex: 0,
+  endingSelectedIndex: 0,
+  currentSectionIndex: 0,
+  currentSectionId: null,
+  menuReturnState: null,
+  overlayVisible: true,
+  explanationPaused: false,
+  cardTitle: "",
+  cardBody: "",
+  cardTimer: 0,
+  promptText: "",
+  promptTimer: 0,
+  normalSnapshot: null,
 };
 const settingsMenuState = {
   selectedIndex: 0,
@@ -2360,7 +2434,8 @@ function isTitleFamilyState(state = gameState.current) {
   return (
     state === GAME_STATES.TITLE ||
     state === GAME_STATES.SETTINGS ||
-    state === GAME_STATES.CREDITS
+    state === GAME_STATES.CREDITS ||
+    state === GAME_STATES.PRESENTATION_MENU
   );
 }
 
@@ -2397,6 +2472,10 @@ function getTitleMenuOptions() {
   }
 
   options.push(
+    Object.freeze({
+      label: TEXT_CONTENT.title.menu.presentation,
+      action: TITLE_MENU_ACTIONS.PRESENTATION,
+    }),
     Object.freeze({ label: TEXT_CONTENT.title.menu.settings, action: TITLE_MENU_ACTIONS.SETTINGS }),
     Object.freeze({ label: TEXT_CONTENT.title.menu.credits, action: TITLE_MENU_ACTIONS.CREDITS }),
     Object.freeze({ label: TEXT_CONTENT.title.menu.exit, action: TITLE_MENU_ACTIONS.EXIT }),
@@ -2426,11 +2505,21 @@ function updateMenuScreens(deltaSeconds) {
 
   if (gameState.current === GAME_STATES.CREDITS) {
     updateCreditsControls();
+    return;
+  }
+
+  if (gameState.current === GAME_STATES.PRESENTATION_MENU) {
+    updatePresentationMenuControls();
   }
 }
 
 function updateEndingControls() {
   if (gameState.current !== GAME_STATES.ENDING || controlsState.open || transitionState.active) {
+    return;
+  }
+
+  if (presentationState.active) {
+    updatePresentationEndingControls();
     return;
   }
 
@@ -2498,6 +2587,117 @@ function activateEndingOption(option) {
   });
 }
 
+function getPresentationEndingOptions() {
+  const actionText = getPresentationText().actions || {};
+  return [
+    { label: actionText.restartCurrent || "Restart Current Section", action: "restart" },
+    { label: actionText.presentationMenu || "Presentation Menu", action: "menu" },
+    { label: actionText.returnToTitle || actionText.backToTitle || "Return to Title", action: "title" },
+  ];
+}
+
+function getPresentationEndingButtonRect(index, total) {
+  const width = 172;
+  const height = 28;
+  const gap = 12;
+  const totalWidth = total * width + (total - 1) * gap;
+  return {
+    x: Math.round((CANVAS_WIDTH - totalWidth) / 2) + index * (width + gap),
+    y: 238,
+    width,
+    height,
+  };
+}
+
+function getHoveredPresentationEndingOptionIndex(optionCount) {
+  for (let index = 0; index < optionCount; index += 1) {
+    if (isPointInRect(mouse.x, mouse.y, getPresentationEndingButtonRect(index, optionCount))) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function updatePresentationEndingControls() {
+  const options = getPresentationEndingOptions();
+  presentationState.endingSelectedIndex = clamp(
+    presentationState.endingSelectedIndex,
+    0,
+    options.length - 1,
+  );
+
+  if (
+    input.wasPressed("ArrowUp") ||
+    input.wasPressed("ArrowLeft") ||
+    input.wasPressed("KeyA")
+  ) {
+    presentationState.endingSelectedIndex =
+      (presentationState.endingSelectedIndex + options.length - 1) % options.length;
+    audioManager.playSfx("uiMove", { volume: 0.36 });
+  }
+
+  if (
+    input.wasPressed("ArrowDown") ||
+    input.wasPressed("ArrowRight") ||
+    input.wasPressed("KeyD")
+  ) {
+    presentationState.endingSelectedIndex =
+      (presentationState.endingSelectedIndex + 1) % options.length;
+    audioManager.playSfx("uiMove", { volume: 0.36 });
+  }
+
+  const hoveredIndex = getHoveredPresentationEndingOptionIndex(options.length);
+  if (hoveredIndex !== -1) {
+    presentationState.endingSelectedIndex = hoveredIndex;
+  }
+
+  if (input.wasPressed("KeyP") || input.wasPressed("Escape")) {
+    openPresentationMenuFromGameplay();
+    return;
+  }
+  if (input.wasPressed("Backspace")) {
+    restartPresentationSection();
+    return;
+  }
+  if (input.wasPressed("PageUp") || input.wasPressed("BracketLeft")) {
+    advancePresentationSection(-1);
+    return;
+  }
+  if (input.wasPressed("PageDown") || input.wasPressed("BracketRight")) {
+    advancePresentationSection(1);
+    return;
+  }
+
+  if (input.wasPressed("KeyE") || input.wasPressed("Enter")) {
+    activatePresentationEndingOption(options[presentationState.endingSelectedIndex]);
+  }
+
+  if (mouse.justPressed && hoveredIndex !== -1) {
+    activatePresentationEndingOption(options[hoveredIndex]);
+  }
+}
+
+function activatePresentationEndingOption(option) {
+  if (!option) {
+    return;
+  }
+
+  audioManager.playSfx("uiSelect", { volume: 0.36 });
+
+  if (option.action === "restart") {
+    restartPresentationSection();
+    return;
+  }
+
+  if (option.action === "menu") {
+    openPresentationMenuFromGameplay();
+    return;
+  }
+
+  exitPresentationToTitle();
+}
+
 function updateTitleScene(scene, deltaSeconds) {
   scene.time += deltaSeconds;
   scene.grainTimer += deltaSeconds;
@@ -2556,6 +2756,12 @@ function activateTitleMenuOption(option) {
   if (option.action === TITLE_MENU_ACTIONS.CONTINUE) {
     audioManager.playSfx("uiSelect", { volume: 0.58 });
     continueRuntimeSession();
+    return;
+  }
+
+  if (option.action === TITLE_MENU_ACTIONS.PRESENTATION) {
+    audioManager.playSfx("uiSelect", { volume: 0.52 });
+    openPresentationMenuFromTitle();
     return;
   }
 
@@ -2641,8 +2847,88 @@ function resetRunProgressForNewGame() {
   clampCameraToCurrentWorld(camera, player);
 }
 
+function cloneStateValue(value) {
+  if (value instanceof Set) {
+    return new Set(Array.from(value, cloneStateValue));
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(cloneStateValue);
+  }
+
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  const clone = {};
+  Object.keys(value).forEach((key) => {
+    clone[key] = cloneStateValue(value[key]);
+  });
+  return clone;
+}
+
+function replaceStateObject(target, snapshot) {
+  Object.keys(target).forEach((key) => {
+    delete target[key];
+  });
+  Object.assign(target, cloneStateValue(snapshot));
+}
+
+function createNormalProgressSnapshot() {
+  return {
+    chapterProgress: cloneStateValue(chapterProgress),
+    archiveProgress: cloneStateValue(archiveProgress),
+    recordsProgress: cloneStateValue(recordsProgress),
+    manuscriptProgress: cloneStateValue(manuscriptProgress),
+    realityProgress: cloneStateValue(realityProgress),
+    classroomProgress: cloneStateValue(classroomProgress),
+    circuitPuzzleState: cloneStateValue(circuitPuzzleState),
+    chamberRingProgress: cloneStateValue(chamberRingProgress),
+    archivistProgress: cloneStateValue(archivistProgress),
+    prologueProgress: cloneStateValue(prologueProgress),
+    escapeProgress: cloneStateValue(escapeProgress),
+    keypadState: cloneStateValue(keypadState),
+    inspectOverlayState: cloneStateValue(inspectOverlayState),
+    dialogueState: cloneStateValue(dialogueState),
+    objectiveState: cloneStateValue(objectiveState),
+    journalState: cloneStateValue(journalState),
+    endingState: cloneStateValue(endingState),
+    runtimeSession: cloneStateValue(runtimeSession),
+    player: cloneStateValue(player),
+    camera: cloneStateValue(camera),
+    gameState: gameState.current,
+  };
+}
+
+function restoreNormalProgressSnapshot(snapshot) {
+  if (!snapshot) {
+    return;
+  }
+
+  replaceStateObject(chapterProgress, snapshot.chapterProgress);
+  replaceStateObject(archiveProgress, snapshot.archiveProgress);
+  replaceStateObject(recordsProgress, snapshot.recordsProgress);
+  replaceStateObject(manuscriptProgress, snapshot.manuscriptProgress);
+  replaceStateObject(realityProgress, snapshot.realityProgress);
+  replaceStateObject(classroomProgress, snapshot.classroomProgress);
+  replaceStateObject(circuitPuzzleState, snapshot.circuitPuzzleState);
+  replaceStateObject(chamberRingProgress, snapshot.chamberRingProgress);
+  replaceStateObject(archivistProgress, snapshot.archivistProgress);
+  replaceStateObject(prologueProgress, snapshot.prologueProgress);
+  replaceStateObject(escapeProgress, snapshot.escapeProgress);
+  replaceStateObject(keypadState, snapshot.keypadState);
+  replaceStateObject(inspectOverlayState, snapshot.inspectOverlayState);
+  replaceStateObject(dialogueState, snapshot.dialogueState);
+  replaceStateObject(objectiveState, snapshot.objectiveState);
+  replaceStateObject(journalState, snapshot.journalState);
+  replaceStateObject(endingState, snapshot.endingState);
+  replaceStateObject(runtimeSession, snapshot.runtimeSession);
+  replaceStateObject(player, snapshot.player);
+  replaceStateObject(camera, snapshot.camera);
+}
+
 function updateRuntimeSessionSnapshot() {
-  if (!isGameplayState() || transitionState.active) {
+  if (presentationState.active || !isGameplayState() || transitionState.active) {
     return;
   }
 
@@ -2660,6 +2946,856 @@ function getHoveredTitleOptionIndex(optionCount) {
   }
 
   return -1;
+}
+
+function getPresentationText() {
+  return TEXT_CONTENT.presentation || {};
+}
+
+function getPresentationSectionLabel(sectionId) {
+  const presentationText = getPresentationText();
+  return presentationText.sections?.[sectionId] || sectionId;
+}
+
+function getPresentationMenuOptions() {
+  const presentationText = getPresentationText();
+  const sectionText = presentationText.sections || {};
+  const actionText = presentationText.actions || {};
+  const options = PRESENTATION_SECTION_IDS.map((sectionId) => ({
+    label: sectionText[sectionId] || getPresentationSectionLabel(sectionId),
+    action: PRESENTATION_MENU_ACTIONS.LOAD_SECTION,
+    sectionId,
+  }));
+
+  options.push({
+    label: sectionText.fullPresentation || "Run Full Presentation",
+    action: PRESENTATION_MENU_ACTIONS.RUN_FULL,
+  });
+
+  if (presentationState.active && presentationState.menuReturnState) {
+    options.push({
+      label: actionText.resumeSection || "Resume Section",
+      action: PRESENTATION_MENU_ACTIONS.RESUME_SECTION,
+    });
+  }
+
+  options.push(
+    {
+      label: actionText.restartCurrent || "Restart Current Section",
+      action: PRESENTATION_MENU_ACTIONS.RESTART_CURRENT,
+    },
+    {
+      label: actionText.previousSection || "Previous Section",
+      action: PRESENTATION_MENU_ACTIONS.PREVIOUS_SECTION,
+    },
+    {
+      label: actionText.nextSection || "Next Section",
+      action: PRESENTATION_MENU_ACTIONS.NEXT_SECTION,
+    },
+    {
+      label: actionText.backToTitle || "Back to Title",
+      action: PRESENTATION_MENU_ACTIONS.BACK_TO_TITLE,
+    },
+  );
+
+  return options;
+}
+
+function getPresentationMenuLayout(optionCount = getPresentationMenuOptions().length) {
+  const panelWidth = Math.min(
+    PRESENTATION_UI.MENU_WIDTH,
+    CANVAS_WIDTH - PRESENTATION_UI.SAFE_X * 2,
+  );
+  const panelHeight = Math.min(
+    PRESENTATION_UI.MENU_HEIGHT,
+    CANVAS_HEIGHT - PRESENTATION_UI.SAFE_Y * 2,
+  );
+  const rowHeight = optionCount >= 12 ? 14 : 15;
+  const rowGap = 2;
+
+  return {
+    x: Math.round((CANVAS_WIDTH - panelWidth) / 2),
+    y: Math.round((CANVAS_HEIGHT - panelHeight) / 2),
+    width: panelWidth,
+    height: panelHeight,
+    contentX: Math.round((CANVAS_WIDTH - panelWidth) / 2) + PRESENTATION_UI.MENU_PADDING_X,
+    contentWidth: panelWidth - PRESENTATION_UI.MENU_PADDING_X * 2,
+    titleY: Math.round((CANVAS_HEIGHT - panelHeight) / 2) + PRESENTATION_UI.MENU_PADDING_Y,
+    currentY: Math.round((CANVAS_HEIGHT - panelHeight) / 2) + 46,
+    listTitleY: Math.round((CANVAS_HEIGHT - panelHeight) / 2) + 66,
+    listY: Math.round((CANVAS_HEIGHT - panelHeight) / 2) + 84,
+    footerY: Math.round((CANVAS_HEIGHT - panelHeight) / 2) + panelHeight - 24,
+    rowHeight,
+    rowGap,
+  };
+}
+
+function getPresentationButtonRect(index, optionCount = getPresentationMenuOptions().length) {
+  const layout = getPresentationMenuLayout(optionCount);
+
+  return {
+    x: layout.contentX,
+    y: layout.listY + index * (layout.rowHeight + layout.rowGap),
+    width: layout.contentWidth,
+    height: layout.rowHeight,
+  };
+}
+
+function getHoveredPresentationOptionIndex() {
+  const options = getPresentationMenuOptions();
+  for (let index = 0; index < options.length; index += 1) {
+    if (isPointInRect(mouse.x, mouse.y, getPresentationButtonRect(index, options.length))) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function openPresentationMenuFromTitle() {
+  presentationState.selectedMenuIndex = 0;
+  presentationState.menuReturnState = null;
+  gameState.set(GAME_STATES.PRESENTATION_MENU);
+}
+
+function openPresentationMenuFromGameplay() {
+  if (!presentationState.active) {
+    return;
+  }
+
+  presentationState.menuReturnState = gameState.current;
+  presentationState.selectedMenuIndex = 0;
+  closeDialogue();
+  closeKeypad();
+  closeInspectOverlay();
+  setJournalOpen(false, { silent: true });
+  controlsState.open = false;
+  interactionState.activeInteractable = null;
+  gameState.set(GAME_STATES.PRESENTATION_MENU);
+}
+
+function resumePresentationSection() {
+  if (!presentationState.active || !presentationState.menuReturnState) {
+    return;
+  }
+
+  const targetState = presentationState.menuReturnState;
+  presentationState.menuReturnState = null;
+  gameState.set(targetState);
+}
+
+function clearPresentationState() {
+  presentationState.active = false;
+  presentationState.fullRoute = false;
+  presentationState.currentSectionIndex = 0;
+  presentationState.currentSectionId = null;
+  presentationState.menuReturnState = null;
+  presentationState.overlayVisible = true;
+  presentationState.explanationPaused = false;
+  presentationState.endingSelectedIndex = 0;
+  presentationState.cardTitle = "";
+  presentationState.cardBody = "";
+  presentationState.cardTimer = 0;
+  presentationState.promptText = "";
+  presentationState.promptTimer = 0;
+  presentationState.normalSnapshot = null;
+}
+
+function exitPresentationToTitle() {
+  const snapshot = presentationState.normalSnapshot;
+  if (snapshot) {
+    restoreNormalProgressSnapshot(snapshot);
+  }
+  clearPresentationState();
+  debug.showOverlay = false;
+  titleMenuState.selectedIndex = 0;
+  gameState.set(GAME_STATES.TITLE);
+  enterTitleScene();
+}
+
+function setPresentationNotice(message) {
+  if (!message) {
+    return;
+  }
+
+  if (presentationState.active) {
+    presentationState.promptText = message;
+    presentationState.promptTimer = PRESENTATION_UI.PROMPT_SECONDS;
+    return;
+  }
+
+  realityProgress.message = message;
+  realityProgress.messageTimer = 2.4;
+}
+
+function showPresentationSectionCard(sectionId) {
+  const card = getPresentationText().cards?.[sectionId] || {};
+  presentationState.cardTitle = card.title || getPresentationSectionLabel(sectionId);
+  presentationState.cardBody = card.body || "";
+  presentationState.cardTimer = 1.8;
+}
+
+function beginPresentationSection(sectionId, options = {}) {
+  const loader = PRESENTATION_SECTION_LOADERS[sectionId];
+  if (typeof loader !== "function") {
+    return;
+  }
+
+  if (!presentationState.active || !presentationState.normalSnapshot) {
+    presentationState.normalSnapshot = createNormalProgressSnapshot();
+  }
+
+  presentationState.active = true;
+  presentationState.fullRoute = Boolean(options.fullRoute);
+  presentationState.currentSectionId = sectionId;
+  presentationState.currentSectionIndex = PRESENTATION_SECTION_IDS.indexOf(sectionId);
+  if (presentationState.currentSectionIndex < 0) {
+    presentationState.currentSectionIndex = 0;
+  }
+  presentationState.menuReturnState = null;
+  presentationState.overlayVisible = true;
+  presentationState.explanationPaused = false;
+  presentationState.endingSelectedIndex = 0;
+  debug.showOverlay = false;
+
+  resetPresentationCheckpointState();
+  loader();
+  showPresentationSectionCard(sectionId);
+}
+
+function restartPresentationSection() {
+  const sectionId = presentationState.currentSectionId || PRESENTATION_SECTION_IDS[presentationState.currentSectionIndex] || PRESENTATION_SECTION_IDS[0];
+  beginPresentationSection(sectionId, { fullRoute: presentationState.fullRoute });
+}
+
+function advancePresentationSection(direction) {
+  const currentIndex = Math.max(0, presentationState.currentSectionIndex);
+  const nextIndex = Math.min(PRESENTATION_SECTION_IDS.length - 1, Math.max(0, currentIndex + direction));
+  beginPresentationSection(PRESENTATION_SECTION_IDS[nextIndex], { fullRoute: presentationState.fullRoute });
+}
+
+function activatePresentationMenuOption(option) {
+  audioManager.playSfx("uiSelect", { volume: 0.38 });
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.LOAD_SECTION) {
+    beginPresentationSection(option.sectionId);
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.RUN_FULL) {
+    beginPresentationSection(PRESENTATION_SECTION_IDS[0], { fullRoute: true });
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.RESUME_SECTION) {
+    resumePresentationSection();
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.PREVIOUS_SECTION) {
+    advancePresentationSection(-1);
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.RESTART_CURRENT) {
+    restartPresentationSection();
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.NEXT_SECTION) {
+    advancePresentationSection(1);
+    return;
+  }
+
+  if (option.action === PRESENTATION_MENU_ACTIONS.BACK_TO_TITLE) {
+    exitPresentationToTitle();
+  }
+}
+
+function updatePresentationMenuControls() {
+  const options = getPresentationMenuOptions();
+  presentationState.selectedMenuIndex = clamp(presentationState.selectedMenuIndex, 0, options.length - 1);
+  const hoveredIndex = getHoveredPresentationOptionIndex();
+  if (hoveredIndex >= 0) {
+    presentationState.selectedMenuIndex = hoveredIndex;
+  }
+
+  if (input.wasPressed("ArrowUp")) {
+    presentationState.selectedMenuIndex = (presentationState.selectedMenuIndex - 1 + options.length) % options.length;
+    audioManager.playSfx("uiMove", { volume: 0.32 });
+  }
+  if (input.wasPressed("ArrowDown")) {
+    presentationState.selectedMenuIndex = (presentationState.selectedMenuIndex + 1) % options.length;
+    audioManager.playSfx("uiMove", { volume: 0.32 });
+  }
+
+  const selectedOption = options[presentationState.selectedMenuIndex];
+  if ((input.wasPressed("KeyE") || input.wasPressed("Enter")) && selectedOption) {
+    activatePresentationMenuOption(selectedOption);
+  }
+  if (mouse.justPressed && hoveredIndex >= 0) {
+    activatePresentationMenuOption(options[hoveredIndex]);
+  }
+  if (input.wasPressed("Escape")) {
+    if (presentationState.active && presentationState.menuReturnState) {
+      resumePresentationSection();
+    } else {
+      exitPresentationToTitle();
+    }
+  }
+}
+
+function resetPresentationCheckpointState() {
+  resetRunProgressForNewGame();
+  closeDialogue();
+  closeKeypad();
+  closeInspectOverlay();
+  setJournalOpen(false, { silent: true });
+  controlsState.open = false;
+  interactionState.activeInteractable = null;
+  interactionState.lastPromptId = null;
+  recordsProgress.activeCaseId = null;
+  transitionState.active = false;
+  transitionState.phase = "none";
+  transitionState.timer = 0;
+  transitionState.targetState = null;
+  transitionState.spawnX = null;
+  presentationState.cardTimer = 0;
+  presentationState.explanationPaused = false;
+  presentationState.promptText = "";
+  presentationState.promptTimer = 0;
+}
+
+function addCompletedPresentationObjectives(objectiveIds) {
+  objectiveIds.forEach((objectiveId) => {
+    if (OBJECTIVE_DATA[objectiveId]) {
+      objectiveState.completedIds.add(objectiveId);
+    }
+  });
+}
+
+function collectPresentationClues(clueIds) {
+  clueIds.forEach((clueId) => {
+    if (CLUE_DATA[clueId]) {
+      collectClue(clueId, { silent: true });
+    }
+  });
+}
+
+function placePresentationPlayer(x, facing = 1) {
+  player.x = x;
+  player.y = PLAYER_CONFIG.SPAWN_Y;
+  player.velocityX = 0;
+  player.facing = facing;
+  clampCameraToCurrentWorld(camera, player);
+}
+
+function preparePresentationCorridorSolved() {
+  Object.assign(chapterProgress, {
+    directoryRead: true,
+    archiveDoorChecked: true,
+    lockPanelInspected: true,
+    maintenanceNoticeRead: true,
+    securityMemoRead: true,
+    maintenanceKeyCollected: true,
+    electricalCabinetOpen: true,
+    circuitPuzzleSolved: true,
+    powerReset: true,
+    archiveDoorUnlocked: true,
+    archiveDoorRevealed: true,
+  });
+  collectPresentationClues([
+    "directory",
+    "lockPanel",
+    "maintenanceNotice",
+    "securityMemo",
+    "maintenanceKey",
+    "powerReset",
+    "archiveUnlocked",
+  ]);
+  addCompletedPresentationObjectives([
+    "enterUniversity",
+    "findArchive",
+    "checkDoor",
+    "resetPower",
+    "findCode",
+    "enterCode",
+    "enterArchive",
+  ]);
+}
+
+function preparePresentationRecordsSolved() {
+  recordsProgress.entered = true;
+  recordsProgress.completed = true;
+  recordsProgress.solvedCases = new Set(["mara", "elias", "jonah"]);
+  recordsProgress.photographedCases = new Set(["mara", "elias", "jonah"]);
+  collectPresentationClues([
+    "maraVossCase",
+    "eliasWardCase",
+    "jonahValeCase",
+    "jonahAlignmentLog",
+  ]);
+  addCompletedPresentationObjectives(["investigateMissingPersons", "returnFromRecordsWing"]);
+}
+
+function preparePresentationArchiveSearch(tableRevealed = false) {
+  preparePresentationCorridorSolved();
+  preparePresentationRecordsSolved();
+  archiveProgress.entered = true;
+  archiveProgress.entranceDialogueShown = true;
+  archiveProgress.indexRead = true;
+  archiveProgress.searchedShelves = new Set([
+    "personnelTransfer",
+    "waterDamage",
+    "restrictedAccess",
+  ]);
+  archiveProgress.firstUsefulRecordFound = true;
+  archiveProgress.coordinateFound = true;
+  archiveProgress.ladderX = ARCHIVE_ROOM.LADDER_TARGET_X;
+  archiveProgress.ladderPosition = ARCHIVE_ROOM.LADDER_TARGET_X;
+  archiveProgress.ladderMoved = true;
+  archiveProgress.ladderLockedAtC13 = true;
+  archiveProgress.sealedStorageKeyCollected = true;
+  archiveProgress.filingCabinetUnlocked = true;
+  archiveProgress.photographFound = true;
+  archiveProgress.accessCardFound = true;
+  archiveProgress.removedPageNoteFound = true;
+  archiveProgress.restrictedGateOpened = tableRevealed;
+  archiveProgress.manuscriptTableRevealed = tableRevealed;
+  archiveProgress.musicPhase = tableRevealed ? "tension" : "pulse";
+  collectPresentationClues([
+    "archiveIndex",
+    "shelfPersonnelRecord",
+    "shelfAtmosphericRecord",
+    "shelfAccessRecord",
+    "handwrittenCoordinate",
+    "sealedStorageKey",
+    "cabinetPhotograph",
+    "archiveAccessCard",
+    "removedPageNote",
+  ]);
+  if (tableRevealed) {
+    collectPresentationClues(["manuscriptTableReveal"]);
+  }
+  addCompletedPresentationObjectives([
+    "locateRestricted",
+    "moveArchiveLadder",
+    "unlockFilingCabinet",
+    "useArchiveAccessCard",
+  ]);
+}
+
+function preparePresentationManuscriptSolved() {
+  archiveProgress.manuscriptSequenceStarted = true;
+  manuscriptProgress.entered = true;
+  manuscriptProgress.fragments.forEach((fragment) => {
+    const data = getFragmentData(fragment.id);
+    fragment.x = data.targetX;
+    fragment.y = data.targetY;
+    fragment.rotation = data.targetRotation;
+    fragment.placed = true;
+  });
+  manuscriptProgress.pageReconstructed = true;
+  manuscriptProgress.manuscriptCompleted = true;
+  manuscriptProgress.manuscriptPatternDiscovered = true;
+  manuscriptProgress.marginMarksRevealed = true;
+  manuscriptProgress.symbolSequence = [...MANUSCRIPT_SYMBOL_SEQUENCE];
+  manuscriptProgress.symbolStageSolved = true;
+  manuscriptProgress.committedToFinalStage = true;
+  manuscriptProgress.rings.forEach((ring, index) => {
+    ring.rotation = MANUSCRIPT_RINGS[index].target;
+  });
+  manuscriptProgress.stage = MANUSCRIPT_STAGES.SOLVED;
+  manuscriptProgress.solved = true;
+  manuscriptProgress.realityChanged = true;
+  manuscriptProgress.finalTriggered = true;
+  manuscriptProgress.returnTimer = 0;
+  manuscriptProgress.glitchTimer = 0;
+  collectPresentationClues([
+    "reconstructedMargin",
+    "manuscriptPattern",
+    "manuscriptControlInterface",
+  ]);
+  addCompletedPresentationObjectives(["reconstructPage", "interpretSymbols", "alignMissingPage"]);
+}
+
+function preparePresentationRealitySymbols() {
+  REALITY_CHANGE_SYMBOLS.forEach((detail) => discoverRealitySymbol(detail.id, { silent: true }));
+  realityProgress.archiveExitLooped = true;
+  realityProgress.distortedEntries = 1;
+  realityProgress.lightShutdownCount = 2;
+  realityProgress.musicIntensity = REALITY_CHANGE_SYMBOLS.length;
+}
+
+function loadPresentationIntroduction() {
+  switchScene(GAME_STATES.PROLOGUE, 72, 1);
+  prologueProgress.timer = 24;
+  prologueProgress.controlGranted = true;
+  setCurrentObjective("enterUniversity");
+  placePresentationPlayer(72, 1);
+}
+
+function loadPresentationArchiveMystery() {
+  preparePresentationArchiveSearch(false);
+  switchScene(GAME_STATES.ARCHIVE, ARCHIVE_ROOM.TABLE_X - 190, 1);
+  setCurrentObjective("useArchiveAccessCard");
+  placePresentationPlayer(ARCHIVE_ROOM.TABLE_X - 190, 1);
+}
+
+function loadPresentationManuscript() {
+  preparePresentationArchiveSearch(true);
+  switchScene(GAME_STATES.MANUSCRIPT, ARCHIVE_ROOM.TABLE_X, 1);
+  manuscriptProgress.stage = MANUSCRIPT_STAGES.RECONSTRUCT;
+  setCurrentObjective("reconstructPage");
+}
+
+function loadPresentationRealityShift() {
+  preparePresentationArchiveSearch(true);
+  preparePresentationManuscriptSolved();
+  realityProgress.chapterStarted = true;
+  realityProgress.archiveReturnSeen = true;
+  preparePresentationRealitySymbols();
+  switchScene(GAME_STATES.ARCHIVE, ARCHIVE_ROOM.TABLE_X - 82, -1);
+  setCurrentObjective("chooseRealDoor");
+  placePresentationPlayer(ARCHIVE_ROOM.TABLE_X - 82, -1);
+}
+
+function loadPresentationBoss() {
+  preparePresentationArchiveSearch(true);
+  preparePresentationManuscriptSolved();
+  preparePresentationRealitySymbols();
+  realityProgress.correctDoorChosen = true;
+  realityProgress.sealedSectionReached = true;
+  realityProgress.passageOpen = true;
+  realityProgress.finalPageVisible = true;
+  realityProgress.finalPageCollected = true;
+  chamberRingProgress.entered = true;
+  chamberRingProgress.ringSolved = true;
+  switchScene(GAME_STATES.ARCHIVIST, ARCHIVIST_CHAMBER.START_X, 1);
+  configurePresentationBossSealPhase();
+}
+
+function loadPresentationEnding() {
+  preparePresentationArchiveSearch(true);
+  preparePresentationManuscriptSolved();
+  preparePresentationRealitySymbols();
+  chamberRingProgress.ringSolved = true;
+  addCompletedPresentationObjectives(["confrontArchivist"]);
+  switchScene(GAME_STATES.ESCAPE, 3238, 1);
+  escapeProgress.cameraChoiceActive = true;
+  escapeProgress.cameraChoice = null;
+  escapeProgress.cameraChoiceIndex = 0;
+  escapeProgress.detourCompleted = true;
+  escapeProgress.timer = 12;
+  setCurrentObjective("chooseCamera");
+  placePresentationPlayer(3238, 1);
+}
+
+function setPresentationManuscriptStage(stage) {
+  manuscriptProgress.stage = stage;
+  manuscriptProgress.inputCooldown = 0;
+  manuscriptProgress.message = "";
+  manuscriptProgress.messageTimer = 0;
+
+  if (stage === MANUSCRIPT_STAGES.RECONSTRUCT) {
+    Object.assign(manuscriptProgress, createManuscriptProgress());
+    manuscriptProgress.entered = true;
+    setCurrentObjective("reconstructPage");
+    return;
+  }
+
+  manuscriptProgress.fragments.forEach((fragment) => {
+    const data = getFragmentData(fragment.id);
+    fragment.x = data.targetX;
+    fragment.y = data.targetY;
+    fragment.rotation = data.targetRotation;
+    fragment.placed = true;
+  });
+  manuscriptProgress.pageReconstructed = true;
+  manuscriptProgress.manuscriptCompleted = true;
+  manuscriptProgress.manuscriptPatternDiscovered = true;
+  manuscriptProgress.marginMarksRevealed = true;
+  collectPresentationClues(["reconstructedMargin", "manuscriptPattern"]);
+
+  if (stage === MANUSCRIPT_STAGES.PATTERN) {
+    manuscriptProgress.symbolSequence = [];
+    manuscriptProgress.symbolStageSolved = false;
+    manuscriptProgress.committedToFinalStage = false;
+    setCurrentObjective("interpretSymbols");
+    return;
+  }
+
+  if (stage === MANUSCRIPT_STAGES.SYMBOLS) {
+    manuscriptProgress.symbolSequence = [];
+    manuscriptProgress.symbolStageSolved = false;
+    manuscriptProgress.committedToFinalStage = false;
+    setCurrentObjective("interpretSymbols");
+    return;
+  }
+
+  if (stage === MANUSCRIPT_STAGES.ALIGNMENT) {
+    manuscriptProgress.symbolSequence = [...MANUSCRIPT_SYMBOL_SEQUENCE];
+    manuscriptProgress.symbolStageSolved = true;
+    manuscriptProgress.committedToFinalStage = true;
+    manuscriptProgress.rings.forEach((ring) => {
+      ring.rotation = 0;
+    });
+    setCurrentObjective("alignMissingPage");
+  }
+}
+
+function advancePresentationManuscriptStage() {
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.RECONSTRUCT) {
+    autoCompleteCurrentManuscriptStage();
+    setPresentationNotice(getPresentationText().messages?.puzzleStageAdvanced);
+    return;
+  }
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    setPresentationManuscriptStage(MANUSCRIPT_STAGES.SYMBOLS);
+    setPresentationNotice(getPresentationText().messages?.puzzleStageAdvanced);
+    return;
+  }
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.SYMBOLS) {
+    if (!manuscriptProgress.symbolStageSolved) {
+      autoCompleteCurrentManuscriptStage();
+    }
+    commitToFinalAlignmentStage();
+    setPresentationNotice(getPresentationText().messages?.puzzleStageAdvanced);
+    return;
+  }
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.ALIGNMENT) {
+    autoCompleteCurrentManuscriptStage();
+    setPresentationNotice(getPresentationText().messages?.puzzleStageAdvanced);
+  }
+}
+
+function rewindPresentationManuscriptStage() {
+  if (manuscriptProgress.stage === MANUSCRIPT_STAGES.PATTERN) {
+    setPresentationManuscriptStage(MANUSCRIPT_STAGES.RECONSTRUCT);
+  } else if (manuscriptProgress.stage === MANUSCRIPT_STAGES.SYMBOLS) {
+    setPresentationManuscriptStage(MANUSCRIPT_STAGES.PATTERN);
+  } else if (manuscriptProgress.stage === MANUSCRIPT_STAGES.ALIGNMENT) {
+    setPresentationManuscriptStage(MANUSCRIPT_STAGES.SYMBOLS);
+  }
+  setPresentationNotice(getPresentationText().messages?.puzzleStageRewound);
+}
+
+function completePresentationManuscriptStage() {
+  autoCompleteCurrentManuscriptStage();
+  setPresentationNotice(getPresentationText().messages?.puzzleStageCompleted);
+}
+
+function configurePresentationBossSealPhase() {
+  resetArchivistCombat();
+  archivistProgress.bossHealth = 35;
+  archivistProgress.bossInvulnerable = true;
+  archivistProgress.bossPhase = 2;
+  archivistProgress.symbolInterruptionActive = true;
+  archivistProgress.symbolInterruptionSequence = [0, 1];
+  archivistProgress.falseCopies = [420, 1020];
+  archivistProgress.bossAttackState = null;
+  archivistProgress.bossAttackCooldown = 1.4;
+  archivistProgress.message = TEXT_CONTENT.boss.messages.machineSeal;
+  archivistProgress.messageTimer = 3;
+  setCurrentObjective("breakArchivistSeal");
+  setPresentationNotice(getPresentationText().messages?.bossSealReady);
+}
+
+function configurePresentationBossVulnerable() {
+  resetArchivistCombat();
+  archivistProgress.bossPhase = 3;
+  archivistProgress.bossHealth = 35;
+  archivistProgress.bossInvulnerable = false;
+  archivistProgress.symbolInterruptionActive = false;
+  archivistProgress.falseCopies = [];
+  archivistProgress.bossAttackCooldown = 1.1;
+  archivistProgress.message = TEXT_CONTENT.boss.messages.finalEntryExposed;
+  archivistProgress.messageTimer = 3;
+  setCurrentObjective("confrontArchivist");
+  setPresentationNotice(getPresentationText().messages?.bossVulnerable);
+}
+
+function triggerPresentationBossDefeat() {
+  configurePresentationBossVulnerable();
+  defeatArchivist();
+  setPresentationNotice(getPresentationText().messages?.bossDefeat);
+}
+
+function activatePresentationSpecialAction(action) {
+  if (gameState.current === GAME_STATES.MANUSCRIPT) {
+    if (action === "previousStage") {
+      rewindPresentationManuscriptStage();
+    } else if (action === "completeStage") {
+      completePresentationManuscriptStage();
+    } else if (action === "nextStage") {
+      advancePresentationManuscriptStage();
+    }
+    return true;
+  }
+
+  if (gameState.current === GAME_STATES.ARCHIVIST) {
+    if (action === "restartBoss") {
+      loadPresentationBoss();
+    } else if (action === "sealPhase") {
+      configurePresentationBossSealPhase();
+    } else if (action === "vulnerablePhase") {
+      configurePresentationBossVulnerable();
+    } else if (action === "defeatBoss") {
+      triggerPresentationBossDefeat();
+    }
+    return true;
+  }
+
+  return false;
+}
+
+function getPresentationSpecialButtons() {
+  if (gameState.current === GAME_STATES.MANUSCRIPT) {
+    return [
+      { label: "Prev", action: "previousStage" },
+      { label: "Complete", action: "completeStage" },
+      { label: "Next", action: "nextStage" },
+    ];
+  }
+
+  return [];
+}
+
+function getPresentationSpecialButtonRect(index) {
+  if (gameState.current === GAME_STATES.MANUSCRIPT) {
+    const width = 66;
+    const gap = 6;
+    const totalWidth = width * 3 + gap * 2;
+    const startX = MANUSCRIPT_VIEW.PANEL_X + MANUSCRIPT_VIEW.PANEL_WIDTH - totalWidth;
+    return {
+      x: startX + index * (width + gap),
+      y: MANUSCRIPT_VIEW.PANEL_Y + MANUSCRIPT_VIEW.PANEL_HEIGHT + 8,
+      width,
+      height: 18,
+    };
+  }
+
+  return {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  };
+}
+
+function updatePresentationSpecialControls() {
+  if (gameState.current === GAME_STATES.MANUSCRIPT) {
+    if (input.wasPressed("Digit7")) return activatePresentationSpecialAction("previousStage");
+    if (input.wasPressed("Digit8")) return activatePresentationSpecialAction("completeStage");
+    if (input.wasPressed("Digit9")) return activatePresentationSpecialAction("nextStage");
+  }
+
+  if (gameState.current === GAME_STATES.ARCHIVIST) {
+    if (input.wasPressed("Digit1")) return activatePresentationSpecialAction("restartBoss");
+    if (input.wasPressed("Digit2")) return activatePresentationSpecialAction("sealPhase");
+    if (input.wasPressed("Digit3")) return activatePresentationSpecialAction("vulnerablePhase");
+    if (input.wasPressed("Digit4")) return activatePresentationSpecialAction("defeatBoss");
+  }
+
+  if (mouse.justPressed) {
+    const buttons = getPresentationSpecialButtons();
+    const clickedIndex = buttons.findIndex((button, index) =>
+      isPointInRect(mouse.x, mouse.y, getPresentationSpecialButtonRect(index)),
+    );
+    if (clickedIndex !== -1) {
+      return activatePresentationSpecialAction(buttons[clickedIndex].action);
+    }
+  }
+
+  return false;
+}
+
+function updatePresentationControls(deltaSeconds) {
+  if (!presentationState.active || gameState.current === GAME_STATES.PRESENTATION_MENU) {
+    return false;
+  }
+
+  const cardWasVisible = presentationState.cardTimer > 0;
+  if (cardWasVisible) {
+    presentationState.cardTimer = Math.max(0, presentationState.cardTimer - deltaSeconds);
+    if (
+      input.wasPressed("KeyE") ||
+      input.wasPressed("Enter") ||
+      input.wasPressed("Space") ||
+      mouse.justPressed
+    ) {
+      presentationState.cardTimer = 0;
+    }
+    return true;
+  }
+
+  if (input.wasPressed("KeyH")) {
+    presentationState.overlayVisible = !presentationState.overlayVisible;
+    audioManager.playSfx("uiSelect", { volume: 0.28 });
+    return true;
+  }
+
+  if (input.wasPressed("KeyP")) {
+    openPresentationMenuFromGameplay();
+    audioManager.playSfx("uiSelect", { volume: 0.32 });
+    return true;
+  }
+
+  if (input.wasPressed("KeyY")) {
+    presentationState.explanationPaused = !presentationState.explanationPaused;
+    setPresentationNotice(
+      presentationState.explanationPaused
+        ? getPresentationText().messages?.explanationPaused
+        : getPresentationText().messages?.explanationResumed,
+    );
+    audioManager.playSfx("uiSelect", { volume: 0.26 });
+    return true;
+  }
+
+  if (input.wasPressed("PageDown") || input.wasPressed("BracketRight")) {
+    advancePresentationSection(1);
+    return true;
+  }
+
+  if (input.wasPressed("PageUp") || input.wasPressed("BracketLeft")) {
+    advancePresentationSection(-1);
+    return true;
+  }
+
+  if (input.wasPressed("Backspace")) {
+    restartPresentationSection();
+    return true;
+  }
+
+  if (updatePresentationSpecialControls()) {
+    return true;
+  }
+
+  return presentationState.explanationPaused;
+}
+
+function updatePresentationPausedVisuals(deltaSeconds) {
+  const scene = getActiveVisualScene();
+
+  if (!scene || typeof scene.time !== "number") {
+    return;
+  }
+
+  scene.time += deltaSeconds * 0.28;
+  if (typeof scene.grainTimer === "number") {
+    scene.grainTimer += deltaSeconds * 0.28;
+  }
+}
+
+function updatePresentationUiTimers(deltaSeconds) {
+  if (!presentationState.active) {
+    return;
+  }
+
+  presentationState.promptTimer = Math.max(0, presentationState.promptTimer - deltaSeconds);
+  if (presentationState.promptTimer === 0) {
+    presentationState.promptText = "";
+  }
 }
 
 function updateSettingsMenuControls() {
@@ -2890,6 +4026,16 @@ function update(deltaSeconds) {
   updateControlsOverlayControls();
   updateMenuScreens(deltaSeconds);
   updateEndingControls();
+  updatePresentationUiTimers(deltaSeconds);
+  if (updatePresentationControls(deltaSeconds)) {
+    if (presentationState.explanationPaused) {
+      updatePresentationPausedVisuals(deltaSeconds);
+    }
+    updateObjectiveState(deltaSeconds);
+    input.finishFrame();
+    mouse.finishFrame();
+    return;
+  }
   updateDialogue(deltaSeconds);
   updateJournalControls();
   updateKeypad(deltaSeconds);
@@ -3168,6 +4314,17 @@ function switchScene(targetState, spawnX, facing) {
 }
 
 function enterTitleScene() {
+  if (presentationState.active) {
+    const snapshot = presentationState.normalSnapshot;
+    if (snapshot) {
+      restoreNormalProgressSnapshot(snapshot);
+    }
+    clearPresentationState();
+    debug.showOverlay = false;
+    titleMenuState.selectedIndex = 0;
+    gameState.set(GAME_STATES.TITLE);
+  }
+
   audioManager.stopAmbience({ fadeSeconds: 0.8 });
   audioManager.playMusic("titleTheme", { fadeSeconds: 1.2, volume: 0.3 });
 }
@@ -3262,7 +4419,9 @@ function enterClassroomScene() {
 function enterEndingScene() {
   endingState.reached = true;
   endingState.selectedIndex = 0;
-  runtimeSession.valid = false;
+  if (!presentationState.active) {
+    runtimeSession.valid = false;
+  }
   audioManager.stopAmbience({ fadeSeconds: 1 });
   audioManager.playMusic("endingTheme", { fadeSeconds: 2.6, volume: 0.32 });
 }
@@ -3345,7 +4504,8 @@ function startRealityChangeChapter() {
 }
 
 function updateDebugControls() {
-  const forceDebugHidden = TRAILER_MODE || cinematicCaptureActive || isInterfaceScreenState();
+  const forceDebugHidden =
+    presentationState.active || TRAILER_MODE || cinematicCaptureActive || isInterfaceScreenState();
 
   if (forceDebugHidden) {
     debug.showOverlay = false;
@@ -4093,7 +5253,7 @@ function updateManuscriptScene(scene, deltaSeconds) {
     return;
   }
 
-  if (TRAILER_MODE && handleManuscriptDeveloperShortcut()) {
+  if (TRAILER_MODE && !presentationState.active && handleManuscriptDeveloperShortcut()) {
     return;
   }
 
@@ -5765,6 +6925,8 @@ function getHorizontalInput() {
 function isMovementPaused() {
   return (
     isInterfaceScreenState() ||
+    presentationState.cardTimer > 0 ||
+    presentationState.explanationPaused ||
     dialogueState.active ||
     journalState.open ||
     keypadState.active ||
@@ -5799,6 +6961,8 @@ function shouldShowInteractionPrompt() {
     !inspectOverlayState.active &&
     recordsProgress.activeCaseId === null &&
     !controlsState.open &&
+    presentationState.cardTimer <= 0 &&
+    !presentationState.explanationPaused &&
     !circuitPuzzleState.active &&
     !archiveProgress.ladderSequenceActive &&
     !archiveProgress.ladderPushActive &&
@@ -7262,6 +8426,7 @@ function render() {
   if (
     debug.showOverlay &&
     debug.showCollisionBoxes &&
+    !presentationState.active &&
     !TRAILER_MODE &&
     !cinematicCaptureActive &&
     !isInterfaceScreenState()
@@ -7279,6 +8444,10 @@ function render() {
   drawDialoguePanel();
   drawControlsHint();
   drawControlsOverlay();
+  drawPresentationIndicator();
+  drawPresentationStageButtons();
+  drawPresentationTemporaryPrompt();
+  drawPresentationCard();
   drawTransitionOverlay();
   drawAudioUnlockPrompt();
   drawDebugScreen();
@@ -7300,6 +8469,11 @@ function drawTitleScreen(scene) {
 
   if (gameState.current === GAME_STATES.CREDITS) {
     drawCreditsScreen();
+    return;
+  }
+
+  if (gameState.current === GAME_STATES.PRESENTATION_MENU) {
+    drawPresentationMenuScreen();
   }
 }
 
@@ -7456,6 +8630,106 @@ function drawTitleMenu() {
   }
 }
 
+function drawPresentationMenuScreen() {
+  const presentationText = getPresentationText();
+  const options = getPresentationMenuOptions();
+  const layout = getPresentationMenuLayout(options.length);
+  const currentLabel = presentationState.currentSectionId
+    ? getPresentationSectionLabel(presentationState.currentSectionId)
+    : presentationText.noSection || "No section loaded";
+
+  context.fillStyle = "rgba(0, 0, 0, 0.54)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  context.fillStyle = "#070c10";
+  context.fillRect(layout.x, layout.y, layout.width, layout.height);
+  context.strokeStyle = "#39484f";
+  context.lineWidth = 2;
+  context.strokeRect(layout.x + 0.5, layout.y + 0.5, layout.width, layout.height);
+  context.fillStyle = "rgba(216, 193, 111, 0.3)";
+  context.fillRect(layout.x, layout.y, layout.width, 2);
+
+  context.textBaseline = "top";
+  context.fillStyle = "#e0ddca";
+  wrapPresentationText(
+    presentationText.title || "PRESENTATION MODE",
+    layout.contentX,
+    layout.titleY,
+    layout.contentWidth,
+    22,
+    {
+      font: PRESENTATION_UI.TITLE_FONT,
+      maxLines: 1,
+      ellipsis: true,
+    },
+  );
+
+  context.fillStyle = "#8fa0a4";
+  wrapPresentationText(
+    formatText(presentationText.currentSectionTemplate || "Current: ${section}", {
+      section: currentLabel,
+    }),
+    layout.contentX,
+    layout.currentY,
+    layout.contentWidth,
+    12,
+    {
+      font: PRESENTATION_UI.SMALL_FONT,
+      maxLines: 1,
+      ellipsis: true,
+    },
+  );
+
+  context.fillStyle = "#d8c16f";
+  wrapPresentationText(
+    presentationText.sectionsTitle || "Sections",
+    layout.contentX,
+    layout.listTitleY,
+    layout.contentWidth,
+    10,
+    {
+      font: PRESENTATION_UI.SMALL_FONT,
+      maxLines: 1,
+      ellipsis: true,
+    },
+  );
+
+  options.forEach((option, index) => {
+    const rect = getPresentationButtonRect(index, options.length);
+    const selected = index === presentationState.selectedMenuIndex;
+
+    context.fillStyle = selected ? "rgba(216, 193, 111, 0.2)" : "rgba(7, 12, 16, 0.74)";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = selected ? "#d8c16f" : "#34464d";
+    context.lineWidth = 1;
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    if (selected) {
+      context.fillStyle = "#d8c16f";
+      context.fillText(">", rect.x + 8, rect.y + 4);
+    }
+    context.fillStyle = selected ? "#f1e7b5" : "#c4ced0";
+    wrapPresentationText(option.label, rect.x + 22, rect.y + 4, rect.width - 32, 10, {
+      font: PRESENTATION_UI.BUTTON_FONT,
+      maxLines: 1,
+      ellipsis: true,
+    });
+  });
+
+  context.fillStyle = "#5e6d72";
+  wrapPresentationText(
+    presentationText.menuFooter || "Enter to select - Escape to resume",
+    layout.contentX,
+    layout.footerY,
+    layout.contentWidth,
+    10,
+    {
+      font: PRESENTATION_UI.SMALL_FONT,
+      maxLines: 1,
+      align: "center",
+      ellipsis: true,
+    },
+  );
+}
+
 function drawSettingsScreen() {
   drawSubscreenPanel(TEXT_CONTENT.settings.title, TEXT_CONTENT.settings.hint);
 
@@ -7579,18 +8853,58 @@ function drawEndingScreen(scene) {
     context.fillText(TEXT_CONTENT.ending.attendancePresent, 264, 210);
   }
 
-  const options = getEndingMenuOptions();
+  if (presentationState.active) {
+    drawPresentationEndingOptions();
+  } else {
+    const options = getEndingMenuOptions();
+    options.forEach((option, index) => {
+      drawMenuButton(
+        getEndingButtonRect(index, options.length),
+        option.label,
+        index === endingState.selectedIndex,
+      );
+    });
+
+    context.fillStyle = "#68787c";
+    context.font = "11px monospace";
+    context.fillText(TEXT_CONTENT.ending.navigationHint, 224, 298);
+  }
+}
+
+function drawPresentationEndingOptions() {
+  const options = getPresentationEndingOptions();
   options.forEach((option, index) => {
-    drawMenuButton(
-      getEndingButtonRect(index, options.length),
-      option.label,
-      index === endingState.selectedIndex,
-    );
+    const rect = getPresentationEndingButtonRect(index, options.length);
+    const selected = index === presentationState.endingSelectedIndex;
+    context.fillStyle = selected ? "rgba(216, 193, 111, 0.22)" : "rgba(7, 12, 16, 0.78)";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = selected ? "#d8c16f" : "#34464d";
+    context.lineWidth = 2;
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    context.fillStyle = selected ? "#f1e7b5" : "#c4ced0";
+    context.textBaseline = "top";
+    wrapPresentationText(option.label, rect.x + 12, rect.y + 9, rect.width - 24, 10, {
+      font: PRESENTATION_UI.BUTTON_FONT,
+      maxLines: 1,
+      align: "center",
+      ellipsis: true,
+    });
   });
 
   context.fillStyle = "#68787c";
-  context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.ending.navigationHint, 224, 298);
+  wrapPresentationText(
+    getPresentationText().menuFooter || TEXT_CONTENT.ending.navigationHint,
+    PRESENTATION_UI.SAFE_X,
+    298,
+    CANVAS_WIDTH - PRESENTATION_UI.SAFE_X * 2,
+    10,
+    {
+      font: PRESENTATION_UI.SMALL_FONT,
+      maxLines: 1,
+      align: "center",
+      ellipsis: true,
+    },
+  );
 }
 
 function drawSubscreenPanel(title, hint) {
@@ -7630,11 +8944,12 @@ function getTitleButtonRect(index, total) {
   const width = 166;
   const height = 28;
   const x = 238;
-  const startY = total > 4 ? 154 : 168;
+  const startY = total > 5 ? 142 : total > 4 ? 154 : 168;
+  const gap = total > 5 ? 30 : 34;
 
   return {
     x,
-    y: startY + index * 34,
+    y: startY + index * gap,
     width,
     height,
   };
@@ -9217,7 +10532,12 @@ function drawManuscriptChrome() {
     drawButton(getCloseManuscriptButtonRect(), TEXT_CONTENT.manuscript.ui.close);
   }
 
-  if (TRAILER_MODE && !shouldHideCaptureUi() && !manuscriptProgress.finalTriggered) {
+  if (
+    TRAILER_MODE &&
+    !presentationState.active &&
+    !shouldHideCaptureUi() &&
+    !manuscriptProgress.finalTriggered
+  ) {
     drawButton(
       getDeveloperCompleteButtonRect(),
       TEXT_CONTENT.manuscript.ui.developerComplete,
@@ -10236,11 +11556,229 @@ function drawControlsOverlay() {
     TEXT_CONTENT.generalUI.controls.climaxLines,
   );
 
-  if (TRAILER_MODE && !shouldHideCaptureUi()) {
+  if (TRAILER_MODE && !presentationState.active && !shouldHideCaptureUi()) {
     context.fillStyle = "#d8c16f";
     context.font = "11px monospace";
     context.fillText(TEXT_CONTENT.generalUI.controls.trailerShortcuts, x + 270, y + 250);
   }
+}
+
+function shouldHidePresentationIndicator() {
+  return (
+    !presentationState.active ||
+    !presentationState.overlayVisible ||
+    isInterfaceScreenState() ||
+    cinematicCaptureActive ||
+    controlsState.open ||
+    dialogueState.active ||
+    journalState.open ||
+    keypadState.active ||
+    inspectOverlayState.active ||
+    recordsProgress.activeCaseId !== null ||
+    circuitPuzzleState.active ||
+    gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    gameState.current === GAME_STATES.ARCHIVIST ||
+    escapeProgress.cameraChoiceActive ||
+    (gameState.current === GAME_STATES.ESCAPE && escapeProgress.protagonistEscaped)
+  );
+}
+
+function drawPresentationIndicator() {
+  if (shouldHidePresentationIndicator()) {
+    return;
+  }
+
+  const sectionLabel = String(
+    getPresentationSectionLabel(presentationState.currentSectionId) || "",
+  ).toUpperCase();
+  const x = PRESENTATION_UI.SAFE_X;
+  const y = PRESENTATION_UI.SAFE_Y;
+  const width = 184;
+  const height = 34;
+
+  context.fillStyle = "rgba(3, 6, 9, 0.58)";
+  context.fillRect(x, y, width, height);
+  context.strokeStyle = "rgba(216, 193, 111, 0.22)";
+  context.lineWidth = 1;
+  context.strokeRect(x + 0.5, y + 0.5, width, height);
+  context.textBaseline = "top";
+  context.fillStyle = "#d8c16f";
+  wrapPresentationText("PRESENTATION MODE", x + 9, y + 6, width - 18, 10, {
+    font: PRESENTATION_UI.INDICATOR_FONT,
+    maxLines: 1,
+    ellipsis: true,
+  });
+  context.fillStyle = "#8fa0a4";
+  wrapPresentationText(sectionLabel, x + 9, y + 19, width - 18, 9, {
+    font: PRESENTATION_UI.SMALL_FONT,
+    maxLines: 1,
+    ellipsis: true,
+  });
+}
+
+function shouldHidePresentationTemporaryPrompt() {
+  return (
+    !presentationState.active ||
+    !presentationState.overlayVisible ||
+    presentationState.promptTimer <= 0 ||
+    !presentationState.promptText ||
+    isInterfaceScreenState() ||
+    cinematicCaptureActive ||
+    controlsState.open ||
+    dialogueState.active ||
+    journalState.open ||
+    keypadState.active ||
+    inspectOverlayState.active ||
+    recordsProgress.activeCaseId !== null ||
+    gameState.current === GAME_STATES.MANUSCRIPT ||
+    gameState.current === GAME_STATES.RING ||
+    gameState.current === GAME_STATES.ARCHIVIST ||
+    escapeProgress.cameraChoiceActive
+  );
+}
+
+function drawPresentationTemporaryPrompt() {
+  if (shouldHidePresentationTemporaryPrompt()) {
+    return;
+  }
+
+  const maxWidth = CANVAS_WIDTH - PRESENTATION_UI.SAFE_X * 2;
+  const textWidth = Math.min(
+    maxWidth,
+    Math.ceil(measureTextWidth(presentationState.promptText, PRESENTATION_UI.BUTTON_FONT)) + 28,
+  );
+  const x = Math.round((CANVAS_WIDTH - textWidth) / 2);
+  const y = CANVAS_HEIGHT - PRESENTATION_UI.SAFE_Y - 62;
+
+  context.globalAlpha = clamp(presentationState.promptTimer / 0.2, 0, 1);
+  context.fillStyle = "rgba(3, 6, 9, 0.72)";
+  context.fillRect(x, y, textWidth, 22);
+  context.strokeStyle = "rgba(216, 193, 111, 0.24)";
+  context.lineWidth = 1;
+  context.strokeRect(x + 0.5, y + 0.5, textWidth, 22);
+  context.fillStyle = "#b8c3c5";
+  context.textBaseline = "top";
+  wrapPresentationText(presentationState.promptText, x + 14, y + 6, textWidth - 28, 10, {
+    font: PRESENTATION_UI.BUTTON_FONT,
+    maxLines: 1,
+    align: "center",
+    ellipsis: true,
+  });
+  context.globalAlpha = 1;
+}
+
+function drawPresentationStageButtons() {
+  const buttons = getPresentationSpecialButtons();
+  if (
+    !presentationState.active ||
+    !presentationState.overlayVisible ||
+    gameState.current !== GAME_STATES.MANUSCRIPT ||
+    buttons.length === 0 ||
+    isInterfaceScreenState() ||
+    manuscriptProgress.finalTriggered ||
+    controlsState.open
+  ) {
+    return;
+  }
+
+  buttons.forEach((button, index) => {
+    const rect = getPresentationSpecialButtonRect(index);
+    const hovered = isPointInRect(mouse.x, mouse.y, rect);
+    context.fillStyle = hovered ? "rgba(216, 193, 111, 0.18)" : "rgba(3, 6, 9, 0.74)";
+    context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    context.strokeStyle = hovered ? "#d8c16f" : "#34464d";
+    context.lineWidth = 1;
+    context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
+    context.fillStyle = hovered ? "#efe4b1" : "#aebabc";
+    context.textBaseline = "top";
+    wrapPresentationText(button.label, rect.x + 6, rect.y + 5, rect.width - 12, 9, {
+      font: PRESENTATION_UI.SMALL_FONT,
+      maxLines: 1,
+      align: "center",
+      ellipsis: true,
+    });
+  });
+}
+
+function drawPresentationCard() {
+  if (!presentationState.active || presentationState.cardTimer <= 0 || isInterfaceScreenState()) {
+    return;
+  }
+
+  const alpha = clamp(presentationState.cardTimer / 0.22, 0, 1);
+  const maxWidth = Math.min(
+    PRESENTATION_UI.CARD_MAX_WIDTH,
+    CANVAS_WIDTH - PRESENTATION_UI.SAFE_X * 2,
+  );
+  const contentWidth = maxWidth - PRESENTATION_UI.CARD_PADDING_X * 2;
+  const titleMetrics = measurePresentationText(
+    presentationState.cardTitle.toUpperCase(),
+    contentWidth,
+    23,
+    {
+      font: PRESENTATION_UI.CARD_TITLE_FONT,
+      maxLines: 2,
+      ellipsis: true,
+    },
+  );
+  const bodyMetrics = measurePresentationText(presentationState.cardBody, contentWidth, 15, {
+    font: PRESENTATION_UI.BODY_FONT,
+    maxLines: 2,
+    ellipsis: true,
+  });
+  const contentHeight = titleMetrics.height + 14 + bodyMetrics.height;
+  const width = maxWidth;
+  const height = Math.min(
+    CANVAS_HEIGHT - PRESENTATION_UI.SAFE_Y * 2,
+    contentHeight + PRESENTATION_UI.CARD_PADDING_Y * 2,
+  );
+  const x = Math.round((CANVAS_WIDTH - width) / 2);
+  const y = Math.round((CANVAS_HEIGHT - height) / 2);
+  const textStartY = y + Math.round((height - contentHeight) / 2);
+
+  context.globalAlpha = alpha;
+  context.fillStyle = "rgba(0, 0, 0, 0.64)";
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  context.fillStyle = "rgba(5, 9, 12, 0.94)";
+  context.fillRect(x, y, width, height);
+  context.strokeStyle = "#39484f";
+  context.lineWidth = 2;
+  context.strokeRect(x + 0.5, y + 0.5, width, height);
+  context.fillStyle = "rgba(216, 193, 111, 0.34)";
+  context.fillRect(x, y, width, 2);
+
+  context.fillStyle = "#e0ddca";
+  context.textBaseline = "top";
+  wrapPresentationText(
+    presentationState.cardTitle.toUpperCase(),
+    x + PRESENTATION_UI.CARD_PADDING_X,
+    textStartY,
+    contentWidth,
+    23,
+    {
+      font: PRESENTATION_UI.CARD_TITLE_FONT,
+      maxLines: 2,
+      align: "center",
+      ellipsis: true,
+    },
+  );
+  context.fillStyle = "#aebabc";
+  wrapPresentationText(
+    presentationState.cardBody,
+    x + PRESENTATION_UI.CARD_PADDING_X,
+    textStartY + titleMetrics.height + 14,
+    contentWidth,
+    15,
+    {
+      font: PRESENTATION_UI.BODY_FONT,
+      maxLines: 2,
+      align: "center",
+      ellipsis: true,
+    },
+  );
+  context.globalAlpha = 1;
 }
 
 function drawControlsColumn(x, y, title, lines) {
@@ -11600,6 +13138,7 @@ function drawPlaceholderState() {
 function drawDebugScreen() {
   if (
     !debug.showOverlay ||
+    presentationState.active ||
     TRAILER_MODE ||
     cinematicCaptureActive ||
     isInterfaceScreenState()
@@ -11736,6 +13275,92 @@ function drawWrappedText(text, x, y, maxWidth, lineHeight) {
   if (line) {
     context.fillText(line, x, lineY);
   }
+}
+
+function getPresentationTextLines(text, maxWidth, options = {}) {
+  const maxLines = options.maxLines ?? Infinity;
+  const ellipsis = options.ellipsis ?? false;
+  const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  let overflowed = false;
+
+  words.forEach((word) => {
+    if (lines.length >= maxLines) {
+      overflowed = true;
+      return;
+    }
+
+    const testLine = line ? `${line} ${word}` : word;
+    if (measureTextWidth(testLine, context.font) <= maxWidth || !line) {
+      line = testLine;
+      return;
+    }
+
+    lines.push(line);
+    line = word;
+    if (lines.length >= maxLines) {
+      overflowed = true;
+    }
+  });
+
+  if (line && lines.length < maxLines) {
+    lines.push(line);
+  } else if (line && lines.length >= maxLines) {
+    overflowed = true;
+  }
+
+  if (ellipsis && overflowed && words.length > 0 && lines.length === maxLines) {
+    let lastLine = lines[lines.length - 1] || "";
+    while (lastLine.length > 0 && measureTextWidth(`${lastLine}...`, context.font) > maxWidth) {
+      lastLine = lastLine.slice(0, -1).trim();
+    }
+    lines[lines.length - 1] = lastLine ? `${lastLine}...` : "...";
+  }
+
+  return lines;
+}
+
+function measurePresentationText(text, maxWidth, lineHeight, options = {}) {
+  const previousFont = context.font;
+  if (options.font) {
+    context.font = options.font;
+  }
+
+  const lines = getPresentationTextLines(text, maxWidth, options);
+  context.font = previousFont;
+
+  return {
+    lines,
+    height: lines.length > 0 ? (lines.length - 1) * lineHeight + lineHeight : 0,
+  };
+}
+
+function wrapPresentationText(text, x, y, maxWidth, lineHeight, options = {}) {
+  const previousFont = context.font;
+  if (options.font) {
+    context.font = options.font;
+  }
+
+  const lines = getPresentationTextLines(text, maxWidth, options);
+  const align = options.align || "left";
+
+  lines.forEach((line, index) => {
+    const lineWidth = measureTextWidth(line);
+    let drawX = x;
+    if (align === "center") {
+      drawX = x + (maxWidth - lineWidth) / 2;
+    } else if (align === "right") {
+      drawX = x + maxWidth - lineWidth;
+    }
+    context.fillText(line, Math.round(drawX), y + index * lineHeight);
+  });
+
+  context.font = previousFont;
+  return {
+    lines,
+    height: lines.length > 0 ? (lines.length - 1) * lineHeight + lineHeight : 0,
+  };
 }
 
 function formatText(template, values = {}) {

@@ -458,8 +458,8 @@ const TEXT_CONTENT = deepFreezeTextContent({
   // Inventory section 10: Vulnerable boss phase.
   boss: {
     ui: {
-      entryReady: "ARCHIVIST VULNERABLE",
-      updating: "ARCHIVIST PROTECTED",
+      entryReady: "ENTRY READY",
+      updating: "UPDATING",
       stabilityTemplate: "STABILITY ${marks}",
       phaseTemplate: "PHASE ${phase}",
       archiveEntryCreated: "ARCHIVE ENTRY CREATED",
@@ -472,92 +472,89 @@ const TEXT_CONTENT = deepFreezeTextContent({
       next: "NEXT",
       name: "THE ARCHIVIST",
       subtitle: "KEEPER OF THE LIVING RECORD",
-      stability: "PLAYER STABILITY",
-      manuscriptCharge: "FLASHLIGHT CHARGE",
-      move: "A / D: Move",
+      stability: "STABILITY",
+      manuscriptCharge: "MANUSCRIPT CHARGE",
+      move: "A/D: Move",
       dodge: "Space: Dodge",
-      focusBeam: "E / Click: Fire charged beam",
-      archiveEntryCompleted: "YOUR RECORD IS COMPLETE",
+      focusBeam: "E / Click: Focus beam",
+      archiveEntryCompleted: "ARCHIVE ENTRY COMPLETED",
       statusContained: "STATUS: CONTAINED",
-      retryBoss: "Retry Fight",
+      retryBoss: "Retry Boss",
       returnToTitle: "Return to Title",
     },
     messages: {
       archivistTurns:
         "The Archivist turns from the terminal. It is the entity that has been maintaining and rewriting the archive.",
-      finalEntryExposed:
-        "The seal is broken. The Archivist is vulnerable—fire the charged flashlight beam.",
+      finalEntryExposed: "The final entry is exposed. Strike now.",
       observerRecord: "\"You entered to observe the archive. Now the archive will preserve you.\"",
       cannotLeave: "\"You cannot escape a place that has already created your record.\"",
       machineSeal:
         "The Archivist is protected by a four-symbol machine seal. Activate Eye, Spiral, Key, then Hand.",
       sealRejects: "Incorrect symbol order. The seal resets.",
       sealBreaks: "The protective seal breaks. The Archivist is now vulnerable.",
-      finalRecordCharging: "Beam attack charging. Dodge before it fires.",
-      rewritesSpace: "The floor is shifting around you. Keep moving.",
-      copyCollapses: "That was a false copy. The real Archivist is still active.",
-      updateLoopRejects: "Wrong control. The sequence has reset.",
-      slashCuts: "The Archivist's slash hit you. Stability reduced.",
-      finalRecordCloses: "The beam caught you before the dodge completed.",
-      corruptedInk: "Corrupted ink hit you. Stability reduced.",
-      floorErupts: "The floor attack hit you. Move out of the marked area.",
+      finalRecordCharging: "A final record is charging. Dodge the beam.",
+      rewritesSpace: "The Archivist rewrites the space around you.",
+      copyCollapses: "The copy collapses into an incorrect sequence.",
+      updateLoopRejects: "The update loop rejects the symbol and erases the sequence.",
+      slashCuts: "The record slash cuts through your outline.",
+      finalRecordCloses: "The final record closes around you.",
+      corruptedInk: "Corrupted ink enters your record.",
+      floorErupts: "The archive floor erupts beneath you.",
     },
   },
 
   // Inventory section 11: Escape sequence.
   escape: {
     labels: {
-      falling: "FALLING DEBRIS",
+      falling: "FALLING",
       serviceBypass: "SERVICE BYPASS",
     },
     messages: {
-      corridorBuried: "The main corridor is blocked. Press Up to climb into the service bypass.",
-      bypassCollapses: "The service bypass collapses behind you. Keep moving.",
-      debrisStrikes: "Falling debris ahead. Keep running and avoid the impact zone.",
-      keepCamera: "You kept the camera. The evidence is safe, but you now move more slowly.",
-      dropCamera:
-        "You dropped the camera. You can move faster, but most of the recorded evidence is lost.",
+      corridorBuried: "The corridor is buried. Press Up to climb through the service bypass.",
+      bypassCollapses: "The bypass collapses behind you.",
+      debrisStrikes: "Debris strikes the floor. Keep moving.",
+      keepCamera: "Keep the camera. Carry the evidence through the final collapse.",
+      dropCamera: "The camera breaks against the floor. You can run faster now.",
     },
     cameraChoice: {
       title: "THE CAMERA IS SLOWING YOU DOWN",
-      description:
-        "The final corridor is collapsing. Choose what matters more: the evidence or a safer escape.",
+      description: "The final corridor is collapsing. Decide what leaves with you.",
       keepLabel: "KEEP THE CAMERA",
-      keepDetail: "Preserve the evidence — harder escape",
+      keepDetail: "Harder escape — preserve and distribute the evidence",
       dropLabel: "DROP THE CAMERA",
-      dropDetail: "Lose most evidence — easier escape",
-      controls: "Arrow keys select — E or Enter confirms",
+      dropDetail: "Easier escape — lose the recorded evidence",
+      controls: "Arrow keys, E, Enter, or mouse",
     },
     reveal: {
-      morningLight: "I escaped the university.",
-      evidenceUpload: "The evidence was uploaded and distributed.",
-      leftCamera: "Most of the evidence was lost beneath the university.",
+      morningLight: "Morning light. The university doors shut behind me.",
+      evidenceUpload: "A damaged evidence upload completed before the camera failed.",
+      leftCamera: "I left the camera beneath the university.",
       survivingImage:
         "One surviving image shows me inside the archive, photographed from behind.",
       phoneImage:
-        "One surviving image shows me inside the archive, photographed from behind.",
-      didNotTakeIt: "I did not take that photograph.",
-      newEntry: "NEW ARCHIVE ENTRY",
+        "My phone now holds one image: me inside the archive, photographed from behind.",
+      didNotTakeIt: "I did not take it.",
+      newEntry: "NEW ARCHIVE ENTRY AVAILABLE",
       subjectExplorer: "SUBJECT: THE EXPLORER",
       statusReleased: "STATUS: RELEASED",
       observationContinuing: "OBSERVATION: CONTINUING",
-      evidenceDistributed: "",
-      attendanceOpen: "",
-      madeItOut: "",
-      archiveDidNotLetGo: "I escaped the archive. It did not stop recording me.",
+      evidenceDistributed: "EVIDENCE: DISTRIBUTED",
+      attendanceOpen: "ATTENDANCE RECORD: STILL OPEN",
+      madeItOut: "I made it out.",
+      archiveDidNotLetGo: "But the archive did not let me go.",
     },
   },
 
   // Inventory section 12: Ending.
   ending: {
     evidenceSurvived: "THE EVIDENCE SURVIVED.",
-    recordContinues: "THE ARCHIVE IS STILL RECORDING.",
-    attendancePresent: "SUBJECT STATUS: PRESENT",
+    recordContinues: "THE RECORD CONTINUES.",
+    attendancePresent: "ATTENDANCE: PRESENT",
     menu: {
-      restart: "Play Again",
-      title: "Return to Title",
+      restart: "Restart",
+      title: "Title",
     },
-    navigationHint: "Arrow keys select — E or Enter confirms",
+    navigationHint: "Arrow keys, E, Enter, or mouse",
   },
 
   // Inventory section 13: Menus and general UI.
@@ -768,7 +765,7 @@ const TEXT_CONTENT = deepFreezeTextContent({
       title: "Uncatalogued attendance register",
       text: "A fresh line appeared in the register: THE EXPLORER — PRESENT.",
     },
-    changedJournal: {
+    changedJournalEntries: {
       maraTitle: "Mara Voss — photograph changed",
       maraText: "Mara's face is now blurred, and the date beneath the photograph has changed to 2086.",
       eliasTitle: "Elias Ward — photograph changed",
@@ -930,21 +927,20 @@ const TEXT_CONTENT = deepFreezeTextContent({
       detail: "Approach the remaining terminal after the update loop shuts down.",
     },
     confrontArchivist: {
-      title: "Defeat the Archivist.",
-      detail: "Dodge its attacks and fire the charged flashlight beam while it is vulnerable.",
+      title: "Survive the Archivist.",
+      detail: "Use the charged flashlight beam and dodge its attacks.",
     },
     breakArchivistSeal: {
       title: "Break the Archivist's protective seal.",
       detail: "Activate Eye, Spiral, Key, then Hand. The Archivist cannot be damaged until the seal breaks.",
     },
     escapeUniversity: {
-      title: "Escape the collapsing university.",
-      detail:
-        "Run toward the exterior light and use the service bypass when the corridor is blocked.",
+      title: "Escape the university.",
+      detail: "Run toward the exterior light before the archive collapses.",
     },
     chooseCamera: {
-      title: "Choose whether to keep the camera.",
-      detail: "Keep it to preserve the evidence, or drop it to escape more easily.",
+      title: "Decide what to carry out.",
+      detail: "Keep the camera and its evidence, or drop it and run.",
     },
   },
 
