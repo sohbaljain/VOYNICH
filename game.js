@@ -2473,7 +2473,7 @@ function getTitleMenuOptions() {
 
   options.push(
     Object.freeze({
-      label: TEXT_CONTENT.title.menu.presentation,
+      label: TEXT_CONTENT.title.menu.presentation || "Presentation Mode",
       action: TITLE_MENU_ACTIONS.PRESENTATION,
     }),
     Object.freeze({ label: TEXT_CONTENT.title.menu.settings, action: TITLE_MENU_ACTIONS.SETTINGS }),
@@ -8604,7 +8604,10 @@ function drawTitleMenu() {
   context.fillText(TEXT_CONTENT.title.name, 70, 62);
   context.fillStyle = "#b6b091";
   context.font = "15px monospace";
-  context.fillText(TEXT_CONTENT.title.tagline, 74, 116);
+  drawWrappedText(TEXT_CONTENT.title.tagline, 74, 116, 492, 16, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   options.forEach((option, index) => {
     drawMenuButton(
@@ -8616,17 +8619,29 @@ function drawTitleMenu() {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.title.navigationHint, 244, 328);
+  drawWrappedText(TEXT_CONTENT.title.navigationHint, 176, 328, 288, 11, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   if (TRAILER_MODE && !shouldHideCaptureUi()) {
     context.fillStyle = "#d8c16f";
-    context.fillText(TEXT_CONTENT.title.trailerNotice, 48, 18);
+    drawWrappedText(TEXT_CONTENT.title.trailerNotice, 32, 18, 576, 11, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 
   if (titleMenuState.exitMessageTimer > 0 && titleMenuState.exitMessage) {
     context.fillStyle = "#d8c16f";
     context.font = "13px monospace";
-    context.fillText(titleMenuState.exitMessage, 244, 306);
+    drawWrappedText(titleMenuState.exitMessage, 176, 306, 288, 13, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 }
 
@@ -8739,12 +8754,20 @@ function drawSettingsScreen() {
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.settings.controlsHint, 126, 314);
+  drawWrappedText(TEXT_CONTENT.settings.controlsHint, 126, 314, 388, 11, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   if (settingsMenuState.messageTimer > 0 && settingsMenuState.message) {
     context.fillStyle = "#d8c16f";
     context.font = "12px monospace";
-    context.fillText(settingsMenuState.message, 396, 54);
+    drawWrappedText(settingsMenuState.message, 306, 54, 208, 12, {
+      align: "right",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 }
 
@@ -8760,7 +8783,10 @@ function drawSettingsItem(item, index, selected) {
   context.fillStyle = selected ? "#e6dfbd" : "#b7c1c3";
   context.font = "12px monospace";
   context.textBaseline = "top";
-  context.fillText(item.label, row.x + 10, row.y + 5);
+  drawWrappedText(item.label, row.x + 10, row.y + 5, 190, 12, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   if (item.type === "range") {
     drawSettingsSlider(item, index);
@@ -8768,7 +8794,11 @@ function drawSettingsItem(item, index, selected) {
   }
 
   context.fillStyle = item.type === "toggle" && settings[item.id] ? "#d8c16f" : "#839296";
-  context.fillText(formatSettingValue(item), row.x + row.width - 94, row.y + 5);
+  drawWrappedText(formatSettingValue(item), row.x + row.width - 94, row.y + 5, 84, 12, {
+    align: "right",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawSettingsSlider(item, index) {
@@ -8792,7 +8822,10 @@ function drawCreditsScreen() {
 
   context.fillStyle = "#e0ddca";
   context.font = "15px monospace";
-  context.fillText(TEXT_CONTENT.credits.createdBy, 126, 92);
+  drawWrappedText(TEXT_CONTENT.credits.createdBy, 126, 92, 390, 16, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#aebabc";
   context.font = "12px monospace";
@@ -8806,17 +8839,29 @@ function drawCreditsScreen() {
 
   context.fillStyle = "#d8c16f";
   context.font = "13px monospace";
-  context.fillText(TEXT_CONTENT.credits.licensedAudio, 126, 178);
+  drawWrappedText(TEXT_CONTENT.credits.licensedAudio, 126, 178, 390, 13, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#88989c";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.credits.licensedAudioPlaceholder, 126, 199);
+  drawWrappedText(TEXT_CONTENT.credits.licensedAudioPlaceholder, 126, 199, 390, 12, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#d8c16f";
   context.font = "13px monospace";
-  context.fillText(TEXT_CONTENT.credits.licensedAssets, 126, 230);
+  drawWrappedText(TEXT_CONTENT.credits.licensedAssets, 126, 230, 390, 13, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#88989c";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.credits.licensedAssetsPlaceholder, 126, 251);
+  drawWrappedText(TEXT_CONTENT.credits.licensedAssetsPlaceholder, 126, 251, 390, 12, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 
   drawMenuButton(getCreditsBackButtonRect(), TEXT_CONTENT.credits.back, true);
 }
@@ -8832,16 +8877,32 @@ function drawEndingScreen(scene) {
   context.textBaseline = "top";
   context.fillStyle = "#e0ddca";
   context.font = "25px monospace";
-  context.fillText(TEXT_CONTENT.title.name, 266, 86);
+  drawWrappedText(TEXT_CONTENT.title.name, 80, 86, 480, 25, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#c6ad61";
   context.font = "16px monospace";
   if (escapeProgress.evidencePreserved) {
-    context.fillText(TEXT_CONTENT.ending.evidenceSurvived, 214, 124);
+    drawWrappedText(TEXT_CONTENT.ending.evidenceSurvived, 80, 124, 480, 16, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
     context.fillStyle = "#77888c";
     context.font = "11px monospace";
-    context.fillText(TEXT_CONTENT.ending.recordContinues, 250, 148);
+    drawWrappedText(TEXT_CONTENT.ending.recordContinues, 80, 148, 480, 11, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   } else {
-    context.fillText(TEXT_CONTENT.ending.recordContinues, 218, 128);
+    drawWrappedText(TEXT_CONTENT.ending.recordContinues, 80, 128, 480, 16, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 
   ARCHIVE_SYMBOL_PATTERN.forEach((symbolId, index) => {
@@ -8850,7 +8911,11 @@ function drawEndingScreen(scene) {
   if (classroomProgress.completed) {
     context.fillStyle = "#80729a";
     context.font = "9px monospace";
-    context.fillText(TEXT_CONTENT.ending.attendancePresent, 264, 210);
+    drawWrappedText(TEXT_CONTENT.ending.attendancePresent, 80, 210, 480, 9, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 
   if (presentationState.active) {
@@ -8867,7 +8932,11 @@ function drawEndingScreen(scene) {
 
     context.fillStyle = "#68787c";
     context.font = "11px monospace";
-    context.fillText(TEXT_CONTENT.ending.navigationHint, 224, 298);
+    drawWrappedText(TEXT_CONTENT.ending.navigationHint, 176, 298, 288, 11, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 }
 
@@ -8922,10 +8991,17 @@ function drawSubscreenPanel(title, hint) {
   context.fillStyle = "#e0ddca";
   context.font = "22px monospace";
   context.textBaseline = "top";
-  context.fillText(title, panel.x + 24, panel.y + 18);
+  drawWrappedText(title, panel.x + 24, panel.y + 18, 250, 24, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText(hint, panel.x + panel.width - measureTextWidth(hint, "11px monospace") - 22, panel.y + 25);
+  drawWrappedText(hint, panel.x + 246, panel.y + 25, 194, 12, {
+    align: "right",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawMenuButton(rect, label, selected) {
@@ -8937,7 +9013,11 @@ function drawMenuButton(rect, label, selected) {
   context.fillStyle = selected ? "#f1e7b5" : "#c4ced0";
   context.font = "14px monospace";
   context.textBaseline = "top";
-  context.fillText(label, rect.x + 18, rect.y + 7);
+  drawWrappedText(label, rect.x + 12, rect.y + 7, rect.width - 24, 14, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function getTitleButtonRect(index, total) {
@@ -10560,10 +10640,16 @@ function drawManuscriptChrome() {
 function drawStageTitle(label, title) {
   context.fillStyle = "#8fa0a4";
   context.font = "12px monospace";
-  context.fillText(label, MANUSCRIPT_VIEW.PANEL_X, MANUSCRIPT_VIEW.PANEL_Y);
+  drawWrappedText(label, MANUSCRIPT_VIEW.PANEL_X, MANUSCRIPT_VIEW.PANEL_Y, MANUSCRIPT_VIEW.PANEL_WIDTH, 12, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#e1ddca";
   context.font = "17px monospace";
-  context.fillText(title, MANUSCRIPT_VIEW.PANEL_X, MANUSCRIPT_VIEW.PANEL_Y + 18);
+  drawWrappedText(title, MANUSCRIPT_VIEW.PANEL_X, MANUSCRIPT_VIEW.PANEL_Y + 18, MANUSCRIPT_VIEW.PANEL_WIDTH, 18, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 }
 
 function drawStageMessage(text) {
@@ -10587,7 +10673,11 @@ function drawButton(rect, label) {
   context.fillStyle = "#d8d7c8";
   context.font = "11px monospace";
   context.textBaseline = "top";
-  context.fillText(label, rect.x + 8, rect.y + 7);
+  drawWrappedText(label, rect.x + 6, rect.y + 7, rect.width - 12, 11, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawInkPulse(scene) {
@@ -11432,10 +11522,16 @@ function drawObjectiveDisplay() {
   context.fillStyle = "#d8d7c8";
   context.font = inBoss ? "10px monospace" : "13px monospace";
   context.textBaseline = "top";
-  context.fillText(objective.title, x + 10, y + 8);
+  drawWrappedText(objective.title, x + 10, y + 8, width - 20, inBoss ? 11 : 13, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#93a3a6";
   context.font = inBoss ? "8px monospace" : "10px monospace";
-  drawWrappedText(objective.detail, x + 10, y + 27, width - 20, 11);
+  drawWrappedText(objective.detail, x + 10, y + 27, width - 20, 11, {
+    maxLines: 2,
+    ellipsis: true,
+  });
   context.globalAlpha = 1;
 }
 
@@ -11466,7 +11562,10 @@ function drawRealityMessage() {
   context.fillStyle = "#d8d7c8";
   context.font = "12px monospace";
   context.textBaseline = "top";
-  drawWrappedText(realityProgress.message, x + 12, y + 10, width - 24, 14);
+  drawWrappedText(realityProgress.message, x + 12, y + 10, width - 24, 14, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 }
 
 function drawControlsHint() {
@@ -11488,16 +11587,28 @@ function drawControlsHint() {
   }
 
   const text = TEXT_CONTENT.generalUI.controlsHint;
-  const width = Math.ceil(measureTextWidth(text, "11px monospace")) + 18;
+  context.font = "11px monospace";
+  const maxTextWidth = 228;
+  const layout = measurePresentationText(text, maxTextWidth, 11, {
+    maxLines: 1,
+    ellipsis: true,
+  });
+  const textWidth = Math.min(
+    maxTextWidth,
+    Math.max(...layout.lines.map((line) => measureTextWidth(line, context.font)), 0),
+  );
+  const width = Math.ceil(textWidth) + 18;
   const x = 18;
   const y = CANVAS_HEIGHT - 28;
 
   context.fillStyle = "rgba(3, 5, 7, 0.64)";
   context.fillRect(x, y, width, 20);
   context.fillStyle = "#9ba9ad";
-  context.font = "11px monospace";
   context.textBaseline = "top";
-  context.fillText(text, x + 9, y + 5);
+  drawWrappedText(text, x + 9, y + 5, width - 18, 11, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawControlsOverlay() {
@@ -11522,11 +11633,18 @@ function drawControlsOverlay() {
   context.fillStyle = "#d8d7c8";
   context.font = "20px monospace";
   context.textBaseline = "top";
-  context.fillText(TEXT_CONTENT.generalUI.controls.title, x + 22, y + 18);
+  drawWrappedText(TEXT_CONTENT.generalUI.controls.title, x + 22, y + 18, 270, 20, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#8fa0a4";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.generalUI.controls.closeHint, x + width - 132, y + 23);
+  drawWrappedText(TEXT_CONTENT.generalUI.controls.closeHint, x + 314, y + 23, 154, 11, {
+    align: "right",
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   drawControlsColumn(
     x + 24,
@@ -11559,7 +11677,10 @@ function drawControlsOverlay() {
   if (TRAILER_MODE && !presentationState.active && !shouldHideCaptureUi()) {
     context.fillStyle = "#d8c16f";
     context.font = "11px monospace";
-    context.fillText(TEXT_CONTENT.generalUI.controls.trailerShortcuts, x + 270, y + 250);
+    drawWrappedText(TEXT_CONTENT.generalUI.controls.trailerShortcuts, x + 270, y + 250, 196, 11, {
+      maxLines: 2,
+      ellipsis: true,
+    });
   }
 }
 
@@ -11784,12 +11905,18 @@ function drawPresentationCard() {
 function drawControlsColumn(x, y, title, lines) {
   context.fillStyle = "#d8c16f";
   context.font = "13px monospace";
-  context.fillText(title, x, y);
+  drawWrappedText(title, x, y, 198, 13, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#b8c3c5";
   context.font = "11px monospace";
   lines.forEach((line, index) => {
-    context.fillText(line, x, y + 22 + index * 15);
+    drawWrappedText(line, x, y + 22 + index * 15, 198, 11, {
+      maxLines: 1,
+      ellipsis: true,
+    });
   });
 }
 
@@ -11805,18 +11932,32 @@ function drawInteractionPrompt() {
   const prompt = formatText(TEXT_CONTENT.generalUI.interactionPromptTemplate, {
     prompt: getInteractablePrompt(interactionState.activeInteractable),
   });
-  const x = Math.round(CANVAS_WIDTH / 2 - measureTextWidth(prompt, "15px monospace") / 2 - 12);
-  const y = 306;
-  const width = Math.ceil(measureTextWidth(prompt, "15px monospace")) + 24;
+  context.font = "15px monospace";
+  const maxTextWidth = CANVAS_WIDTH - 80;
+  const layout = measurePresentationText(prompt, maxTextWidth, 16, {
+    maxLines: 2,
+    ellipsis: true,
+  });
+  const textWidth = Math.min(
+    maxTextWidth,
+    Math.max(...layout.lines.map((line) => measureTextWidth(line, context.font)), 0),
+  );
+  const width = Math.ceil(textWidth) + 24;
+  const height = layout.height + 16;
+  const x = Math.round(clamp((CANVAS_WIDTH - width) / 2, 16, CANVAS_WIDTH - width - 16));
+  const y = Math.round(CANVAS_HEIGHT - height - 24);
 
   context.fillStyle = "rgba(3, 5, 7, 0.82)";
-  context.fillRect(x, y, width, 30);
+  context.fillRect(x, y, width, height);
   context.fillStyle = "rgba(214, 203, 143, 0.38)";
   context.fillRect(x, y, width, 2);
   context.fillStyle = "#e0ddc8";
-  context.font = "15px monospace";
   context.textBaseline = "top";
-  context.fillText(prompt, x + 12, y + 8);
+  drawWrappedText(prompt, x + 12, y + 8, width - 24, 16, {
+    align: "center",
+    maxLines: 2,
+    ellipsis: true,
+  });
 }
 
 function drawJournalScreen() {
@@ -11848,14 +11989,20 @@ function drawJournalScreen() {
   context.fillStyle = "#b8c3c5";
   context.fillText(TEXT_CONTENT.generalUI.journal.currentObjective, panelX + 24, panelY + 58);
   context.fillStyle = "#e2dbc4";
-  context.fillText(objective.title, panelX + 24, panelY + 80);
+  drawWrappedText(objective.title, panelX + 24, panelY + 80, panelWidth - 48, 14, {
+    maxLines: 2,
+    ellipsis: true,
+  });
   context.fillStyle = "#8fa0a4";
   context.font = "12px monospace";
-  context.fillText(objective.detail, panelX + 24, panelY + 101);
+  drawWrappedText(objective.detail, panelX + 24, panelY + 106, panelWidth - 48, 13, {
+    maxLines: 2,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#b8c3c5";
   context.font = "14px monospace";
-  context.fillText(TEXT_CONTENT.generalUI.journal.collectedClues, panelX + 24, panelY + 136);
+  context.fillText(TEXT_CONTENT.generalUI.journal.collectedClues, panelX + 24, panelY + 142);
 
   const clueIds = Array.from(chapterProgress.clues);
   const cluesPerPage = 2;
@@ -11866,15 +12013,21 @@ function drawJournalScreen() {
   context.font = "12px monospace";
   if (clueIds.length === 0) {
     context.fillStyle = "#65777b";
-    context.fillText(TEXT_CONTENT.generalUI.journal.noClues, panelX + 24, panelY + 160);
+    context.fillText(TEXT_CONTENT.generalUI.journal.noClues, panelX + 24, panelY + 166);
   } else {
     visibleClues.forEach((clueId, index) => {
       const clue = getJournalClue(clueId);
-      const y = panelY + 158 + index * 58;
+      const y = panelY + 164 + index * 72;
       context.fillStyle = "#d0c8ad";
-      context.fillText(clue.title, panelX + 24, y);
+      drawWrappedText(clue.title, panelX + 24, y, panelWidth - 48, 12, {
+        maxLines: 1,
+        ellipsis: true,
+      });
       context.fillStyle = "#7f9094";
-      drawWrappedText(clue.text, panelX + 42, y + 14, panelWidth - 74, 13);
+      drawWrappedText(clue.text, panelX + 42, y + 14, panelWidth - 74, 13, {
+        maxLines: 3,
+        ellipsis: true,
+      });
     });
 
   }
@@ -11919,11 +12072,31 @@ function drawInspectOverlay() {
   context.fillStyle = "#d8d7c8";
   context.font = "16px monospace";
   context.textBaseline = "top";
-  context.fillText(inspectOverlayState.title, panelX + 18, panelY + 18);
+  const titleLayout = drawWrappedText(
+    inspectOverlayState.title,
+    panelX + 18,
+    panelY + 18,
+    panelWidth - 36,
+    17,
+    {
+      maxLines: 2,
+      ellipsis: true,
+    },
+  );
 
   context.fillStyle = "#aab7ba";
   context.font = "13px monospace";
-  drawWrappedText(inspectOverlayState.text, panelX + 20, panelY + 52, panelWidth - 40, 17);
+  drawWrappedText(
+    inspectOverlayState.text,
+    panelX + 20,
+    panelY + 52 + Math.max(0, titleLayout.lines.length - 1) * 17,
+    panelWidth - 40,
+    17,
+    {
+      maxLines: titleLayout.lines.length > 1 ? 4 : 5,
+      ellipsis: true,
+    },
+  );
 
   if (inspectOverlayState.clueId) {
     context.fillStyle = "#756f4a";
@@ -11956,19 +12129,33 @@ function drawAudioUnlockPrompt() {
   }
 
   const text = TEXT_CONTENT.generalUI.audio.unlockPrompt;
-  const width = Math.ceil(measureTextWidth(text, "12px monospace")) + 28;
+  context.font = "12px monospace";
+  const maxTextWidth = CANVAS_WIDTH - 96;
+  const layout = measurePresentationText(text, maxTextWidth, 13, {
+    maxLines: 2,
+    ellipsis: true,
+  });
+  const textWidth = Math.min(
+    maxTextWidth,
+    Math.max(...layout.lines.map((line) => measureTextWidth(line, context.font)), 0),
+  );
+  const width = Math.ceil(textWidth) + 28;
+  const height = layout.height + 16;
   const x = Math.round((CANVAS_WIDTH - width) / 2);
   const y = 18;
 
   context.fillStyle = "rgba(3, 6, 9, 0.86)";
-  context.fillRect(x, y, width, 28);
+  context.fillRect(x, y, width, height);
   context.strokeStyle = "#38484f";
   context.lineWidth = 1;
-  context.strokeRect(x + 0.5, y + 0.5, width, 28);
+  context.strokeRect(x + 0.5, y + 0.5, width, height);
   context.fillStyle = "#d8c16f";
-  context.font = "12px monospace";
   context.textBaseline = "top";
-  context.fillText(text, x + 14, y + 8);
+  drawWrappedText(text, x + 14, y + 8, width - 28, 13, {
+    align: "center",
+    maxLines: 2,
+    ellipsis: true,
+  });
 }
 
 function drawKeypadScreen() {
@@ -12005,7 +12192,17 @@ function drawKeypadScreen() {
 
   context.fillStyle = keypadState.messageTimer > 0 ? "#d8c16f" : "#68787c";
   context.font = "12px monospace";
-  context.fillText(keypadState.message || TEXT_CONTENT.corridor.keypad.defaultHint, x + 22, y + 222);
+  drawWrappedText(
+    keypadState.message || TEXT_CONTENT.corridor.keypad.defaultHint,
+    x + 22,
+    y + 220,
+    width - 44,
+    13,
+    {
+      maxLines: 2,
+      ellipsis: true,
+    },
+  );
 }
 
 function drawKeypadButtons(x, y) {
@@ -12052,15 +12249,25 @@ function drawDialoguePanel() {
   context.fillStyle = line.thought ? "#9ba9ad" : "#d8d7c8";
   context.font = line.thought ? "italic 15px monospace" : "15px monospace";
   context.textBaseline = "top";
-  context.fillText(line.speaker, panelX + 18, panelY + 12);
+  drawWrappedText(line.speaker, panelX + 18, panelY + 12, panelWidth - 118, 15, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   context.fillStyle = line.thought ? "#aab7ba" : "#e1ddca";
   context.font = line.thought ? "italic 14px monospace" : "14px monospace";
-  drawWrappedText(visibleText, panelX + 18, panelY + 36, panelWidth - 36, 17);
+  drawWrappedText(visibleText, panelX + 18, panelY + 36, panelWidth - 36, 17, {
+    maxLines: 3,
+    ellipsis: true,
+  });
 
   context.fillStyle = "#68787c";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.generalUI.dialogue.advanceHint, panelX + panelWidth - 78, panelY + panelHeight - 18);
+  drawWrappedText(TEXT_CONTENT.generalUI.dialogue.advanceHint, panelX + panelWidth - 118, panelY + panelHeight - 18, 100, 11, {
+    align: "right",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawCollisionBoxes(target, view) {
@@ -12129,16 +12336,28 @@ function drawMissingPersonsWing(view, scene) {
     context.fillRect(x + 25, 158, 18, 25);
     context.fillStyle = "#d0c8ad";
     context.font = "10px monospace";
-    context.fillText(caseData.name.toUpperCase(), x + 10, 210);
+    drawWrappedText(caseData.name.toUpperCase(), x + 10, 210, 92, 10, {
+      maxLines: 1,
+      ellipsis: true,
+    });
     context.fillStyle = "#7f9094";
     context.font = "8px monospace";
-    context.fillText(caseData.role.toUpperCase(), x + 10, 226);
-    context.fillText(
+    drawWrappedText(caseData.role.toUpperCase(), x + 10, 226, 92, 9, {
+      maxLines: 2,
+      ellipsis: true,
+    });
+    drawWrappedText(
       solved
         ? TEXT_CONTENT.recordsWing.labels.contradictionCaptured
         : TEXT_CONTENT.recordsWing.labels.fileAltered,
       x + 10,
       250,
+      92,
+      9,
+      {
+        maxLines: 2,
+        ellipsis: true,
+      },
     );
   });
 
@@ -12152,7 +12371,7 @@ function drawMissingPersonsWing(view, scene) {
 }
 
 function getMissingPersonRecordRect(index) {
-  return { x: 112, y: 150 + index * 38, width: 416, height: 30 };
+  return { x: 112, y: 150 + index * 38, width: 416, height: 34 };
 }
 
 function drawMissingPersonCaseOverlay() {
@@ -12172,11 +12391,20 @@ function drawMissingPersonCaseOverlay() {
   context.strokeRect(70.5, 34.5, 500, 292);
   context.fillStyle = "#e0ddca";
   context.font = "19px monospace";
-  context.fillText(caseData.name.toUpperCase(), 94, 54);
+  drawWrappedText(caseData.name.toUpperCase(), 94, 54, 452, 20, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#9eaaac";
   context.font = "11px monospace";
-  context.fillText(caseData.role, 96, 82);
-  context.fillText(TEXT_CONTENT.recordsWing.overlay.instruction, 96, 112);
+  drawWrappedText(caseData.role, 96, 82, 448, 12, {
+    maxLines: 1,
+    ellipsis: true,
+  });
+  drawWrappedText(TEXT_CONTENT.recordsWing.overlay.instruction, 96, 112, 448, 12, {
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   caseData.records.forEach((record, index) => {
     const rect = getMissingPersonRecordRect(index);
@@ -12187,17 +12415,27 @@ function drawMissingPersonCaseOverlay() {
     context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
     context.fillStyle = selected ? "#e2dbc4" : "#9ba9ab";
     context.font = "10px monospace";
-    context.fillText(record, rect.x + 10, rect.y + 10);
+    drawWrappedText(record, rect.x + 10, rect.y + 7, rect.width - 20, 11, {
+      maxLines: 2,
+      ellipsis: true,
+    });
   });
 
   context.fillStyle = recordsProgress.errorTimer > 0 ? "#d35c51" : "#68787c";
   context.font = "10px monospace";
-  context.fillText(
+  drawWrappedText(
     recordsProgress.errorTimer > 0
       ? TEXT_CONTENT.recordsWing.labels.contradictionNotProven
       : TEXT_CONTENT.recordsWing.overlay.controls,
     118,
     306,
+    404,
+    10,
+    {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    },
   );
   if (recordsProgress.errorTimer > 0) {
     context.fillStyle = "rgba(180, 28, 22, 0.16)";
@@ -12294,20 +12532,31 @@ function drawPrologueScene(view, scene) {
       context.fillStyle = "#d8d7c8";
       context.font = prologueProgress.timer < 3 ? "24px monospace" : "15px monospace";
       context.textBaseline = "top";
-      const width = measureTextWidth(text, context.font);
-      context.fillText(text, (CANVAS_WIDTH - width) / 2, 150);
+      drawWrappedText(text, 40, 142, CANVAS_WIDTH - 80, 18, {
+        align: "center",
+        maxLines: prologueProgress.timer < 3 ? 1 : 3,
+        ellipsis: true,
+      });
     }
     if (prologueProgress.timer >= 3) {
       context.fillStyle = "#59696d";
       context.font = "10px monospace";
-      context.fillText(TEXT_CONTENT.opening.skipHint, 248, 326);
+      drawWrappedText(TEXT_CONTENT.opening.skipHint, 176, 326, 288, 10, {
+        align: "center",
+        maxLines: 1,
+        ellipsis: true,
+      });
     }
   } else {
     context.fillStyle = "rgba(3, 5, 7, 0.76)";
-    context.fillRect(188, 24, 264, 26);
+    context.fillRect(136, 24, 368, 28);
     context.fillStyle = "#b8c3c5";
     context.font = "11px monospace";
-    context.fillText(TEXT_CONTENT.opening.serviceEntranceHint, 204, 32);
+    drawWrappedText(TEXT_CONTENT.opening.serviceEntranceHint, 152, 32, 336, 11, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 }
 
@@ -12439,10 +12688,18 @@ function drawEscapeGameplayUi() {
   context.strokeRect(112.5, 54.5, 416, 250);
   context.fillStyle = "#e0ddca";
   context.font = "18px monospace";
-  context.fillText(TEXT_CONTENT.escape.cameraChoice.title, 154, 76);
+  drawWrappedText(TEXT_CONTENT.escape.cameraChoice.title, 132, 74, 376, 19, {
+    align: "center",
+    maxLines: 2,
+    ellipsis: true,
+  });
   context.fillStyle = "#91a0a3";
   context.font = "10px monospace";
-  context.fillText(TEXT_CONTENT.escape.cameraChoice.description, 132, 112);
+  drawWrappedText(TEXT_CONTENT.escape.cameraChoice.description, 132, 112, 376, 12, {
+    align: "center",
+    maxLines: 3,
+    ellipsis: true,
+  });
 
   const options = [
     [TEXT_CONTENT.escape.cameraChoice.keepLabel, TEXT_CONTENT.escape.cameraChoice.keepDetail],
@@ -12457,14 +12714,24 @@ function drawEscapeGameplayUi() {
     context.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width, rect.height);
     context.fillStyle = selected ? "#e2dbc4" : "#a1adaf";
     context.font = "11px monospace";
-    context.fillText(label, rect.x + 12, rect.y + 6);
+    drawWrappedText(label, rect.x + 12, rect.y + 6, rect.width - 24, 11, {
+      maxLines: 1,
+      ellipsis: true,
+    });
     context.fillStyle = "#728286";
     context.font = "8px monospace";
-    context.fillText(detail, rect.x + 12, rect.y + 22);
+    drawWrappedText(detail, rect.x + 12, rect.y + 22, rect.width - 24, 9, {
+      maxLines: 1,
+      ellipsis: true,
+    });
   });
   context.fillStyle = "#68787c";
   context.font = "9px monospace";
-  context.fillText(TEXT_CONTENT.escape.cameraChoice.controls, 222, 286);
+  drawWrappedText(TEXT_CONTENT.escape.cameraChoice.controls, 144, 286, 352, 9, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawEscapeReveal(scene) {
@@ -12477,58 +12744,115 @@ function drawEscapeReveal(scene) {
   if (time < 4) {
     context.fillStyle = "#202629";
     context.font = "15px monospace";
-    context.fillText(TEXT_CONTENT.escape.reveal.morningLight, 104, 154);
+    drawWrappedText(TEXT_CONTENT.escape.reveal.morningLight, 80, 154, 480, 17, {
+      align: "center",
+      maxLines: 2,
+      ellipsis: true,
+    });
     return;
   }
   if (time < 8) {
     context.fillStyle = "#d8d7c8";
     context.font = "14px monospace";
-    context.fillText(
+    drawWrappedText(
       escapeProgress.evidencePreserved
         ? TEXT_CONTENT.escape.reveal.evidenceUpload
         : TEXT_CONTENT.escape.reveal.leftCamera,
-      escapeProgress.evidencePreserved ? 84 : 154,
+      80,
       128,
+      480,
+      16,
+      {
+        align: "center",
+        maxLines: 2,
+        ellipsis: true,
+      },
     );
     context.fillStyle = "#839296";
     context.font = "11px monospace";
-    context.fillText(
+    drawWrappedText(
       escapeProgress.evidencePreserved
         ? TEXT_CONTENT.escape.reveal.survivingImage
         : TEXT_CONTENT.escape.reveal.phoneImage,
-      escapeProgress.evidencePreserved ? 84 : 72,
+      80,
       164,
+      480,
+      13,
+      {
+        align: "center",
+        maxLines: 2,
+        ellipsis: true,
+      },
     );
-    context.fillText(TEXT_CONTENT.escape.reveal.didNotTakeIt, 256, 190);
+    drawWrappedText(TEXT_CONTENT.escape.reveal.didNotTakeIt, 80, 196, 480, 13, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
     return;
   }
 
   context.fillStyle = "#d8d7c8";
   context.font = "17px monospace";
-  context.fillText(TEXT_CONTENT.escape.reveal.newEntry, 174, 78);
+  drawWrappedText(TEXT_CONTENT.escape.reveal.newEntry, 80, 78, 480, 18, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#aebabc";
   context.font = "13px monospace";
-  context.fillText(TEXT_CONTENT.escape.reveal.subjectExplorer, 210, 130);
+  drawWrappedText(TEXT_CONTENT.escape.reveal.subjectExplorer, 80, 130, 480, 14, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#c6ad61";
-  context.fillText(TEXT_CONTENT.escape.reveal.statusReleased, 228, 158);
-  context.fillText(TEXT_CONTENT.escape.reveal.observationContinuing, 202, 184);
+  drawWrappedText(TEXT_CONTENT.escape.reveal.statusReleased, 80, 158, 480, 14, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
+  drawWrappedText(TEXT_CONTENT.escape.reveal.observationContinuing, 80, 184, 480, 14, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   if (escapeProgress.evidencePreserved) {
     context.fillStyle = "#75b68b";
-    context.fillText(TEXT_CONTENT.escape.reveal.evidenceDistributed, 220, 208);
+    drawWrappedText(TEXT_CONTENT.escape.reveal.evidenceDistributed, 80, 208, 480, 14, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
   if (classroomProgress.completed) {
     context.fillStyle = "#8d7eae";
-    context.fillText(TEXT_CONTENT.escape.reveal.attendanceOpen, 190, 226);
+    drawWrappedText(TEXT_CONTENT.escape.reveal.attendanceOpen, 80, 226, 480, 14, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
 
   if (time >= 14) {
     context.fillStyle = "#d8d7c8";
     context.font = "12px monospace";
-    context.fillText(TEXT_CONTENT.escape.reveal.madeItOut, 260, classroomProgress.completed ? 250 : 238);
-    context.fillText(
+    drawWrappedText(TEXT_CONTENT.escape.reveal.madeItOut, 80, classroomProgress.completed ? 250 : 238, 480, 13, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
+    drawWrappedText(
       TEXT_CONTENT.escape.reveal.archiveDidNotLetGo,
-      190,
+      80,
       classroomProgress.completed ? 270 : 260,
+      480,
+      13,
+      {
+        align: "center",
+        maxLines: 2,
+        ellipsis: true,
+      },
     );
   }
 }
@@ -12547,10 +12871,18 @@ function drawCircuitPuzzle() {
   context.strokeRect(72.5, 48.5, 496, 264);
   context.fillStyle = "#d8d7c8";
   context.font = "19px monospace";
-  context.fillText(TEXT_CONTENT.corridor.breaker.title, 96, 70);
+  drawWrappedText(TEXT_CONTENT.corridor.breaker.title, 96, 70, 448, 20, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#7f9094";
   context.font = "11px monospace";
-  context.fillText(TEXT_CONTENT.corridor.breaker.hint, 96, 99);
+  drawWrappedText(TEXT_CONTENT.corridor.breaker.hint, 96, 99, 448, 12, {
+    align: "center",
+    maxLines: 2,
+    ellipsis: true,
+  });
 
   CIRCUIT_SEQUENCE.forEach((switchId, index) => {
     const rect = getCircuitSwitchRect(index);
@@ -12577,7 +12909,11 @@ function drawCircuitPuzzle() {
   context.font = "11px monospace";
   drawWrappedText(circuitPuzzleState.message, 100, 270, 390, 14);
   context.fillStyle = "#65777b";
-  context.fillText(TEXT_CONTENT.corridor.breaker.closeHint, 378, 291);
+  drawWrappedText(TEXT_CONTENT.corridor.breaker.closeHint, 340, 291, 204, 11, {
+    align: "right",
+    maxLines: 1,
+    ellipsis: true,
+  });
 }
 
 function drawChamberRingScene() {
@@ -12623,7 +12959,10 @@ function drawChamberRingScene() {
   context.strokeRect(420.5, 40.5, 198, 282);
   context.fillStyle = "#d8d7c8";
   context.font = "17px monospace";
-  context.fillText(TEXT_CONTENT.archivist.chamber.lockTitle, 438, 62);
+  drawWrappedText(TEXT_CONTENT.archivist.chamber.lockTitle, 438, 62, 164, 18, {
+    maxLines: 2,
+    ellipsis: true,
+  });
   context.fillStyle = "#8fa0a4";
   context.font = "11px monospace";
   drawWrappedText(
@@ -12635,7 +12974,10 @@ function drawChamberRingScene() {
   );
   context.fillStyle = "#66777b";
   context.font = "10px monospace";
-  context.fillText(TEXT_CONTENT.archivist.chamber.journalHint, 438, 180);
+  drawWrappedText(TEXT_CONTENT.archivist.chamber.journalHint, 438, 180, 164, 11, {
+    maxLines: 2,
+    ellipsis: true,
+  });
   drawButton(getChamberRingRotateRect(-1), TEXT_CONTENT.archivist.chamber.symbolMinus);
   drawButton(getChamberRingRotateRect(1), TEXT_CONTENT.archivist.chamber.symbolPlus);
   drawButton(getChamberRingEngageRect(), TEXT_CONTENT.archivist.chamber.engageMechanism);
@@ -12683,7 +13025,11 @@ function drawLegacyArchivistChamberScene(view, scene) {
       context.strokeRect(x + 0.5, 180.5, 56, 92);
       context.fillStyle = "#b07060";
       context.font = "9px monospace";
-      context.fillText(TEXT_CONTENT.boss.ui.updating, x + 7, 192);
+      drawWrappedText(TEXT_CONTENT.boss.ui.updating, x + 6, 192, 44, 9, {
+        align: "center",
+        maxLines: 1,
+        ellipsis: true,
+      });
       drawOriginalSymbol(ARCHIVE_SYMBOL_PATTERN[index], x + 17, 222, 1, true);
     });
     drawArchivistFigure(archivistProgress.archivistX - viewX, 154, true, scene.time);
@@ -12723,7 +13069,11 @@ function drawLegacyArchivistChamberScene(view, scene) {
     context.fillRect(terminalX + 10, 188, 52, 42);
     context.fillStyle = "#18140f";
     context.font = "8px monospace";
-    context.fillText(TEXT_CONTENT.boss.ui.entryReady, terminalX + 14, 204);
+    drawWrappedText(TEXT_CONTENT.boss.ui.entryReady, terminalX + 8, 204, 56, 8, {
+      align: "center",
+      maxLines: 2,
+      ellipsis: true,
+    });
   }
   context.globalAlpha = 1;
 }
@@ -12790,21 +13140,41 @@ function drawArchivistAftermath() {
 
   if (elapsed >= 2) {
     context.font = "18px monospace";
-    context.fillText(TEXT_CONTENT.boss.ui.archiveEntryCreated, 192, 104);
+    drawWrappedText(TEXT_CONTENT.boss.ui.archiveEntryCreated, 80, 104, 480, 19, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
   if (elapsed >= 6) {
     context.font = "13px monospace";
-    context.fillText(TEXT_CONTENT.boss.ui.subjectRedacted, 218, 146);
+    drawWrappedText(TEXT_CONTENT.boss.ui.subjectRedacted, 80, 146, 480, 14, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
   if (elapsed >= 9) {
     context.fillStyle = "#c6ad61";
-    context.fillText(TEXT_CONTENT.boss.ui.statusStillInside, 218, 170);
+    drawWrappedText(TEXT_CONTENT.boss.ui.statusStillInside, 80, 170, 480, 14, {
+      align: "center",
+      maxLines: 1,
+      ellipsis: true,
+    });
   }
   if (elapsed >= 13) {
     context.fillStyle = "#aebabc";
     context.font = "12px monospace";
-    context.fillText(TEXT_CONTENT.boss.ui.archivePreparing, 170, 222);
-    context.fillText(TEXT_CONTENT.boss.ui.nextEntry, 200, 242);
+    drawWrappedText(TEXT_CONTENT.boss.ui.archivePreparing, 80, 222, 480, 13, {
+      align: "center",
+      maxLines: 2,
+      ellipsis: true,
+    });
+    drawWrappedText(TEXT_CONTENT.boss.ui.nextEntry, 80, 250, 480, 13, {
+      align: "center",
+      maxLines: 2,
+      ellipsis: true,
+    });
   }
 }
 
@@ -12903,10 +13273,18 @@ function drawArchivistSealGuidance(viewX, scene) {
   context.strokeRect(120.5, 70.5, 400, 66);
   context.fillStyle = "#d8c16f";
   context.font = "14px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.sealActive, 236, 80);
+  drawWrappedText(TEXT_CONTENT.boss.ui.sealActive, 140, 80, 360, 14, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#aebabc";
   context.font = "10px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.deactivateSymbols, 204, 101);
+  drawWrappedText(TEXT_CONTENT.boss.ui.deactivateSymbols, 140, 101, 360, 10, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
 
   ARCHIVE_SYMBOL_PATTERN.forEach((symbolId, index) => {
     const label = ARCHIVE_SYMBOL_LABELS[symbolId];
@@ -13049,10 +13427,18 @@ function drawBossCombatUi() {
   context.fillStyle = "#e0ddca";
   context.font = "15px monospace";
   context.textBaseline = "top";
-  context.fillText(TEXT_CONTENT.boss.ui.name, 258, 10);
+  drawWrappedText(TEXT_CONTENT.boss.ui.name, 174, 10, 292, 15, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#77888c";
   context.font = "9px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.subtitle, 244, 27);
+  drawWrappedText(TEXT_CONTENT.boss.ui.subtitle, 174, 27, 292, 9, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#251113";
   context.fillRect(180, 43, 280, 10);
   context.fillStyle = archivistProgress.bossInvulnerable ? "#776b4d" : "#a84e46";
@@ -13069,7 +13455,10 @@ function drawBossCombatUi() {
   context.fillRect(16, 308, 184, 38);
   context.fillStyle = "#aebabc";
   context.font = "9px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.stability, 26, 314);
+  drawWrappedText(TEXT_CONTENT.boss.ui.stability, 26, 314, 54, 9, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   for (let index = 0; index < BOSS_COMBAT.MAX_STABILITY; index += 1) {
     context.fillStyle =
       index < archivistProgress.playerStability ? "#d8c16f" : "#28343a";
@@ -13077,7 +13466,10 @@ function drawBossCombatUi() {
   }
 
   context.fillStyle = "#aebabc";
-  context.fillText(TEXT_CONTENT.boss.ui.manuscriptCharge, 26, 330);
+  drawWrappedText(TEXT_CONTENT.boss.ui.manuscriptCharge, 26, 330, 94, 9, {
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#172126";
   context.fillRect(126, 331, 62, 7);
   context.fillStyle = "#d8c16f";
@@ -13106,9 +13498,24 @@ function drawBossCombatUi() {
     context.fillRect(458, 116, 164, 68);
     context.fillStyle = "#8fa0a4";
     context.font = "9px monospace";
-    if (!archivistProgress.tutorialMoved) context.fillText(TEXT_CONTENT.boss.ui.move, 470, 126);
-    if (!archivistProgress.tutorialDodged) context.fillText(TEXT_CONTENT.boss.ui.dodge, 470, 144);
-    if (!archivistProgress.tutorialAttacked) context.fillText(TEXT_CONTENT.boss.ui.focusBeam, 470, 162);
+    if (!archivistProgress.tutorialMoved) {
+      drawWrappedText(TEXT_CONTENT.boss.ui.move, 470, 126, 140, 9, {
+        maxLines: 1,
+        ellipsis: true,
+      });
+    }
+    if (!archivistProgress.tutorialDodged) {
+      drawWrappedText(TEXT_CONTENT.boss.ui.dodge, 470, 144, 140, 9, {
+        maxLines: 1,
+        ellipsis: true,
+      });
+    }
+    if (!archivistProgress.tutorialAttacked) {
+      drawWrappedText(TEXT_CONTENT.boss.ui.focusBeam, 470, 162, 140, 9, {
+        maxLines: 1,
+        ellipsis: true,
+      });
+    }
   }
 }
 
@@ -13117,10 +13524,18 @@ function drawBossDefeatScreen() {
   context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   context.fillStyle = "#b8c3c5";
   context.font = "18px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.archiveEntryCompleted, 184, 96);
+  drawWrappedText(TEXT_CONTENT.boss.ui.archiveEntryCompleted, 80, 96, 480, 18, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   context.fillStyle = "#a6544b";
   context.font = "13px monospace";
-  context.fillText(TEXT_CONTENT.boss.ui.statusContained, 236, 132);
+  drawWrappedText(TEXT_CONTENT.boss.ui.statusContained, 80, 132, 480, 13, {
+    align: "center",
+    maxLines: 1,
+    ellipsis: true,
+  });
   [TEXT_CONTENT.boss.ui.retryBoss, TEXT_CONTENT.boss.ui.returnToTitle].forEach((label, index) => {
     drawMenuButton(
       getBossDefeatButtonRect(index),
@@ -13254,27 +13669,31 @@ function fillPolygon(points) {
   context.fill();
 }
 
-function drawWrappedText(text, x, y, maxWidth, lineHeight) {
-  const words = text.split(" ");
-  let line = "";
-  let lineY = y;
+function drawWrappedText(text, x, y, maxWidth, lineHeight, options = {}) {
+  const previousFont = context.font;
+  if (options.font) {
+    context.font = options.font;
+  }
 
-  words.forEach((word) => {
-    const testLine = line ? `${line} ${word}` : word;
+  const lines = getPresentationTextLines(text, maxWidth, options);
+  const align = options.align || "left";
 
-    if (measureTextWidth(testLine, context.font) > maxWidth && line) {
-      context.fillText(line, x, lineY);
-      line = word;
-      lineY += lineHeight;
-      return;
+  lines.forEach((line, index) => {
+    const lineWidth = measureTextWidth(line, context.font);
+    let drawX = x;
+    if (align === "center") {
+      drawX = x + (maxWidth - lineWidth) / 2;
+    } else if (align === "right") {
+      drawX = x + maxWidth - lineWidth;
     }
-
-    line = testLine;
+    context.fillText(line, Math.round(drawX), y + index * lineHeight);
   });
 
-  if (line) {
-    context.fillText(line, x, lineY);
-  }
+  context.font = previousFont;
+  return {
+    lines,
+    height: lines.length > 0 ? (lines.length - 1) * lineHeight + lineHeight : 0,
+  };
 }
 
 function getPresentationTextLines(text, maxWidth, options = {}) {

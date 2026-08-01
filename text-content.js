@@ -20,6 +20,7 @@ const TEXT_CONTENT = deepFreezeTextContent({
     menu: {
       start: "Start",
       continue: "Continue",
+      presentation: "Presentation Mode",
       settings: "Settings",
       credits: "Credits",
       exit: "Exit",
